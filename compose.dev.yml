@@ -1,0 +1,29 @@
+services:
+  wg-test-dev:
+    build:
+      dockerfile: ./Dockerfile.dev
+    volumes:
+      - ./src/:/app/
+      - temp:/app/node_modules/
+      # - temp1:/app/.next/
+      # - /lib/modules:/lib/modules:ro
+      # - ./data/:/etc/wireguard
+    ports:
+      - "51820:51820/udp"
+      - "8080:8080/tcp"
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - INIT_ENABLED=true
+      - INIT_HOST=test
+      - INIT_PORT=51820
+      - INIT_USERNAME=testtest
+      - INIT_PASSWORD=testtesttest
+
+# folders should be generated inside container
+volumes:
+  temp:
+    driver: local
+  #temp1:
+  #  driver: local
