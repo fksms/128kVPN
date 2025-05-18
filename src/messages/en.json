@@ -1,6 +1,12 @@
 {
     "HomePage": {
-        "title": "Test",
-        "about": "TestTest"
+        "title": "Test"
+    },
+    "CreateInterfaceModal": {
+        "title": "Create Interface",
+        "name": "Name",
+        "description": "Description",
+        "create": "Create",
+        "cancel": "Cancel"
     }
 }

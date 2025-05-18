@@ -29,4 +29,5 @@ RUN npm install
 # Copy Project
 COPY src ./
 
+# Run Web UI
 CMD [ "npm", "run", "dev" ]

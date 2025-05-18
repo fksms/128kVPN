@@ -1,6 +1,12 @@
 {
     "HomePage": {
-        "title": "テスト",
-        "about": "テストテスト"
+        "title": "テスト"
+    },
+    "CreateInterfaceModal": {
+        "title": "インターフェースを作成",
+        "name": "名前",
+        "description": "説明",
+        "create": "作成",
+        "cancel": "キャンセル"
     }
 }

@@ -1,5 +1,6 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { ClientList } from "@/components/ClientList";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import InterfaceList from "@/components/InterfaceList";
+import CreateInterfaceButton from "@/components/CreateInterfaceButton";
 
 type Props = {
     params: Promise<{ locale: string }>;
@@ -15,11 +16,9 @@ export default async function HomePage({ params }: Props) {
     return (
         <main className="flex justify-center p-6 space-y-4">
             <div className="my-6 space-y-4">
-                <h1 className="flex justify-center text-3xl font-bold">{t('HomePage.title')}</h1>
-                <div className="flex justify-center space-x-2">
-                    <button className="btn btn-accent">+ New</button>
-                </div>
-                <ClientList />
+                <h1 className="flex justify-center text-3xl font-bold">{t("HomePage.title")}</h1>
+                <CreateInterfaceButton />
+                <InterfaceList />
             </div>
         </main>
     );
