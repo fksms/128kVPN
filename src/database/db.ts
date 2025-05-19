@@ -1,15 +1,15 @@
-import Database from "better-sqlite3";
+import Database from 'better-sqlite3';
 
 export type WGInterface = {
-  userid: string;
-  name: string;
-  ip_address: string;
-}
+    userid: string;
+    name: string;
+    ip_address: string;
+};
 
 const maxNameLength = 20;
 const maxInterfaces = 10;
 
-const db = new Database("./database/wg_interfaces.db");
+const db = new Database('./database/wg_interfaces.db');
 
 // テーブル作成（重複作成はされない）
 db.exec(`
