@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import WGInterfaceList from '@/components/WGInterfaceList';
+import { maxInterfaceNameLength, maxInterfaces } from '@/database/db';
 
 type Props = {
     params: Promise<{ locale: string }>;
@@ -16,7 +17,7 @@ export default async function HomePage({ params }: Props) {
         <main className='flex justify-center p-6 space-y-4'>
             <div className='my-6 space-y-4'>
                 <h1 className='flex justify-center text-3xl font-bold'>{t('HomePage.title')}</h1>
-                <WGInterfaceList />
+                <WGInterfaceList maxInterfaceNameLength={maxInterfaceNameLength} maxInterfaces={maxInterfaces} />
             </div>
         </main>
     );

@@ -4,6 +4,11 @@ import { useEffect, useState } from 'react';
 import { WGInterface } from '@/database/db';
 import { useTranslations } from 'next-intl';
 
+type Props = {
+    maxInterfaceNameLength: number;
+    maxInterfaces: number;
+};
+
 // Open the modal
 function showModal(id: string) {
     return (document.getElementById(id) as HTMLDialogElement).showModal();
@@ -14,7 +19,7 @@ function closeModal(id: string) {
     return (document.getElementById(id) as HTMLDialogElement).close();
 }
 
-export default function WGInterfaceList() {
+export default function WGInterfaceList({ maxInterfaceNameLength, maxInterfaces }: Props) {
     const CreateInterfaceModalId = 'create_interface_modal';
     const DeleteInterfaceModalId = 'delete_interface_modal';
 
@@ -48,12 +53,12 @@ export default function WGInterfaceList() {
             return;
         }
         // 20文字を超えているならエラー
-        if (createWGInterfaceName.length > 20) {
+        if (createWGInterfaceName.length > maxInterfaceNameLength) {
             setCreateWGInterfaceError(t('WGInterfaceList.CreateModal.tooLongName'));
             return;
         }
         // インターフェースが10個以上ならエラー
-        if (wgInterfaces.length >= 10) {
+        if (wgInterfaces.length >= maxInterfaces) {
             setCreateWGInterfaceError(t('WGInterfaceList.CreateModal.tooManyInterfaces'));
             return;
         }

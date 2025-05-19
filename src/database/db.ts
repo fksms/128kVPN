@@ -6,8 +6,10 @@ export type WGInterface = {
     ip_address: string;
 };
 
-const maxNameLength = 20;
-const maxInterfaces = 10;
+// インターフェース名の最大文字数
+export const maxInterfaceNameLength = 20;
+// インターフェースの最大数
+export const maxInterfaces = 10;
 
 const db = new Database('./database/wg_interfaces.db');
 
@@ -16,7 +18,7 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS wg_interfaces (
     id INTEGER PRIMARY KEY,
     userid TEXT NOT NULL,
-    name TEXT NOT NULL CHECK(name <> '') CHECK(LENGTH(name) <= ${maxNameLength}),
+    name TEXT NOT NULL CHECK(name <> '') CHECK(LENGTH(name) <= ${maxInterfaceNameLength}),
     ip_address TEXT NOT NULL,
     UNIQUE(userid, name)
   );
