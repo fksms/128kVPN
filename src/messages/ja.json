@@ -2,11 +2,27 @@
     "HomePage": {
         "title": "テスト"
     },
-    "CreateInterfaceModal": {
-        "title": "インターフェースを作成",
-        "name": "名前",
-        "description": "説明",
-        "create": "作成",
-        "cancel": "キャンセル"
+    "WGInterfaceList": {
+        "new": "+ 新規",
+        "qrCode": "QRコード",
+        "download": "ダウンロード",
+        "delete": "削除",
+        "CreateModal": {
+            "title": "インターフェースを作成",
+            "description": "名前を入力してください",
+            "placeholder": "ここに名前を入力",
+            "submit": "作成",
+            "cancel": "キャンセル",
+            "emptyName": "名前は必須です",
+            "tooLongName": "名前は最大20文字までです",
+            "tooManyInterfaces": "インターフェースの数は最大10個までです",
+            "alreadyexistsName": "このインターフェース名はすでに存在します"
+        },
+        "DeleteModal": {
+            "title": "インターフェースを削除",
+            "description": "本当にこのインターフェースを削除しますか？",
+            "submit": "削除",
+            "cancel": "キャンセル"
+        }
     }
 }

@@ -1,20 +1,40 @@
 import Database from "better-sqlite3";
 
-export type InterfaceItem = {
+export type WGInterface = {
   userid: string;
-  interface_name: string;
+  name: string;
   ip_address: string;
 }
 
-const db = new Database("./database/interfaces.db");
+const maxNameLength = 20;
+const maxInterfaces = 10;
 
-// 初回起動時のみテーブル作成
+const db = new Database("./database/wg_interfaces.db");
+
+// テーブル作成（重複作成はされない）
 db.exec(`
-  CREATE TABLE IF NOT EXISTS interfaces (
-    userid TEXT NOT NULL PRIMARY KEY,
-    interface_name TEXT NOT NULL,
-    ip_address TEXT NOT NULL
+  CREATE TABLE IF NOT EXISTS wg_interfaces (
+    id INTEGER PRIMARY KEY,
+    userid TEXT NOT NULL,
+    name TEXT NOT NULL CHECK(name <> '') CHECK(LENGTH(name) <= ${maxNameLength}),
+    ip_address TEXT NOT NULL,
+    UNIQUE(userid, name)
   );
+`);
+
+// トリガー削除（重複作成防止）
+db.exec(`DROP TRIGGER IF EXISTS limit_interface_count`);
+
+// トリガー作成
+db.exec(`
+  CREATE TRIGGER limit_interface_count
+  BEFORE INSERT ON wg_interfaces
+  WHEN (
+    (SELECT COUNT(*) FROM wg_interfaces WHERE userid = NEW.userid) >= ${maxInterfaces}
+  )
+  BEGIN
+    SELECT RAISE(ABORT, 'The maximum number of interfaces has been exceeded');
+  END;
 `);
 
 export default db;
