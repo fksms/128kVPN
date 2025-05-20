@@ -1,9 +1,17 @@
 {
     "HomePage": {
-        "title": "Test"
+        "title": "Test",
+        "settings": "Settings",
+        "language": "Language",
+        "languageSelect": {
+            "en": "English",
+            "ja": "Japanese"
+        }
     },
     "WGInterfaceList": {
         "new": "+ New",
+        "remaining": "Remaining:",
+        "remainingTimeUnit": "minutes",
         "qrCode": "QR Code",
         "download": "Download",
         "delete": "Delete",

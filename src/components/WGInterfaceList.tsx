@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { WGInterface } from '@/database/db';
 import { useTranslations } from 'next-intl';
+import { WGInterface } from '@/database/db';
+import CountdownTimer from './CountdownTimer';
 
 type Props = {
     maxInterfaceNameLength: number;
@@ -31,7 +32,7 @@ export default function WGInterfaceList({ maxInterfaceNameLength, maxInterfaces 
     const [createWGInterfaceError, setCreateWGInterfaceError] = useState('');
 
     const [deleteWGInterfaceName, setDeleteWGInterfaceName] = useState('');
-    //const [deleteWGInterfaceError, setDeleteWGInterfaceError] = useState("");
+    //const [deleteWGInterfaceError, setDeleteWGInterfaceError] = useState('');
 
     // Fetch the list of interfaces
     const getWGInterfaces = async () => {
@@ -82,6 +83,7 @@ export default function WGInterfaceList({ maxInterfaceNameLength, maxInterfaces 
             if (!res.ok) throw new Error('Failed to fetch');
             // Reset the input field
             setCreateWGInterfaceName('');
+            setCreateWGInterfaceError('');
             // Close the modal
             closeModal(CreateInterfaceModalId);
             // Refresh the list
@@ -177,7 +179,7 @@ export default function WGInterfaceList({ maxInterfaceNameLength, maxInterfaces 
             {/*--------------------リスト部--------------------*/}
             <div className='flex flex-col space-y-5'>
                 {wgInterfaces.map((wgInterface) => (
-                    <div className='card bg-base-100 w-[600px] max-w-full shadow-md' key={wgInterface.name}>
+                    <div className='card bg-base-100 shadow-md' key={wgInterface.name}>
                         <div className='card-body'>
                             <div className='flex justify-between'>
                                 <div>
@@ -193,8 +195,10 @@ export default function WGInterfaceList({ maxInterfaceNameLength, maxInterfaces 
                                 */}
                                 </div>
 
-                                <div className='flex interfaces-center space-x-2'>
-                                    <div className='pr-4'>Expire time</div>
+                                <div className='flex items-center space-x-2'>
+                                    <div className='mr-4'>
+                                        <CountdownTimer expireAt={new Date(wgInterface.expires_at)} />
+                                    </div>
 
                                     <button
                                         onClick={() => {}}
@@ -268,14 +272,6 @@ export default function WGInterfaceList({ maxInterfaceNameLength, maxInterfaces 
                                     </button>
                                 </div>
                             </div>
-
-                            {/*
-                        <QRCodeModal
-                            visible={qrVisible}
-                            onClose={() => setQrVisible(false)}
-                            configText={`[Peer]\nPublicKey = xxxxxx\nAllowedIPs = ${ip}/32\nEndpoint = your.server:51820`}
-                        />
-                        */}
                         </div>
                     </div>
                 ))}

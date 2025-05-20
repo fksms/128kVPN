@@ -1,4 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
+import { expirationDurationMinutes } from '@/env';
 import db from '@/database/db';
 
 // GETリクエスト
@@ -34,12 +35,19 @@ export async function POST(req: NextRequest) {
     }
 
     if (action == 'create') {
+        // 現在時刻の取得
+        const now = new Date();
+        // 失効日時を計算して文字列に変換
+        const expires_at = new Date(now.getTime() + expirationDurationMinutes * 60 * 1000).toISOString();
+
         try {
             // プレースホルダを使ってSQLを準備
-            const stmt = db.prepare('INSERT INTO wg_interfaces (userid, name, ip_address) VALUES (?, ?, ?)');
+            const stmt = db.prepare(
+                'INSERT INTO wg_interfaces (userid, name, ip_address, expires_at) VALUES (?, ?, ?, ?)'
+            );
 
             // プレースホルダに値をバインド
-            stmt.run(userid, name, ip_address);
+            stmt.run(userid, name, ip_address, expires_at);
 
             return NextResponse.json({ message: 'Interface created successfully' }, { status: 200 });
         } catch (error) {

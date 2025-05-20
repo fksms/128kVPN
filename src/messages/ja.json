@@ -1,9 +1,17 @@
 {
     "HomePage": {
-        "title": "テスト"
+        "title": "テスト",
+        "settings": "設定",
+        "language": "言語",
+        "languageSelect": {
+            "en": "英語",
+            "ja": "日本語"
+        }
     },
     "WGInterfaceList": {
         "new": "+ 新規",
+        "remaining": "残り:",
+        "remainingTimeUnit": "分",
         "qrCode": "QRコード",
         "download": "ダウンロード",
         "delete": "削除",

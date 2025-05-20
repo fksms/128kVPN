@@ -1,15 +1,12 @@
 import Database from 'better-sqlite3';
+import { maxInterfaceNameLength, maxInterfaces } from '@/env';
 
 export type WGInterface = {
     userid: string;
     name: string;
     ip_address: string;
+    expires_at: string;
 };
-
-// インターフェース名の最大文字数
-export const maxInterfaceNameLength = 20;
-// インターフェースの最大数
-export const maxInterfaces = 10;
 
 const db = new Database('./database/wg_interfaces.db');
 
@@ -20,6 +17,7 @@ db.exec(`
     userid TEXT NOT NULL,
     name TEXT NOT NULL CHECK(name <> '') CHECK(LENGTH(name) <= ${maxInterfaceNameLength}),
     ip_address TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
     UNIQUE(userid, name)
   );
 `);

@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { maxInterfaceNameLength, maxInterfaces } from '@/env';
+import Navbar from '@/components/Navbar';
 import WGInterfaceList from '@/components/WGInterfaceList';
-import { maxInterfaceNameLength, maxInterfaces } from '@/database/db';
 
 type Props = {
     params: Promise<{ locale: string }>;
@@ -13,11 +14,14 @@ export default async function HomePage({ params }: Props) {
     setRequestLocale(locale);
 
     const t = await getTranslations({ locale });
+
     return (
-        <main className='flex justify-center p-6 space-y-4'>
-            <div className='my-6 space-y-4'>
-                <h1 className='flex justify-center text-3xl font-bold'>{t('HomePage.title')}</h1>
-                <WGInterfaceList maxInterfaceNameLength={maxInterfaceNameLength} maxInterfaces={maxInterfaces} />
+        <main>
+            <div className='flex justify-center max-w-full'>
+                <div className='my-3 space-y-4 w-180 px-8'>
+                    <Navbar />
+                    <WGInterfaceList maxInterfaceNameLength={maxInterfaceNameLength} maxInterfaces={maxInterfaces} />
+                </div>
             </div>
         </main>
     );
