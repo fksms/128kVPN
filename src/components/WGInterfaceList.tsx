@@ -141,7 +141,7 @@ export default function WGInterfaceList({ maxInterfaceNameLength, maxInterfaces 
 
             {/*--------------------インターフェース作成モーダル--------------------*/}
             <dialog id={CreateInterfaceModalId} className='modal'>
-                <div className='modal-box w-96 max-w-xl'>
+                <div className='modal-box w-85 max-w-md'>
                     <h3 className='font-bold text-lg'>{t('WGInterfaceList.CreateModal.title')}</h3>
                     <p className='py-4'>{t('WGInterfaceList.CreateModal.description')}</p>
                     <input
@@ -280,7 +280,7 @@ export default function WGInterfaceList({ maxInterfaceNameLength, maxInterfaces 
 
             {/*--------------------インターフェース削除モーダル--------------------*/}
             <dialog id={DeleteInterfaceModalId} className='modal'>
-                <div className='modal-box w-96 max-w-xl'>
+                <div className='modal-box w-85 max-w-md'>
                     <h3 className='font-bold text-lg'>{t('WGInterfaceList.DeleteModal.title')}</h3>
                     <div role='alert' className='alert alert-warning mt-4'>
                         <span>{deleteWGInterfaceName}</span>

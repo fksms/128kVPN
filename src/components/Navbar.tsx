@@ -21,7 +21,7 @@ export default function Navbar() {
                         </div>
                         <ul
                             tabIndex={0}
-                            className='menu dropdown-content bg-base-200 rounded-box z-1 mt-2 w-52 p-2 shadow-sm'
+                            className='menu dropdown-content bg-base-200 rounded-box z-1 mt-2 w-25 p-2 shadow-sm'
                         >
                             <li>
                                 <a
