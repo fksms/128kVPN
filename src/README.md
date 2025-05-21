@@ -1,12 +1,19 @@
 ## How to build
 
-Build (Dev)
+Install dependencies
 ```
-npm run dev
+npm install
 ```
 
-Build (Prod)
+Build (Dev)<br>
+(For `XXXXXXXX`, specify any string that is difficult to guess.)
+```
+SECRET_API_KEY=XXXXXXXX npm run dev
+```
+
+Build (Prod)<br>
+(For `XXXXXXXX`, specify any string that is difficult to guess.)
 ```
 npm run build
-npm run start
+SECRET_API_KEY=XXXXXXXX npm run start
 ```

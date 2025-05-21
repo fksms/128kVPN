@@ -1,4 +1,4 @@
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { setRequestLocale } from 'next-intl/server';
 import Navbar from '@/components/Navbar';
 import WGInterfaceList from '@/components/WGInterfaceList';
 
@@ -11,8 +11,6 @@ export default async function HomePage({ params }: Props) {
 
     // Enable static rendering
     setRequestLocale(locale);
-
-    const t = await getTranslations({ locale });
 
     return (
         <main>

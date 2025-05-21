@@ -22,8 +22,8 @@
             "submit": "作成",
             "cancel": "キャンセル",
             "emptyName": "名前は必須です",
-            "tooLongName": "名前は最大20文字までです",
-            "tooManyInterfaces": "インターフェースの数は最大10個までです",
+            "tooLongName": "名前が長すぎます",
+            "tooManyInterfaces": "作成可能なインターフェース数を超えています",
             "alreadyexistsName": "このインターフェース名はすでに存在します"
         },
         "DeleteModal": {

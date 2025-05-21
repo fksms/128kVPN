@@ -22,8 +22,8 @@
             "submit": "Create",
             "cancel": "Cancel",
             "emptyName": "Name is required",
-            "tooLongName": "Name must be at most 20 characters",
-            "tooManyInterfaces": "The number of interfaces is limited to 10",
+            "tooLongName": "Name is too long",
+            "tooManyInterfaces": "You have exceeded the maximum number of interfaces you can create",
             "alreadyexistsName": "This interface name already exists"
         },
         "DeleteModal": {
