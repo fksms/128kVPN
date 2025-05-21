@@ -208,7 +208,7 @@ export default function WGInterfaceList() {
 
                                 <div className='flex items-center space-x-2'>
                                     <div className='mr-4'>
-                                        <CountdownTimer expireAt={new Date(wgInterface.expires_at)} />
+                                        <CountdownTimer expireAt={wgInterface.expires_at} />
                                     </div>
 
                                     <button

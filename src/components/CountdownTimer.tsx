@@ -4,15 +4,14 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 type Props = {
-    expireAt: Date;
+    expireAt: number;
 };
 
 export default function CountdownTimer({ expireAt }: Props) {
     const t = useTranslations();
 
     const calculateRemainingMinutes = () => {
-        const now = new Date();
-        const diff = Math.max(0, Math.floor((expireAt.getTime() - now.getTime()) / (60 * 1000)));
+        const diff = Math.max(0, Math.floor((expireAt - Date.now()) / (60 * 1000)));
         return diff;
     };
 
