@@ -8,7 +8,7 @@ export type WGInterface = {
     expires_at: string;
 };
 
-const db = new Database('./database/wg_interfaces.db');
+const db = new Database('wg_interfaces.db');
 
 // テーブル作成（重複作成はされない）
 db.exec(`
