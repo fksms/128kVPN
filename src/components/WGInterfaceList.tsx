@@ -3,12 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { WGInterface } from '@/database/db';
+import { maxInterfaceNameLength, maxInterfaces } from '@/env';
+import { ErrorCodes } from '@/lib/errorCodes';
 import CountdownTimer from './CountdownTimer';
-
-type Props = {
-    maxInterfaceNameLength: number;
-    maxInterfaces: number;
-};
 
 // Open the modal
 function showModal(id: string) {
@@ -20,7 +17,7 @@ function closeModal(id: string) {
     return (document.getElementById(id) as HTMLDialogElement).close();
 }
 
-export default function WGInterfaceList({ maxInterfaceNameLength, maxInterfaces }: Props) {
+export default function WGInterfaceList() {
     const CreateInterfaceModalId = 'create_interface_modal';
     const DeleteInterfaceModalId = 'delete_interface_modal';
 
@@ -38,11 +35,15 @@ export default function WGInterfaceList({ maxInterfaceNameLength, maxInterfaces 
     const getWGInterfaces = async () => {
         try {
             const res = await fetch('/api/wg-interfaces', { method: 'GET' });
-            if (!res.ok) throw new Error('Failed to fetch');
             const data = await res.json();
-            setWGInterfaces(data);
+
+            if (data.success) {
+                setWGInterfaces(data.data);
+            } else {
+                throw new Error(data.code);
+            }
         } catch (error) {
-            console.error(error);
+            throw new Error(ErrorCodes.FAILED_TO_FETCH);
         }
     };
 
@@ -80,16 +81,21 @@ export default function WGInterfaceList({ maxInterfaceNameLength, maxInterfaces 
                     name: createWGInterfaceName,
                 }),
             });
-            if (!res.ok) throw new Error('Failed to fetch');
-            // Reset the input field
-            setCreateWGInterfaceName('');
-            setCreateWGInterfaceError('');
-            // Close the modal
-            closeModal(CreateInterfaceModalId);
-            // Refresh the list
-            getWGInterfaces();
+            const data = await res.json();
+
+            if (data.success) {
+                // Reset the input field
+                setCreateWGInterfaceName('');
+                setCreateWGInterfaceError('');
+                // Close the modal
+                closeModal(CreateInterfaceModalId);
+                // Refresh the list
+                getWGInterfaces();
+            } else {
+                throw new Error(data.code);
+            }
         } catch (error) {
-            console.error(error);
+            throw new Error(ErrorCodes.FAILED_TO_FETCH);
         }
     };
 
@@ -106,15 +112,20 @@ export default function WGInterfaceList({ maxInterfaceNameLength, maxInterfaces 
                     name: deleteWGInterfaceName,
                 }),
             });
-            if (!res.ok) throw new Error('Failed to fetch');
-            // Reset the input field
-            setDeleteWGInterfaceName('');
-            // Close the modal
-            closeModal(DeleteInterfaceModalId);
-            // Refresh the list
-            getWGInterfaces();
+            const data = await res.json();
+
+            if (data.success) {
+                // Reset the input field
+                setDeleteWGInterfaceName('');
+                // Close the modal
+                closeModal(DeleteInterfaceModalId);
+                // Refresh the list
+                getWGInterfaces();
+            } else {
+                throw new Error(data.code);
+            }
         } catch (error) {
-            console.error(error);
+            throw new Error(ErrorCodes.FAILED_TO_FETCH);
         }
     };
 
@@ -126,7 +137,7 @@ export default function WGInterfaceList({ maxInterfaceNameLength, maxInterfaces 
     return (
         <div className='space-y-4'>
             {/*--------------------ボタン部--------------------*/}
-            <div className='flex justify-center space-x-2'>
+            <div className='flex justify-center pb-4'>
                 <button
                     className='btn btn-accent'
                     onClick={() => {

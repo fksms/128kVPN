@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { expirationDurationMinutes } from '@/env';
 import db from '@/database/db';
+import { ErrorCodes } from '@/lib/errorCodes';
 
 // GETリクエスト
 export async function GET(req: NextRequest) {
@@ -13,10 +14,22 @@ export async function GET(req: NextRequest) {
         // プレースホルダに値をバインド
         const wgInterfaces = stmt.all(userid);
 
-        return NextResponse.json(wgInterfaces, { status: 200 });
+        return NextResponse.json(
+            {
+                success: true,
+                data: wgInterfaces,
+            },
+            { status: 200 }
+        );
     } catch (error) {
         console.error(error);
-        return NextResponse.json({ error: 'SQL Error' }, { status: 500 });
+        return NextResponse.json(
+            {
+                success: false,
+                code: ErrorCodes.SQL_ERROR,
+            },
+            { status: 500 }
+        );
     }
 }
 
@@ -31,7 +44,13 @@ export async function POST(req: NextRequest) {
     const action = body.action;
 
     if (!name) {
-        return NextResponse.json({ error: 'Name is required' }, { status: 400 });
+        return NextResponse.json(
+            {
+                success: false,
+                code: ErrorCodes.INVALID_REQUEST,
+            },
+            { status: 400 }
+        );
     }
 
     if (action == 'create') {
@@ -49,10 +68,22 @@ export async function POST(req: NextRequest) {
             // プレースホルダに値をバインド
             stmt.run(userid, name, ip_address, expires_at);
 
-            return NextResponse.json({ message: 'Interface created successfully' }, { status: 200 });
+            return NextResponse.json(
+                {
+                    success: true,
+                    data: '',
+                },
+                { status: 200 }
+            );
         } catch (error) {
             console.error(error);
-            return NextResponse.json({ error: 'SQL Error' }, { status: 500 });
+            return NextResponse.json(
+                {
+                    success: false,
+                    code: ErrorCodes.SQL_ERROR,
+                },
+                { status: 500 }
+            );
         }
     } else if (action == 'delete') {
         try {
@@ -62,12 +93,30 @@ export async function POST(req: NextRequest) {
             // プレースホルダに値をバインド
             stmt.run(userid, name);
 
-            return NextResponse.json({ message: 'Interface deleted successfully' }, { status: 200 });
+            return NextResponse.json(
+                {
+                    success: true,
+                    data: '',
+                },
+                { status: 200 }
+            );
         } catch (error) {
             console.error(error);
-            return NextResponse.json({ error: 'SQL Error' }, { status: 500 });
+            return NextResponse.json(
+                {
+                    success: false,
+                    code: ErrorCodes.SQL_ERROR,
+                },
+                { status: 500 }
+            );
         }
     } else {
-        return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
+        return NextResponse.json(
+            {
+                success: false,
+                code: ErrorCodes.INVALID_REQUEST,
+            },
+            { status: 400 }
+        );
     }
 }

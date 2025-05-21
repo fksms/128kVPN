@@ -1,5 +1,4 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { maxInterfaceNameLength, maxInterfaces } from '@/env';
 import Navbar from '@/components/Navbar';
 import WGInterfaceList from '@/components/WGInterfaceList';
 
@@ -20,7 +19,7 @@ export default async function HomePage({ params }: Props) {
             <div className='flex justify-center max-w-full'>
                 <div className='my-3 space-y-4 w-180 px-8'>
                     <Navbar />
-                    <WGInterfaceList maxInterfaceNameLength={maxInterfaceNameLength} maxInterfaces={maxInterfaces} />
+                    <WGInterfaceList />
                 </div>
             </div>
         </main>
