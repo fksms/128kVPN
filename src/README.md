@@ -5,9 +5,9 @@ Install dependencies
 npm install
 ```
 
-Pre-build the `monitor.ts`
+Build the `monitor.ts`
 ```sh
-npm run prebuild
+npm run build:monitor
 ```
 
 Build (Dev)<br>

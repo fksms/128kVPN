@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "prebuild": "tsc monitor.ts --outDir ./build",
+        "build:monitor": "tsc monitor.ts --outDir ./build",
         "dev": "next dev --turbopack & node build/monitor.js",
         "build": "next build",
         "start": "node .next/standalone/server.js & node build/monitor.js",

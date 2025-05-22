@@ -10,4 +10,6 @@ services:
       - SYS_MODULE
     environment:
       # For `XXXXXXXX`, specify any string that is difficult to guess.
+      - BASE_URL=http://host.docker.internal
+      - PORT=8080
       - SECRET_API_KEY=XXXXXXXX

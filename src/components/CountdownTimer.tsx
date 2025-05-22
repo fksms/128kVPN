@@ -11,8 +11,7 @@ export default function CountdownTimer({ expireAt }: Props) {
     const t = useTranslations();
 
     const calculateRemainingMinutes = (): number => {
-        const remaining = Math.max(0, Math.floor((expireAt - Date.now()) / (60 * 1000)));
-        return remaining;
+        return Math.max(0, Math.floor((expireAt - Date.now()) / (60 * 1000)));
     };
 
     const [remainingMinutes, setRemainingMinutes] = useState(calculateRemainingMinutes());
