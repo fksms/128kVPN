@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
         );
     }
 
-    if (action == 'create') {
+    if (action === 'create') {
         // 失効日時を計算（UNIXタイムスタンプ）
         const expires_at = Date.now() + expirationDurationMinutes * 60 * 1000;
 
@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
                 { status: 500 }
             );
         }
-    } else if (action == 'delete') {
+    } else if (action === 'delete') {
         try {
             // プレースホルダを使ってSQLを準備
             const stmt = db.prepare('DELETE FROM wg_interfaces WHERE userid = ? AND name = ?');

@@ -21,16 +21,23 @@
             "placeholder": "ここに名前を入力",
             "submit": "作成",
             "cancel": "キャンセル",
-            "emptyName": "名前は必須です",
-            "tooLongName": "名前が長すぎます",
-            "tooManyInterfaces": "作成可能なインターフェース数を超えています",
-            "alreadyexistsName": "このインターフェース名はすでに存在します"
+            "error": {
+                "emptyName": "名前は必須です",
+                "tooLongName": "名前が長すぎます",
+                "tooManyInterfaces": "作成可能なインターフェース数を超えています",
+                "alreadyexistsName": "このインターフェース名はすでに存在します",
+                "sqlError": "SQLエラーが発生しました",
+                "invalidRequest": "無効なリクエストです",
+                "failedToFetch": "データの取得に失敗しました",
+                "unknownError": "不明なエラーが発生しました"
+            }
         },
         "DeleteModal": {
             "title": "インターフェースを削除",
             "description": "本当にこのインターフェースを削除しますか？",
             "submit": "削除",
-            "cancel": "キャンセル"
+            "cancel": "キャンセル",
+            "error": {}
         }
     }
 }

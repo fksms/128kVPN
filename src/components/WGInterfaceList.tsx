@@ -29,7 +29,7 @@ export default function WGInterfaceList() {
     const [createWGInterfaceError, setCreateWGInterfaceError] = useState('');
 
     const [deleteWGInterfaceName, setDeleteWGInterfaceName] = useState('');
-    //const [deleteWGInterfaceError, setDeleteWGInterfaceError] = useState('');
+    const [deleteWGInterfaceError, setDeleteWGInterfaceError] = useState('');
 
     // Fetch the list of interfaces
     const getWGInterfaces = async () => {
@@ -40,10 +40,12 @@ export default function WGInterfaceList() {
             if (data.success) {
                 setWGInterfaces(data.data);
             } else {
-                throw new Error(data.code);
+                console.error(data.code);
+                return;
             }
         } catch (error) {
-            throw new Error(ErrorCodes.FAILED_TO_FETCH);
+            console.error(ErrorCodes.FAILED_TO_FETCH);
+            return;
         }
     };
 
@@ -51,22 +53,22 @@ export default function WGInterfaceList() {
     const createWGInterface = async () => {
         // 空文字ならエラー
         if (createWGInterfaceName.length < 1) {
-            setCreateWGInterfaceError(t('WGInterfaceList.CreateModal.emptyName'));
+            setCreateWGInterfaceError(t('WGInterfaceList.CreateModal.error.emptyName'));
             return;
         }
         // 20文字を超えているならエラー
         if (createWGInterfaceName.length > maxInterfaceNameLength) {
-            setCreateWGInterfaceError(t('WGInterfaceList.CreateModal.tooLongName'));
+            setCreateWGInterfaceError(t('WGInterfaceList.CreateModal.error.tooLongName'));
             return;
         }
         // インターフェースが10個以上ならエラー
         if (wgInterfaces.length >= maxInterfaces) {
-            setCreateWGInterfaceError(t('WGInterfaceList.CreateModal.tooManyInterfaces'));
+            setCreateWGInterfaceError(t('WGInterfaceList.CreateModal.error.tooManyInterfaces'));
             return;
         }
         // インターフェース名がすでに存在しているならエラー
         if (wgInterfaces.some((wgInterface) => wgInterface.name === createWGInterfaceName)) {
-            setCreateWGInterfaceError(t('WGInterfaceList.CreateModal.alreadyexistsName'));
+            setCreateWGInterfaceError(t('WGInterfaceList.CreateModal.error.alreadyexistsName'));
             return;
         }
 
@@ -83,6 +85,7 @@ export default function WGInterfaceList() {
             });
             const data = await res.json();
 
+            // 以下、エラーハンドリング
             if (data.success) {
                 // Reset the input field
                 setCreateWGInterfaceName('');
@@ -91,11 +94,23 @@ export default function WGInterfaceList() {
                 closeModal(CreateInterfaceModalId);
                 // Refresh the list
                 getWGInterfaces();
+            } else if (data.code === ErrorCodes.INVALID_REQUEST) {
+                setCreateWGInterfaceError(t('WGInterfaceList.CreateModal.error.invalidRequest'));
+                console.error(data.code);
+                return;
+            } else if (data.code === ErrorCodes.SQL_ERROR) {
+                setCreateWGInterfaceError(t('WGInterfaceList.CreateModal.error.sqlError'));
+                console.error(data.code);
+                return;
             } else {
-                throw new Error(data.code);
+                setCreateWGInterfaceError(t('WGInterfaceList.CreateModal.error.unknownError'));
+                console.error(data.code);
+                return;
             }
         } catch (error) {
-            throw new Error(ErrorCodes.FAILED_TO_FETCH);
+            setCreateWGInterfaceError(t('WGInterfaceList.CreateModal.error.failedToFetch'));
+            console.error(ErrorCodes.FAILED_TO_FETCH);
+            return;
         }
     };
 
@@ -114,18 +129,32 @@ export default function WGInterfaceList() {
             });
             const data = await res.json();
 
+            // 以下、エラーハンドリング
             if (data.success) {
                 // Reset the input field
                 setDeleteWGInterfaceName('');
+                setDeleteWGInterfaceError('');
                 // Close the modal
                 closeModal(DeleteInterfaceModalId);
                 // Refresh the list
                 getWGInterfaces();
+            } else if (data.code === ErrorCodes.INVALID_REQUEST) {
+                setDeleteWGInterfaceError(t('WGInterfaceList.CreateModal.error.invalidRequest'));
+                console.error(data.code);
+                return;
+            } else if (data.code === ErrorCodes.SQL_ERROR) {
+                setDeleteWGInterfaceError(t('WGInterfaceList.CreateModal.error.sqlError'));
+                console.error(data.code);
+                return;
             } else {
-                throw new Error(data.code);
+                setDeleteWGInterfaceError(t('WGInterfaceList.CreateModal.error.unknownError'));
+                console.error(data.code);
+                return;
             }
         } catch (error) {
-            throw new Error(ErrorCodes.FAILED_TO_FETCH);
+            setDeleteWGInterfaceError(t('WGInterfaceList.CreateModal.error.failedToFetch'));
+            console.error(ErrorCodes.FAILED_TO_FETCH);
+            return;
         }
     };
 
@@ -296,9 +325,10 @@ export default function WGInterfaceList() {
                     <div role='alert' className='alert alert-warning mt-4'>
                         <span>{deleteWGInterfaceName}</span>
                     </div>
-                    <p className='py-4'>{t('WGInterfaceList.DeleteModal.description')}</p>
+                    <p className='pt-4'>{t('WGInterfaceList.DeleteModal.description')}</p>
+                    <p className='text-sm text-error mt-2'>{deleteWGInterfaceError}</p>
 
-                    <div className='flex justify-end space-x-2'>
+                    <div className='flex justify-end space-x-2 mt-4'>
                         <button
                             className='btn btn-soft btn-primary'
                             onClick={() => {
@@ -311,6 +341,7 @@ export default function WGInterfaceList() {
                             className='btn'
                             onClick={() => {
                                 closeModal(DeleteInterfaceModalId);
+                                setDeleteWGInterfaceError('');
                             }}
                         >
                             {t('WGInterfaceList.DeleteModal.cancel')}
