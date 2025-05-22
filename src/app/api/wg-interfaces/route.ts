@@ -4,7 +4,7 @@ import db from '@/database/db';
 import { ErrorCodes } from '@/lib/errorCodes';
 
 // GETリクエスト
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
     const userid = 'testuser';
 
     try {
@@ -34,14 +34,14 @@ export async function GET(req: NextRequest) {
 }
 
 // POSTリクエスト
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
     const userid = 'testuser';
     const ip_address = 'test_ip';
 
     const body = await req.json();
 
-    const name = body.name;
     const action = body.action;
+    const name = body.name;
 
     if (!name) {
         return NextResponse.json(

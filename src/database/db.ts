@@ -1,13 +1,6 @@
 import Database from 'better-sqlite3';
 import { maxInterfaceNameLength, maxInterfaces } from '@/env';
 
-export type WGInterface = {
-    userid: string;
-    name: string;
-    ip_address: string;
-    expires_at: number; // UNIXタイムスタンプで保持
-};
-
 const db = new Database('wg_interfaces.db');
 
 // テーブル作成（重複作成はされない）

@@ -10,24 +10,24 @@ type Props = {
 export default function CountdownTimer({ expireAt }: Props) {
     const t = useTranslations();
 
-    const calculateRemainingMinutes = () => {
-        const diff = Math.max(0, Math.floor((expireAt - Date.now()) / (60 * 1000)));
-        return diff;
+    const calculateRemainingMinutes = (): number => {
+        const remaining = Math.max(0, Math.floor((expireAt - Date.now()) / (60 * 1000)));
+        return remaining;
     };
 
     const [remainingMinutes, setRemainingMinutes] = useState(calculateRemainingMinutes());
 
     useEffect(() => {
+        // コンポーネントマウント時に実行（インターバル開始）
         const interval = setInterval(() => {
-            setRemainingMinutes((prev) => {
-                const next = calculateRemainingMinutes();
-                return next;
-            });
+            setRemainingMinutes(calculateRemainingMinutes());
         }, 60 * 1000); // 1分ごとに更新
 
-        // クリーンアップ処理
-        return () => clearInterval(interval);
-    }, [expireAt]);
+        return () => {
+            // コンポーネントアンマウント時に実行（インターバル解除）
+            clearInterval(interval);
+        };
+    }, []);
 
     return (
         <div>

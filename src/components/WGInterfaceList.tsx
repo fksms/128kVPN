@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { WGInterface } from '@/database/db';
 import { maxInterfaceNameLength, maxInterfaces } from '@/env';
+import { WGInterface } from '@/lib/type';
 import { ErrorCodes } from '@/lib/errorCodes';
 import CountdownTimer from './CountdownTimer';
 
@@ -23,22 +23,19 @@ export default function WGInterfaceList() {
 
     const t = useTranslations();
 
+    // -------------------- Start `getWGInterfaces` --------------------
     const [wgInterfaces, setWGInterfaces] = useState<WGInterface[]>([]);
 
-    const [createWGInterfaceName, setCreateWGInterfaceName] = useState('');
-    const [createWGInterfaceError, setCreateWGInterfaceError] = useState('');
-
-    const [deleteWGInterfaceName, setDeleteWGInterfaceName] = useState('');
-    const [deleteWGInterfaceError, setDeleteWGInterfaceError] = useState('');
-
     // Fetch the list of interfaces
-    const getWGInterfaces = async () => {
+    const getWGInterfaces = async (): Promise<void> => {
         try {
             const res = await fetch('/api/wg-interfaces', { method: 'GET' });
             const data = await res.json();
 
+            // 以下、エラーハンドリング
             if (data.success) {
                 setWGInterfaces(data.data);
+                return;
             } else {
                 console.error(data.code);
                 return;
@@ -48,9 +45,14 @@ export default function WGInterfaceList() {
             return;
         }
     };
+    // -------------------- End `getWGInterfaces` --------------------
+
+    // -------------------- Start `createWGInterface` --------------------
+    const [createWGInterfaceName, setCreateWGInterfaceName] = useState('');
+    const [createWGInterfaceError, setCreateWGInterfaceError] = useState('');
 
     // Create a new interface
-    const createWGInterface = async () => {
+    const createWGInterface = async (): Promise<void> => {
         // 空文字ならエラー
         if (createWGInterfaceName.length < 1) {
             setCreateWGInterfaceError(t('WGInterfaceList.CreateModal.error.emptyName'));
@@ -94,6 +96,7 @@ export default function WGInterfaceList() {
                 closeModal(CreateInterfaceModalId);
                 // Refresh the list
                 getWGInterfaces();
+                return;
             } else if (data.code === ErrorCodes.INVALID_REQUEST) {
                 setCreateWGInterfaceError(t('WGInterfaceList.CreateModal.error.invalidRequest'));
                 console.error(data.code);
@@ -113,9 +116,14 @@ export default function WGInterfaceList() {
             return;
         }
     };
+    // -------------------- End `createWGInterface` --------------------
+
+    // -------------------- Start `deleteWGInterface` --------------------
+    const [deleteWGInterfaceName, setDeleteWGInterfaceName] = useState('');
+    const [deleteWGInterfaceError, setDeleteWGInterfaceError] = useState('');
 
     // Delete an interface
-    const deleteWGInterface = async () => {
+    const deleteWGInterface = async (): Promise<void> => {
         try {
             const res = await fetch('/api/wg-interfaces', {
                 method: 'POST',
@@ -138,6 +146,7 @@ export default function WGInterfaceList() {
                 closeModal(DeleteInterfaceModalId);
                 // Refresh the list
                 getWGInterfaces();
+                return;
             } else if (data.code === ErrorCodes.INVALID_REQUEST) {
                 setDeleteWGInterfaceError(t('WGInterfaceList.CreateModal.error.invalidRequest'));
                 console.error(data.code);
@@ -157,9 +166,10 @@ export default function WGInterfaceList() {
             return;
         }
     };
+    // -------------------- End `deleteWGInterface` --------------------
 
-    // Execute the function when the component mounts
     useEffect(() => {
+        // Execute the function when the component mounts
         getWGInterfaces();
     }, []);
 

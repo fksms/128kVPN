@@ -5,10 +5,10 @@ import { routing } from '@/i18n/routing';
 // next-intlのmiddlewareを事前に作成
 const intlMiddleware = createMiddleware(routing);
 
-export function middleware(request: NextRequest) {
+export function middleware(request: NextRequest): NextResponse {
     const pathname = request.nextUrl.pathname;
 
-    // all-wg-interfacesだけAPIキーチェック
+    // `/api/all-wg-interfaces`の場合はAPI_KEYをチェック
     if (pathname.startsWith('/api/all-wg-interfaces')) {
         const apiKey = request.headers.get('x-api-key');
 
@@ -21,8 +21,10 @@ export function middleware(request: NextRequest) {
         }
     }
 
-    // API以外は next-intl のmiddlewareを適用
-    return intlMiddleware(request);
+    // `next-intl`のmiddlewareを適用
+    else {
+        return intlMiddleware(request);
+    }
 }
 
 export const config = {
@@ -30,9 +32,9 @@ export const config = {
     // - … if they start with `/api`, `/trpc`, `/_next` or `/_vercel`
     // - … the ones containing a dot (e.g. `favicon.ico`)
     matcher: [
-        // all-wg-interfaces制御用
+        // `all-wg-interfaces`制御用
         '/api/all-wg-interfaces/:path*',
-        // next-intl用
+        // 特定のパスを除外して、それ以外は全て`next-intl`で制御
         '/((?!api|trpc|_next|_vercel|.*\\..*).*)',
     ],
 };
