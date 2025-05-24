@@ -186,9 +186,11 @@ export default function WGInterfaceList() {
                         // Open the modal
                         showModal(createInterfaceModalRef);
                         // inputにフォーカスを当てる（実行に50ミリ秒遅延させる）
+                        /*
                         setTimeout(() => {
                             createInterfaceModalInputRef.current?.focus();
                         }, 50);
+                        */
                     }}
                 >
                     {t('WGInterfaceList.new')}
@@ -198,7 +200,7 @@ export default function WGInterfaceList() {
 
             {/*--------------------インターフェース作成モーダル--------------------*/}
             <dialog ref={createInterfaceModalRef} className='modal'>
-                <div className='modal-box w-85 max-w-md'>
+                <div className='modal-box min-w-xs max-w-sm'>
                     <h3 className='font-bold text-lg'>{t('WGInterfaceList.CreateModal.title')}</h3>
                     <p className='py-4'>{t('WGInterfaceList.CreateModal.description')}</p>
                     <input
@@ -239,7 +241,7 @@ export default function WGInterfaceList() {
                 {wgInterfaces.map((wgInterface) => (
                     <div className='card bg-base-100 shadow-md' key={wgInterface.name}>
                         <div className='card-body'>
-                            <div className='flex justify-between'>
+                            <div className='flex max-sm:flex-col sm:flex-row justify-between max-sm:space-y-4'>
                                 <div>
                                     <div className='font-medium card-title'>{wgInterface.name}</div>
 
@@ -253,7 +255,7 @@ export default function WGInterfaceList() {
                                 */}
                                 </div>
 
-                                <div className='flex items-center space-x-2'>
+                                <div className='flex items-center max-sm:justify-end space-x-2'>
                                     <div className='mr-4'>
                                         <CountdownTimer expireAt={wgInterface.expires_at} />
                                     </div>
@@ -338,7 +340,7 @@ export default function WGInterfaceList() {
 
             {/*--------------------インターフェース削除モーダル--------------------*/}
             <dialog ref={deleteInterfaceModalRef} className='modal'>
-                <div className='modal-box w-85 max-w-md'>
+                <div className='modal-box min-w-xs max-w-sm'>
                     <h3 className='font-bold text-lg'>{t('WGInterfaceList.DeleteModal.title')}</h3>
                     <div role='alert' className='alert alert-warning mt-4'>
                         <span>{deleteWGInterfaceName}</span>

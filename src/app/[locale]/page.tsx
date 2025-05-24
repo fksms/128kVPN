@@ -14,8 +14,8 @@ export default async function HomePage({ params }: Props) {
 
     return (
         <main>
-            <div className='flex justify-center max-w-full'>
-                <div className='my-3 space-y-4 w-180 px-8'>
+            <div className='flex justify-center max-w-full min-w-xs'>
+                <div className='w-3xl px-8 py-4 space-y-4'>
                     <Navbar />
                     <WGInterfaceList />
                 </div>
