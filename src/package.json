@@ -4,9 +4,9 @@
     "private": true,
     "scripts": {
         "build:monitor": "tsc monitor.ts --outDir ./build",
-        "dev": "next dev --turbopack & node build/monitor.js",
+        "dev": "next dev --turbopack & node build/monitor.js & wait",
         "build": "next build",
-        "start": "node .next/standalone/server.js & node build/monitor.js",
+        "start": "node .next/standalone/server.js & node build/monitor.js & wait",
         "lint": "next lint",
         "format": "prettier --write './**/*.{js,mjs,jsx,ts,tsx,css,json}'"
     },
