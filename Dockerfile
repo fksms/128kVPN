@@ -43,7 +43,5 @@ RUN update-alternatives --install /usr/sbin/iptables iptables /usr/sbin/iptables
 RUN update-alternatives --install /usr/sbin/ip6tables ip6tables /usr/sbin/ip6tables-legacy 10 --slave /usr/sbin/ip6tables-restore ip6tables-restore /usr/sbin/ip6tables-legacy-restore --slave /usr/sbin/ip6tables-save ip6tables-save /usr/sbin/ip6tables-legacy-save
 
 # Run Web UI
-CMD node server.js & node monitor.js & wait
-
-#ENTRYPOINT ["dumb-init", "--"]
-#CMD ["/bin/sh", "-c", "node server.js & node monitor.js & wait"]
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["/bin/sh", "-c", "node server.js & node monitor.js & wait"]
