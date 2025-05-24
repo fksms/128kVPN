@@ -1,5 +1,7 @@
 @import 'tailwindcss';
-@plugin "daisyui";
+@plugin "daisyui" {
+    exclude: rootscrollgutter; /* https://daisyui.com/docs/config/#exclude */
+}
 
 :root {
     --background: #eceff1;

@@ -12,6 +12,8 @@
         "new": "+ 新規",
         "remaining": "残り:",
         "remainingTimeUnit": "分",
+        "expiringSoon": "まもなく失効",
+        "expired": "失効済み",
         "qrCode": "QRコード",
         "download": "ダウンロード",
         "delete": "削除",
@@ -37,7 +39,12 @@
             "description": "本当にこのインターフェースを削除しますか？",
             "submit": "削除",
             "cancel": "キャンセル",
-            "error": {}
+            "error": {
+                "sqlError": "SQLエラーが発生しました",
+                "invalidRequest": "無効なリクエストです",
+                "failedToFetch": "データの取得に失敗しました",
+                "unknownError": "不明なエラーが発生しました"
+            }
         }
     }
 }

@@ -1,29 +1,32 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, RefObject } from 'react';
 import { useTranslations } from 'next-intl';
 import { maxInterfaceNameLength, maxInterfaces } from '@/env';
 import { WGInterface } from '@/lib/type';
 import { ErrorCodes } from '@/lib/errorCodes';
 import CountdownTimer from './CountdownTimer';
 
-// Open the modal
-function showModal(id: string) {
-    return (document.getElementById(id) as HTMLDialogElement).showModal();
-}
-
-// Close the modal
-function closeModal(id: string) {
-    return (document.getElementById(id) as HTMLDialogElement).close();
-}
-
 export default function WGInterfaceList() {
-    const CreateInterfaceModalId = 'create_interface_modal';
-    const DeleteInterfaceModalId = 'delete_interface_modal';
-
     const t = useTranslations();
 
-    // -------------------- Start `getWGInterfaces` --------------------
+    const createInterfaceModalRef = useRef<HTMLDialogElement>(null);
+    const deleteInterfaceModalRef = useRef<HTMLDialogElement>(null);
+    const createInterfaceModalInputRef = useRef<HTMLInputElement>(null);
+
+    // Open the modal
+    const showModal = (ref: RefObject<HTMLDialogElement | null>): void => {
+        ref.current?.showModal();
+        return;
+    };
+
+    // Close the modal
+    const closeModal = (ref: RefObject<HTMLDialogElement | null>): void => {
+        ref.current?.close();
+        return;
+    };
+
+    // -------------------- `getWGInterfaces` --------------------
     const [wgInterfaces, setWGInterfaces] = useState<WGInterface[]>([]);
 
     // Fetch the list of interfaces
@@ -45,9 +48,9 @@ export default function WGInterfaceList() {
             return;
         }
     };
-    // -------------------- End `getWGInterfaces` --------------------
+    // -------------------- `getWGInterfaces` --------------------
 
-    // -------------------- Start `createWGInterface` --------------------
+    // -------------------- `createWGInterface` --------------------
     const [createWGInterfaceName, setCreateWGInterfaceName] = useState('');
     const [createWGInterfaceError, setCreateWGInterfaceError] = useState('');
 
@@ -93,7 +96,7 @@ export default function WGInterfaceList() {
                 setCreateWGInterfaceName('');
                 setCreateWGInterfaceError('');
                 // Close the modal
-                closeModal(CreateInterfaceModalId);
+                closeModal(createInterfaceModalRef);
                 // Refresh the list
                 getWGInterfaces();
                 return;
@@ -116,9 +119,9 @@ export default function WGInterfaceList() {
             return;
         }
     };
-    // -------------------- End `createWGInterface` --------------------
+    // -------------------- `createWGInterface` --------------------
 
-    // -------------------- Start `deleteWGInterface` --------------------
+    // -------------------- `deleteWGInterface` --------------------
     const [deleteWGInterfaceName, setDeleteWGInterfaceName] = useState('');
     const [deleteWGInterfaceError, setDeleteWGInterfaceError] = useState('');
 
@@ -143,7 +146,7 @@ export default function WGInterfaceList() {
                 setDeleteWGInterfaceName('');
                 setDeleteWGInterfaceError('');
                 // Close the modal
-                closeModal(DeleteInterfaceModalId);
+                closeModal(deleteInterfaceModalRef);
                 // Refresh the list
                 getWGInterfaces();
                 return;
@@ -166,10 +169,10 @@ export default function WGInterfaceList() {
             return;
         }
     };
-    // -------------------- End `deleteWGInterface` --------------------
+    // -------------------- `deleteWGInterface` --------------------
 
     useEffect(() => {
-        // Execute the function when the component mounts
+        // コンポーネントマウント時に実行
         getWGInterfaces();
     }, []);
 
@@ -181,7 +184,11 @@ export default function WGInterfaceList() {
                     className='btn btn-accent'
                     onClick={() => {
                         // Open the modal
-                        showModal(CreateInterfaceModalId);
+                        showModal(createInterfaceModalRef);
+                        // inputにフォーカスを当てる（実行に50ミリ秒遅延させる）
+                        setTimeout(() => {
+                            createInterfaceModalInputRef.current?.focus();
+                        }, 50);
                     }}
                 >
                     {t('WGInterfaceList.new')}
@@ -190,11 +197,12 @@ export default function WGInterfaceList() {
             {/*--------------------ボタン部--------------------*/}
 
             {/*--------------------インターフェース作成モーダル--------------------*/}
-            <dialog id={CreateInterfaceModalId} className='modal'>
+            <dialog ref={createInterfaceModalRef} className='modal'>
                 <div className='modal-box w-85 max-w-md'>
                     <h3 className='font-bold text-lg'>{t('WGInterfaceList.CreateModal.title')}</h3>
                     <p className='py-4'>{t('WGInterfaceList.CreateModal.description')}</p>
                     <input
+                        ref={createInterfaceModalInputRef}
                         type='text'
                         value={createWGInterfaceName}
                         onChange={(e) => setCreateWGInterfaceName(e.target.value)}
@@ -215,7 +223,7 @@ export default function WGInterfaceList() {
                         <button
                             className='btn'
                             onClick={() => {
-                                closeModal(CreateInterfaceModalId);
+                                closeModal(createInterfaceModalRef);
                                 setCreateWGInterfaceError('');
                             }}
                         >
@@ -300,7 +308,7 @@ export default function WGInterfaceList() {
                                             // Set the interface name to delete
                                             setDeleteWGInterfaceName(wgInterface.name);
                                             // Open the modal
-                                            showModal(DeleteInterfaceModalId);
+                                            showModal(deleteInterfaceModalRef);
                                         }}
                                         className='btn btn-square btn-md'
                                         title={t('WGInterfaceList.delete')}
@@ -329,7 +337,7 @@ export default function WGInterfaceList() {
             {/*--------------------リスト部--------------------*/}
 
             {/*--------------------インターフェース削除モーダル--------------------*/}
-            <dialog id={DeleteInterfaceModalId} className='modal'>
+            <dialog ref={deleteInterfaceModalRef} className='modal'>
                 <div className='modal-box w-85 max-w-md'>
                     <h3 className='font-bold text-lg'>{t('WGInterfaceList.DeleteModal.title')}</h3>
                     <div role='alert' className='alert alert-warning mt-4'>
@@ -350,7 +358,7 @@ export default function WGInterfaceList() {
                         <button
                             className='btn'
                             onClick={() => {
-                                closeModal(DeleteInterfaceModalId);
+                                closeModal(deleteInterfaceModalRef);
                                 setDeleteWGInterfaceError('');
                             }}
                         >

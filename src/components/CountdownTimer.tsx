@@ -10,31 +10,47 @@ type Props = {
 export default function CountdownTimer({ expireAt }: Props) {
     const t = useTranslations();
 
-    const calculateRemainingMinutes = (): number => {
-        return Math.max(0, Math.floor((expireAt - Date.now()) / (60 * 1000)));
-    };
-
-    const [remainingMinutes, setRemainingMinutes] = useState(calculateRemainingMinutes());
+    const [remainingMinutes, setRemainingMinutes] = useState(0);
 
     useEffect(() => {
-        // コンポーネントマウント時に実行（インターバル開始）
+        // コンポーネントマウント時に実行
+        const calculateRemainingMinutes = (): number => {
+            return Math.floor((expireAt - Date.now()) / (60 * 1000));
+        };
+
+        setRemainingMinutes(calculateRemainingMinutes());
+
+        // インターバル開始
         const interval = setInterval(() => {
             setRemainingMinutes(calculateRemainingMinutes());
         }, 60 * 1000); // 1分ごとに更新
 
         return () => {
-            // コンポーネントアンマウント時に実行（インターバル解除）
+            // コンポーネントアンマウント時に実行
+            // インターバル解除
             clearInterval(interval);
         };
-    }, []);
+    }, [expireAt]);
 
     return (
         <div>
             <div className='text-right'>
-                <p>{t('WGInterfaceList.remaining')}</p>
-                <p>
-                    {remainingMinutes} {t('WGInterfaceList.remainingTimeUnit')}
-                </p>
+                {remainingMinutes >= 0 ? (
+                    <div>
+                        <p>{t('WGInterfaceList.remaining')}</p>
+                        <p>
+                            {remainingMinutes} {t('WGInterfaceList.remainingTimeUnit')}
+                        </p>
+                    </div>
+                ) : remainingMinutes < 0 && remainingMinutes >= -1 ? (
+                    <div>
+                        <p>{t('WGInterfaceList.expiringSoon')}</p>
+                    </div>
+                ) : (
+                    <div>
+                        <p>{t('WGInterfaceList.expired')}</p>
+                    </div>
+                )}
             </div>
         </div>
     );

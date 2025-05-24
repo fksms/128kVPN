@@ -12,6 +12,8 @@
         "new": "+ New",
         "remaining": "Remaining:",
         "remainingTimeUnit": "minutes",
+        "expiringSoon": "Expiring Soon",
+        "expired": "Expired",
         "qrCode": "QR Code",
         "download": "Download",
         "delete": "Delete",
@@ -37,7 +39,12 @@
             "description": "Are you sure you want to delete this interface?",
             "submit": "Delete",
             "cancel": "Cancel",
-            "error": {}
+            "error": {
+                "sqlError": "An SQL error occurred",
+                "invalidRequest": "Invalid request",
+                "failedToFetch": "Failed to fetch data",
+                "unknownError": "An unknown error occurred"
+            }
         }
     }
 }
