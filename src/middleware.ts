@@ -9,7 +9,7 @@ export function middleware(request: NextRequest): NextResponse {
     const pathname = request.nextUrl.pathname;
 
     // `/api/all-wg-interfaces`の場合はAPI_KEYをチェック
-    if (pathname.startsWith('/api/all-wg-interfaces')) {
+    if (pathname === '/api/all-wg-interfaces') {
         const apiKey = request.headers.get('x-api-key');
 
         if (apiKey !== process.env.SECRET_API_KEY) {
@@ -21,10 +21,12 @@ export function middleware(request: NextRequest): NextResponse {
         }
     }
 
-    // `next-intl`のmiddlewareを適用
-    else {
-        return intlMiddleware(request);
+    if (pathname === '/login' || pathname === '/login/') {
+        return NextResponse.next();
     }
+
+    // `next-intl`のmiddlewareを適用
+    return intlMiddleware(request);
 }
 
 export const config = {
@@ -33,8 +35,8 @@ export const config = {
     // - … the ones containing a dot (e.g. `favicon.ico`)
     matcher: [
         // `all-wg-interfaces`制御用
-        '/api/all-wg-interfaces/:path*',
-        // 特定のパスを除外して、それ以外は全て`next-intl`で制御
+        '/api/all-wg-interfaces',
+        // 特定のパスはMiddlewareの適用から除外する
         '/((?!api|trpc|_next|_vercel|.*\\..*).*)',
     ],
 };

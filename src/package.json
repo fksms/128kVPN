@@ -12,6 +12,7 @@
     },
     "dependencies": {
         "better-sqlite3": "^11.10.0",
+        "firebase": "^11.8.1",
         "next": "15.3.2",
         "next-intl": "^4.1.0",
         "qrcode": "^1.5.4",
