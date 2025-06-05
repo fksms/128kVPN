@@ -21,9 +21,11 @@ export function middleware(request: NextRequest): NextResponse {
         }
     }
 
+    /*
     if (pathname === '/login' || pathname === '/login/') {
         return NextResponse.next();
     }
+    */
 
     // `next-intl`のmiddlewareを適用
     return intlMiddleware(request);

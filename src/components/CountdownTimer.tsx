@@ -37,18 +37,18 @@ export default function CountdownTimer({ expireAt }: Props) {
             <div className='text-right'>
                 {remainingMinutes >= 0 ? (
                     <div>
-                        <p>{t('WGInterfaceList.remaining')}</p>
+                        <p>{t('DashboardPage.WGInterfaceList.remaining')}</p>
                         <p>
-                            {remainingMinutes} {t('WGInterfaceList.remainingTimeUnit')}
+                            {remainingMinutes} {t('DashboardPage.WGInterfaceList.remainingTimeUnit')}
                         </p>
                     </div>
                 ) : remainingMinutes < 0 && remainingMinutes >= -1 ? (
                     <div>
-                        <p>{t('WGInterfaceList.expiringSoon')}</p>
+                        <p>{t('DashboardPage.WGInterfaceList.expiringSoon')}</p>
                     </div>
                 ) : (
                     <div>
-                        <p>{t('WGInterfaceList.expired')}</p>
+                        <p>{t('DashboardPage.WGInterfaceList.expired')}</p>
                     </div>
                 )}
             </div>

@@ -1,49 +1,51 @@
 {
-    "HomePage": {
-        "title": "Test",
-        "settings": "Settings",
-        "language": "Language",
-        "languageSelect": {
-            "en": "English",
-            "ja": "Japanese"
-        }
-    },
-    "WGInterfaceList": {
-        "new": "+ New",
-        "remaining": "Remaining:",
-        "remainingTimeUnit": "minutes",
-        "expiringSoon": "Expiring Soon",
-        "expired": "Expired",
-        "qrCode": "QR Code",
-        "download": "Download",
-        "delete": "Delete",
-        "CreateModal": {
-            "title": "Create Interface",
-            "description": "Please enter a name",
-            "placeholder": "Enter name here",
-            "submit": "Create",
-            "cancel": "Cancel",
-            "error": {
-                "emptyName": "Name is required",
-                "tooLongName": "Name is too long",
-                "tooManyInterfaces": "You have exceeded the maximum number of interfaces you can create",
-                "alreadyexistsName": "This interface name already exists",
-                "sqlError": "An SQL error occurred",
-                "invalidRequest": "Invalid request",
-                "failedToFetch": "Failed to fetch data",
-                "unknownError": "An unknown error occurred"
+    "DashboardPage": {
+        "Navbar": {
+            "title": "Test",
+            "settings": "Settings",
+            "language": "Language",
+            "languageSelect": {
+                "en": "English",
+                "ja": "Japanese"
             }
         },
-        "DeleteModal": {
-            "title": "Delete Interface",
-            "description": "Are you sure you want to delete this interface?",
-            "submit": "Delete",
-            "cancel": "Cancel",
-            "error": {
-                "sqlError": "An SQL error occurred",
-                "invalidRequest": "Invalid request",
-                "failedToFetch": "Failed to fetch data",
-                "unknownError": "An unknown error occurred"
+        "WGInterfaceList": {
+            "new": "+ New",
+            "remaining": "Remaining:",
+            "remainingTimeUnit": "minutes",
+            "expiringSoon": "Expiring Soon",
+            "expired": "Expired",
+            "qrCode": "QR Code",
+            "download": "Download",
+            "delete": "Delete",
+            "CreateModal": {
+                "title": "Create Interface",
+                "description": "Please enter a name",
+                "placeholder": "Enter name here",
+                "submit": "Create",
+                "cancel": "Cancel",
+                "error": {
+                    "emptyName": "Name is required",
+                    "tooLongName": "Name is too long",
+                    "tooManyInterfaces": "You have exceeded the maximum number of interfaces you can create",
+                    "alreadyexistsName": "This interface name already exists",
+                    "sqlError": "An SQL error occurred",
+                    "invalidRequest": "Invalid request",
+                    "failedToFetch": "Failed to fetch data",
+                    "unknownError": "An unknown error occurred"
+                }
+            },
+            "DeleteModal": {
+                "title": "Delete Interface",
+                "description": "Are you sure you want to delete this interface?",
+                "submit": "Delete",
+                "cancel": "Cancel",
+                "error": {
+                    "sqlError": "An SQL error occurred",
+                    "invalidRequest": "Invalid request",
+                    "failedToFetch": "Failed to fetch data",
+                    "unknownError": "An unknown error occurred"
+                }
             }
         }
     }

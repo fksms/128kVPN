@@ -23,6 +23,7 @@
         "@eslint/eslintrc": "^3",
         "@tailwindcss/postcss": "^4",
         "@types/better-sqlite3": "^7.6.13",
+        "@types/firebase": "^2.4.32",
         "@types/node": "^20",
         "@types/qrcode": "^1.5.5",
         "@types/react": "^19",

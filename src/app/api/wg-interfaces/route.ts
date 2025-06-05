@@ -59,9 +59,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
         try {
             // プレースホルダを使ってSQLを準備
-            const stmt = db.prepare(
-                'INSERT INTO wg_interfaces (userid, name, ip_address, expires_at) VALUES (?, ?, ?, ?)'
-            );
+            const stmt = db.prepare('INSERT INTO wg_interfaces (userid, name, ip_address, expires_at) VALUES (?, ?, ?, ?)');
 
             // プレースホルダに値をバインド
             stmt.run(userid, name, ip_address, expires_at);

@@ -9,21 +9,13 @@ export default function ResetPasswordPage() {
                             <label className='label'>
                                 <span className='text-base label-text'>New Password</span>
                             </label>
-                            <input
-                                type='password'
-                                placeholder='Enter New Password'
-                                className='w-full input input-bordered'
-                            />
+                            <input type='password' placeholder='Enter New Password' className='w-full input input-bordered' />
                         </div>
                         <div>
                             <label className='label'>
                                 <span className='text-base label-text'>Confirm Password</span>
                             </label>
-                            <input
-                                type='password'
-                                placeholder='Confirm New Password'
-                                className='w-full input input-bordered'
-                            />
+                            <input type='password' placeholder='Confirm New Password' className='w-full input input-bordered' />
                         </div>
                         <div className='pt-2'>
                             <button className='btn btn-block btn-neutral'>Reset Password</button>
