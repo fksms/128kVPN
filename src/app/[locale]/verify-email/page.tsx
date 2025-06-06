@@ -2,10 +2,10 @@
 
 import AuthForm from '@/components/AuthForm';
 
-export default function RegisterPage() {
+export default function VerifyEmailPage() {
     return (
         <div>
-            <AuthForm action='register' />
+            <AuthForm action='verify-email' />
         </div>
     );
 }

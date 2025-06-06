@@ -8,10 +8,6 @@ export default function Navbar() {
     const pathname = usePathname();
     const router = useRouter();
 
-    const switchLanguage = (newLocale: string) => {
-        router.push(pathname, { locale: newLocale });
-    };
-
     return (
         <div className='navbar'>
             <div className='flex-1'>
@@ -26,10 +22,10 @@ export default function Navbar() {
                         </div>
                         <ul tabIndex={0} className='menu dropdown-content bg-base-200 rounded-box z-1 mt-2 w-25 p-2 shadow-sm'>
                             <li>
-                                <a onClick={() => switchLanguage('ja')}>{t('DashboardPage.Navbar.languageSelect.ja')}</a>
+                                <a onClick={() => router.push(pathname, { locale: 'ja' })}>{t('DashboardPage.Navbar.languageSelect.ja')}</a>
                             </li>
                             <li>
-                                <a onClick={() => switchLanguage('en')}>{t('DashboardPage.Navbar.languageSelect.en')}</a>
+                                <a onClick={() => router.push(pathname, { locale: 'en' })}>{t('DashboardPage.Navbar.languageSelect.en')}</a>
                             </li>
                         </ul>
                     </div>

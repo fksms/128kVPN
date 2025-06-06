@@ -1,4 +1,30 @@
 {
+    "AuthForm": {
+        "email": "Email",
+        "password": "Password",
+        "confirmPassword": "Confirm Password",
+        "loginButton": "Login",
+        "registerButton": "Sign Up",
+        "sendMailButton": "Send Mail",
+        "createAccount": "Create Account",
+        "forgotPassword": "Forgot Password?",
+        "backToLogin": "Back to Login",
+        "error": {
+            "emptyFields": "Please fill in all fields",
+            "invalidEmail": "Invalid email address",
+            "shortPassword": "Password is too short",
+            "passwordsDoNotMatch": "Passwords do not match",
+            "userDisabled": "This account has been disabled",
+            "userNotFound": "User not found",
+            "wrongPassword": "Incorrect password",
+            "invalidCredential": "Email or password is incorrect",
+            "emailAlreadyInUse": "This email is already in use",
+            "weakPassword": "Password is too weak",
+            "tooManyRequests": "Too many requests. Please try again later",
+            "networkError": "A network error occurred",
+            "unknownError": "An unknown error occurred"
+        }
+    },
     "DashboardPage": {
         "Navbar": {
             "title": "Test",
@@ -6,19 +32,15 @@
             "language": "Language",
             "languageSelect": {
                 "en": "English",
-                "ja": "Japanese"
+                "ja": "日本語"
             }
         },
         "WGInterfaceList": {
             "new": "+ New",
-            "remaining": "Remaining:",
-            "remainingTimeUnit": "minutes",
-            "expiringSoon": "Expiring Soon",
-            "expired": "Expired",
             "qrCode": "QR Code",
             "download": "Download",
             "delete": "Delete",
-            "CreateModal": {
+            "interfaceCreationModal": {
                 "title": "Create Interface",
                 "description": "Please enter a name",
                 "placeholder": "Enter name here",
@@ -35,7 +57,7 @@
                     "unknownError": "An unknown error occurred"
                 }
             },
-            "DeleteModal": {
+            "interfaceDeletionModal": {
                 "title": "Delete Interface",
                 "description": "Are you sure you want to delete this interface?",
                 "submit": "Delete",
@@ -46,6 +68,12 @@
                     "failedToFetch": "Failed to fetch data",
                     "unknownError": "An unknown error occurred"
                 }
+            },
+            "CountdownTimer": {
+                "remaining": "Remaining:",
+                "remainingTimeUnit": "minutes",
+                "expiringSoon": "Expiring Soon",
+                "expired": "Expired"
             }
         }
     }

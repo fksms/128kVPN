@@ -1,24 +1,46 @@
 {
+    "AuthForm": {
+        "email": "メールアドレス",
+        "password": "パスワード",
+        "confirmPassword": "パスワードを確認",
+        "loginButton": "ログイン",
+        "registerButton": "登録",
+        "sendMailButton": "メールを送信",
+        "createAccount": "アカウントを作成",
+        "forgotPassword": "パスワードを忘れた場合",
+        "backToLogin": "ログイン画面に戻る",
+        "error": {
+            "emptyFields": "すべてのフィールドを入力してください",
+            "invalidEmail": "無効なメールアドレスです",
+            "shortPassword": "パスワードが短すぎます",
+            "passwordsDoNotMatch": "パスワードが一致しません",
+            "userDisabled": "このアカウントは無効化されています",
+            "userNotFound": "ユーザーが見つかりません",
+            "wrongPassword": "パスワードが間違っています",
+            "invalidCredential": "メールアドレスかパスワードが間違っています",
+            "emailAlreadyInUse": "このメールアドレスはすでに使用されています",
+            "weakPassword": "パスワードが弱すぎます",
+            "tooManyRequests": "リクエストが多すぎます。しばらく待ってから再試行してください",
+            "networkError": "ネットワークエラーが発生しました",
+            "unknownError": "不明なエラーが発生しました"
+        }
+    },
     "DashboardPage": {
         "Navbar": {
             "title": "テスト",
             "settings": "設定",
             "language": "言語",
             "languageSelect": {
-                "en": "英語",
+                "en": "English",
                 "ja": "日本語"
             }
         },
         "WGInterfaceList": {
             "new": "+ 新規",
-            "remaining": "残り:",
-            "remainingTimeUnit": "分",
-            "expiringSoon": "まもなく失効",
-            "expired": "失効済み",
             "qrCode": "QRコード",
             "download": "ダウンロード",
             "delete": "削除",
-            "CreateModal": {
+            "interfaceCreationModal": {
                 "title": "インターフェースを作成",
                 "description": "名前を入力してください",
                 "placeholder": "ここに名前を入力",
@@ -35,7 +57,7 @@
                     "unknownError": "不明なエラーが発生しました"
                 }
             },
-            "DeleteModal": {
+            "interfaceDeletionModal": {
                 "title": "インターフェースを削除",
                 "description": "本当にこのインターフェースを削除しますか？",
                 "submit": "削除",
@@ -46,6 +68,12 @@
                     "failedToFetch": "データの取得に失敗しました",
                     "unknownError": "不明なエラーが発生しました"
                 }
+            },
+            "CountdownTimer": {
+                "remaining": "残り:",
+                "remainingTimeUnit": "分",
+                "expiringSoon": "まもなく失効",
+                "expired": "失効済み"
             }
         }
     }

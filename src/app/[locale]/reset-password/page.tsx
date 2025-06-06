@@ -2,7 +2,7 @@ export default function ResetPasswordPage() {
     return (
         <div>
             <div className='relative flex flex-col items-center justify-center h-screen overflow-hidden px-8'>
-                <div className='w-full p-6 bg-base-100 rounded-md shadow-lg max-w-sm'>
+                <div className='w-full px-6 py-4 bg-base-100 rounded-md shadow-lg max-w-sm'>
                     <h1 className='text-3xl font-semibold text-center text-gray-700'>DaisyUI</h1>
                     <form className='space-y-4'>
                         <div>
