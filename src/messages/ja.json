@@ -9,6 +9,10 @@
         "createAccount": "アカウントを作成",
         "forgotPassword": "パスワードを忘れた場合",
         "backToLogin": "ログイン画面に戻る",
+        "verifyEmail1": "メールアドレスに確認リンクを送信しました。",
+        "verifyEmail2": "受信トレイを確認し、リンクをクリックしてメールアドレスを確認してください。",
+        "forgotPasswordSentEmail1": "パスワードリセットリンクをメールアドレスに送信しました。",
+        "forgotPasswordSentEmail2": "受信トレイを確認し、リンクをクリックしてパスワードをリセットしてください。",
         "error": {
             "emptyFields": "すべてのフィールドを入力してください",
             "invalidEmail": "無効なメールアドレスです",
@@ -25,56 +29,55 @@
             "unknownError": "不明なエラーが発生しました"
         }
     },
+    "Navbar": {
+        "title": "テスト",
+        "dashboard": "管理画面",
+        "settings": "設定",
+        "language": "言語",
+        "languageSelect": {
+            "en": "English",
+            "ja": "日本語"
+        }
+    },
     "DashboardPage": {
-        "Navbar": {
-            "title": "テスト",
-            "settings": "設定",
-            "language": "言語",
-            "languageSelect": {
-                "en": "English",
-                "ja": "日本語"
+        "new": "+ 新規",
+        "qrCode": "QRコード",
+        "download": "ダウンロード",
+        "delete": "削除",
+        "interfaceCreationModal": {
+            "title": "インターフェースを作成",
+            "description": "名前を入力してください",
+            "placeholder": "ここに名前を入力",
+            "submit": "作成",
+            "cancel": "キャンセル",
+            "error": {
+                "emptyName": "名前は必須です",
+                "tooLongName": "名前が長すぎます",
+                "tooManyInterfaces": "作成可能なインターフェース数を超えています",
+                "alreadyexistsName": "このインターフェース名はすでに存在します",
+                "sqlError": "SQLエラーが発生しました",
+                "invalidRequest": "無効なリクエストです",
+                "failedToFetch": "データの取得に失敗しました",
+                "unknownError": "不明なエラーが発生しました"
             }
         },
-        "WGInterfaceList": {
-            "new": "+ 新規",
-            "qrCode": "QRコード",
-            "download": "ダウンロード",
-            "delete": "削除",
-            "interfaceCreationModal": {
-                "title": "インターフェースを作成",
-                "description": "名前を入力してください",
-                "placeholder": "ここに名前を入力",
-                "submit": "作成",
-                "cancel": "キャンセル",
-                "error": {
-                    "emptyName": "名前は必須です",
-                    "tooLongName": "名前が長すぎます",
-                    "tooManyInterfaces": "作成可能なインターフェース数を超えています",
-                    "alreadyexistsName": "このインターフェース名はすでに存在します",
-                    "sqlError": "SQLエラーが発生しました",
-                    "invalidRequest": "無効なリクエストです",
-                    "failedToFetch": "データの取得に失敗しました",
-                    "unknownError": "不明なエラーが発生しました"
-                }
-            },
-            "interfaceDeletionModal": {
-                "title": "インターフェースを削除",
-                "description": "本当にこのインターフェースを削除しますか？",
-                "submit": "削除",
-                "cancel": "キャンセル",
-                "error": {
-                    "sqlError": "SQLエラーが発生しました",
-                    "invalidRequest": "無効なリクエストです",
-                    "failedToFetch": "データの取得に失敗しました",
-                    "unknownError": "不明なエラーが発生しました"
-                }
-            },
-            "CountdownTimer": {
-                "remaining": "残り:",
-                "remainingTimeUnit": "分",
-                "expiringSoon": "まもなく失効",
-                "expired": "失効済み"
+        "interfaceDeletionModal": {
+            "title": "インターフェースを削除",
+            "description": "本当にこのインターフェースを削除しますか？",
+            "submit": "削除",
+            "cancel": "キャンセル",
+            "error": {
+                "sqlError": "SQLエラーが発生しました",
+                "invalidRequest": "無効なリクエストです",
+                "failedToFetch": "データの取得に失敗しました",
+                "unknownError": "不明なエラーが発生しました"
             }
+        },
+        "CountdownTimer": {
+            "remaining": "残り:",
+            "remainingTimeUnit": "分",
+            "expiringSoon": "まもなく失効",
+            "expired": "失効済み"
         }
     }
 }

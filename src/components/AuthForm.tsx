@@ -10,7 +10,7 @@ import LanguageDropdown from '@/components/LanguageDropdown';
 import SocialLoginButton from '@/components/SocialLoginButton';
 
 type Props = {
-    action: 'login' | 'register' | 'forgot-password' | 'verify-email';
+    action: 'login' | 'register' | 'forgot-password' | 'verify-email' | 'forgot-password-sent-email';
 };
 
 export default function AuthForm({ action }: Props) {
@@ -86,11 +86,13 @@ export default function AuthForm({ action }: Props) {
             }
             // パスワードリセット時の処理
             else if (action === 'forgot-password') {
-                const userCredential = await sendPasswordResetEmail(auth, email, {
-                    url: 'https://example.com/reset-complete',
-                });
-                console.log(userCredential);
-                router.push('/dashboard', { locale: locale });
+                // URLの一番後ろのパスを削除する
+                const url = new URL(window.location.href);
+                const fullPath = url.pathname;
+                url.pathname = fullPath.substring(0, fullPath.lastIndexOf('/'));
+                // パスワードリセットメールを送信
+                await sendPasswordResetEmail(auth, email, { url: url.href });
+                router.push('/forgot-password/sent', { locale: locale });
                 return;
             }
             // 不明なエラー
@@ -149,12 +151,14 @@ export default function AuthForm({ action }: Props) {
                 <div className='w-full px-6 py-4 bg-base-100 rounded-md shadow-lg max-w-sm'>
                     <h1 className='text-3xl pb-6 font-semibold text-center text-gray-700'>Test</h1>
                     <form className='space-y-4' onSubmit={(e) => handleAuth(e)}>
-                        <div>
-                            <label className='label pb-1'>
-                                <span className='text-sm label-text'>{t('AuthForm.email')}</span>
-                            </label>
-                            <input type='email' className='w-full input input-bordered text-base' value={email} onChange={(e) => setEmail(e.target.value)} />
-                        </div>
+                        {(action === 'login' || action === 'register' || action === 'forgot-password') && (
+                            <div>
+                                <label className='label pb-1'>
+                                    <span className='text-sm label-text'>{t('AuthForm.email')}</span>
+                                </label>
+                                <input type='email' className='w-full input input-bordered text-base' value={email} onChange={(e) => setEmail(e.target.value)} />
+                            </div>
+                        )}
 
                         {(action === 'login' || action === 'register') && (
                             <div>
@@ -216,7 +220,23 @@ export default function AuthForm({ action }: Props) {
                             </div>
                         )}
 
-                        {(action === 'register' || action === 'forgot-password') && (
+                        {action === 'verify-email' && (
+                            <p className='text-sm text-gray-600 mb-6'>
+                                {t('AuthForm.verifyEmail1')}
+                                <br />
+                                {t('AuthForm.verifyEmail2')}
+                            </p>
+                        )}
+
+                        {action === 'forgot-password-sent-email' && (
+                            <p className='text-sm text-gray-600 mb-6'>
+                                {t('AuthForm.forgotPasswordSentEmail1')}
+                                <br />
+                                {t('AuthForm.forgotPasswordSentEmail2')}
+                            </p>
+                        )}
+
+                        {(action === 'register' || action === 'forgot-password' || action === 'verify-email' || action === 'forgot-password-sent-email') && (
                             <div>
                                 <a href='/login' className='text-sm text-blue-600 hover:text-blue-800 hover:underline'>
                                     {t('AuthForm.backToLogin')}
@@ -233,7 +253,7 @@ export default function AuthForm({ action }: Props) {
                     )}
 
                     <hr className='w-full my-4 border-neutral-content' />
-                    <LanguageDropdown />
+                    <LanguageDropdown size='xs' direction='start' buttonClassName='text-gray-500' />
                 </div>
             </div>
         </div>

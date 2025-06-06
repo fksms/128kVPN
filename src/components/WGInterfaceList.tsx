@@ -58,22 +58,22 @@ export default function WGInterfaceList() {
     const createWGInterface = async (): Promise<void> => {
         // インターフェース名が空文字ならエラー
         if (createWGInterfaceName.length < 1) {
-            setCreateWGInterfaceError(t('DashboardPage.WGInterfaceList.interfaceCreationModal.error.emptyName'));
+            setCreateWGInterfaceError(t('DashboardPage.interfaceCreationModal.error.emptyName'));
             return;
         }
         // インターフェース名が長すぎるならエラー
         if (createWGInterfaceName.length > maxInterfaceNameLength) {
-            setCreateWGInterfaceError(t('DashboardPage.WGInterfaceList.interfaceCreationModal.error.tooLongName'));
+            setCreateWGInterfaceError(t('DashboardPage.interfaceCreationModal.error.tooLongName'));
             return;
         }
         // 登録済みのインターフェース数が多すぎるならエラー
         if (wgInterfaces.length >= maxInterfaces) {
-            setCreateWGInterfaceError(t('DashboardPage.WGInterfaceList.interfaceCreationModal.error.tooManyInterfaces'));
+            setCreateWGInterfaceError(t('DashboardPage.interfaceCreationModal.error.tooManyInterfaces'));
             return;
         }
         // 設定したインターフェース名と同名のインターフェース名がすでに存在しているならエラー
         if (wgInterfaces.some((wgInterface) => wgInterface.name === createWGInterfaceName)) {
-            setCreateWGInterfaceError(t('DashboardPage.WGInterfaceList.interfaceCreationModal.error.alreadyexistsName'));
+            setCreateWGInterfaceError(t('DashboardPage.interfaceCreationModal.error.alreadyexistsName'));
             return;
         }
 
@@ -101,20 +101,20 @@ export default function WGInterfaceList() {
                 getWGInterfaces();
                 return;
             } else if (data.code === ErrorCodes.INVALID_REQUEST) {
-                setCreateWGInterfaceError(t('DashboardPage.WGInterfaceList.interfaceCreationModal.error.invalidRequest'));
+                setCreateWGInterfaceError(t('DashboardPage.interfaceCreationModal.error.invalidRequest'));
                 console.error(data.code);
                 return;
             } else if (data.code === ErrorCodes.SQL_ERROR) {
-                setCreateWGInterfaceError(t('DashboardPage.WGInterfaceList.interfaceCreationModal.error.sqlError'));
+                setCreateWGInterfaceError(t('DashboardPage.interfaceCreationModal.error.sqlError'));
                 console.error(data.code);
                 return;
             } else {
-                setCreateWGInterfaceError(t('DashboardPage.WGInterfaceList.interfaceCreationModal.error.unknownError'));
+                setCreateWGInterfaceError(t('DashboardPage.interfaceCreationModal.error.unknownError'));
                 console.error(data.code);
                 return;
             }
         } catch (error) {
-            setCreateWGInterfaceError(t('DashboardPage.WGInterfaceList.interfaceCreationModal.error.failedToFetch'));
+            setCreateWGInterfaceError(t('DashboardPage.interfaceCreationModal.error.failedToFetch'));
             console.error(ErrorCodes.FAILED_TO_FETCH);
             return;
         }
@@ -151,20 +151,20 @@ export default function WGInterfaceList() {
                 getWGInterfaces();
                 return;
             } else if (data.code === ErrorCodes.INVALID_REQUEST) {
-                setDeleteWGInterfaceError(t('DashboardPage.WGInterfaceList.interfaceDeletionModal.error.invalidRequest'));
+                setDeleteWGInterfaceError(t('DashboardPage.interfaceDeletionModal.error.invalidRequest'));
                 console.error(data.code);
                 return;
             } else if (data.code === ErrorCodes.SQL_ERROR) {
-                setDeleteWGInterfaceError(t('DashboardPage.WGInterfaceList.interfaceDeletionModal.error.sqlError'));
+                setDeleteWGInterfaceError(t('DashboardPage.interfaceDeletionModal.error.sqlError'));
                 console.error(data.code);
                 return;
             } else {
-                setDeleteWGInterfaceError(t('DashboardPage.WGInterfaceList.interfaceDeletionModal.error.unknownError'));
+                setDeleteWGInterfaceError(t('DashboardPage.interfaceDeletionModal.error.unknownError'));
                 console.error(data.code);
                 return;
             }
         } catch (error) {
-            setDeleteWGInterfaceError(t('DashboardPage.WGInterfaceList.interfaceDeletionModal.error.failedToFetch'));
+            setDeleteWGInterfaceError(t('DashboardPage.interfaceDeletionModal.error.failedToFetch'));
             console.error(ErrorCodes.FAILED_TO_FETCH);
             return;
         }
@@ -193,7 +193,7 @@ export default function WGInterfaceList() {
                         */
                     }}
                 >
-                    {t('DashboardPage.WGInterfaceList.new')}
+                    {t('DashboardPage.new')}
                 </button>
             </div>
             {/*--------------------ボタン部--------------------*/}
@@ -201,14 +201,14 @@ export default function WGInterfaceList() {
             {/*--------------------インターフェース作成モーダル--------------------*/}
             <dialog ref={interfaceCreationModalRef} className='modal'>
                 <div className='modal-box min-w-xs max-w-sm'>
-                    <h3 className='font-bold text-lg'>{t('DashboardPage.WGInterfaceList.interfaceCreationModal.title')}</h3>
-                    <p className='py-4'>{t('DashboardPage.WGInterfaceList.interfaceCreationModal.description')}</p>
+                    <h3 className='font-bold text-lg'>{t('DashboardPage.interfaceCreationModal.title')}</h3>
+                    <p className='py-4'>{t('DashboardPage.interfaceCreationModal.description')}</p>
                     <input
                         ref={inputRef}
                         type='text'
                         value={createWGInterfaceName}
                         onChange={(e) => setCreateWGInterfaceName(e.target.value)}
-                        placeholder={t('DashboardPage.WGInterfaceList.interfaceCreationModal.placeholder')}
+                        placeholder={t('DashboardPage.interfaceCreationModal.placeholder')}
                         className='input text-base'
                     />
                     <p className='text-sm text-error mt-2'>{createWGInterfaceError}</p>
@@ -220,7 +220,7 @@ export default function WGInterfaceList() {
                                 createWGInterface();
                             }}
                         >
-                            {t('DashboardPage.WGInterfaceList.interfaceCreationModal.submit')}
+                            {t('DashboardPage.interfaceCreationModal.submit')}
                         </button>
                         <button
                             className='btn'
@@ -229,7 +229,7 @@ export default function WGInterfaceList() {
                                 setCreateWGInterfaceError('');
                             }}
                         >
-                            {t('DashboardPage.WGInterfaceList.interfaceCreationModal.cancel')}
+                            {t('DashboardPage.interfaceCreationModal.cancel')}
                         </button>
                     </div>
                 </div>
@@ -252,7 +252,7 @@ export default function WGInterfaceList() {
                                         <CountdownTimer expireAt={wgInterface.expires_at} />
                                     </div>
 
-                                    <button onClick={() => {}} className='btn btn-square btn-md' title={t('DashboardPage.WGInterfaceList.qrCode')}>
+                                    <button onClick={() => {}} className='btn btn-square btn-md' title={t('DashboardPage.qrCode')}>
                                         <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-6'>
                                             <path
                                                 strokeLinecap='round'
@@ -266,7 +266,7 @@ export default function WGInterfaceList() {
                                             />
                                         </svg>
                                     </button>
-                                    <button onClick={() => {}} className='btn btn-square btn-md' title={t('DashboardPage.WGInterfaceList.download')}>
+                                    <button onClick={() => {}} className='btn btn-square btn-md' title={t('DashboardPage.download')}>
                                         <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-6'>
                                             <path
                                                 strokeLinecap='round'
@@ -283,7 +283,7 @@ export default function WGInterfaceList() {
                                             showModal(interfaceDeletionModalRef);
                                         }}
                                         className='btn btn-square btn-md'
-                                        title={t('DashboardPage.WGInterfaceList.delete')}
+                                        title={t('DashboardPage.delete')}
                                     >
                                         <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-6'>
                                             <path
@@ -304,11 +304,11 @@ export default function WGInterfaceList() {
             {/*--------------------インターフェース削除モーダル--------------------*/}
             <dialog ref={interfaceDeletionModalRef} className='modal'>
                 <div className='modal-box min-w-xs max-w-sm'>
-                    <h3 className='font-bold text-lg'>{t('DashboardPage.WGInterfaceList.interfaceDeletionModal.title')}</h3>
+                    <h3 className='font-bold text-lg'>{t('DashboardPage.interfaceDeletionModal.title')}</h3>
                     <div role='alert' className='alert alert-warning mt-4'>
                         <span>{deleteWGInterfaceName}</span>
                     </div>
-                    <p className='pt-4'>{t('DashboardPage.WGInterfaceList.interfaceDeletionModal.description')}</p>
+                    <p className='pt-4'>{t('DashboardPage.interfaceDeletionModal.description')}</p>
                     <p className='text-sm text-error mt-2'>{deleteWGInterfaceError}</p>
 
                     <div className='flex justify-end space-x-2 mt-4'>
@@ -318,7 +318,7 @@ export default function WGInterfaceList() {
                                 deleteWGInterface();
                             }}
                         >
-                            {t('DashboardPage.WGInterfaceList.interfaceDeletionModal.submit')}
+                            {t('DashboardPage.interfaceDeletionModal.submit')}
                         </button>
                         <button
                             className='btn'
@@ -327,7 +327,7 @@ export default function WGInterfaceList() {
                                 setDeleteWGInterfaceError('');
                             }}
                         >
-                            {t('DashboardPage.WGInterfaceList.interfaceDeletionModal.cancel')}
+                            {t('DashboardPage.interfaceDeletionModal.cancel')}
                         </button>
                     </div>
                 </div>
