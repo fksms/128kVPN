@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, signOut } from 'firebase/auth';
 import { app } from '@/lib/firebase';
 import LanguageDropdown from '@/components/LanguageDropdown';
 import SocialLoginButton from '@/components/SocialLoginButton';
@@ -57,6 +57,9 @@ export default function AuthForm({ action }: Props) {
             return;
         }
 
+        // Set the language code for Firebase Auth
+        auth.languageCode = locale;
+
         try {
             // ログイン時の処理
             if (action === 'login') {
@@ -71,6 +74,7 @@ export default function AuthForm({ action }: Props) {
                 else {
                     // 認証メールを送信
                     await sendEmailVerification(userCredential.user);
+                    await signOut(auth);
                     router.push('/verify-email', { locale: locale });
                     return;
                 }
@@ -81,6 +85,7 @@ export default function AuthForm({ action }: Props) {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 // 認証メールを送信
                 await sendEmailVerification(userCredential.user);
+                await signOut(auth);
                 router.push('/verify-email', { locale: locale });
                 return;
             }
@@ -92,6 +97,7 @@ export default function AuthForm({ action }: Props) {
                 url.pathname = fullPath.substring(0, fullPath.lastIndexOf('/'));
                 // パスワードリセットメールを送信
                 await sendPasswordResetEmail(auth, email, { url: url.href });
+                await signOut(auth);
                 router.push('/forgot-password/sent', { locale: locale });
                 return;
             }
@@ -114,6 +120,9 @@ export default function AuthForm({ action }: Props) {
                         setError(t('AuthForm.error.userNotFound'));
                         return;
                     case 'auth/wrong-password':
+                        setError(t('AuthForm.error.wrongPassword'));
+                        return;
+                    case 'auth/missing-password':
                         setError(t('AuthForm.error.wrongPassword'));
                         return;
                     // https://zenn.dev/mekk/articles/4b563dc3813cd7

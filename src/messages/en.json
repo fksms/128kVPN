@@ -33,6 +33,7 @@
         "title": "Test",
         "dashboard": "Dashboard",
         "settings": "Settings",
+        "logout": "Logout",
         "language": "Language",
         "languageSelect": {
             "en": "English",

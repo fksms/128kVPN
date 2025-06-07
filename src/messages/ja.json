@@ -33,6 +33,7 @@
         "title": "テスト",
         "dashboard": "管理画面",
         "settings": "設定",
+        "logout": "ログアウト",
         "language": "言語",
         "languageSelect": {
             "en": "English",
