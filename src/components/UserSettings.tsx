@@ -1,62 +1,116 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, RefObject } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
-import { getAuth, verifyBeforeUpdateEmail, updatePassword, signOut, onAuthStateChanged, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
+import { getAuth, verifyBeforeUpdateEmail, updatePassword, signOut, deleteUser, onAuthStateChanged, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 import { app } from '@/lib/firebase';
+
+type AuthAction = 'changeEmail' | 'changePassword' | 'deleteAccount';
 
 export default function UserSettings() {
     const t = useTranslations();
 
+    const [currentPassword, setCurrentPassword] = useState('');
     const [currentEmail, setCurrentEmail] = useState('');
     const [newEmail, setNewEmail] = useState('');
-    const [currentPassword1, setCurrentPassword1] = useState('');
-    const [currentPassword2, setCurrentPassword2] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error1, setError1] = useState('');
     const [error2, setError2] = useState('');
+    const [error3, setError3] = useState('');
+
+    const [actionType, setActionType] = useState<AuthAction | null>(null);
 
     const router = useRouter();
     const locale = useLocale();
 
     const auth = getAuth(app);
 
-    const handleEmailChange = async (): Promise<void> => {
+    const passwordCheckModalRef = useRef<HTMLDialogElement>(null);
+
+    // Open the modal
+    const showModal = (ref: RefObject<HTMLDialogElement | null>): void => {
+        ref.current?.showModal();
+        return;
+    };
+
+    // Close the modal
+    const closeModal = (ref: RefObject<HTMLDialogElement | null>): void => {
+        ref.current?.close();
+        return;
+    };
+
+    const checkInput = (action: AuthAction): void => {
         // メールアドレスが空ならエラー
-        if (!newEmail) {
+        if (action === 'changeEmail' && !newEmail) {
             setError1(t('AuthForm.error.emptyFields'));
             return;
         }
         // メールアドレスが正しい形式ではないならエラー
         // See: https://html.spec.whatwg.org/multipage/input.html#email-state-(type=email)
-        if (!newEmail.match(/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/)) {
+        if (action === 'changeEmail' && !newEmail.match(/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/)) {
             setError1(t('AuthForm.error.invalidEmail'));
             return;
         }
         // パスワードが空ならエラー
-        if (!currentPassword1) {
+        if (action === 'changePassword' && (!newPassword || !confirmPassword)) {
             setError2(t('AuthForm.error.emptyFields'));
             return;
         }
         // パスワードが短すぎるならエラー
-        if (currentPassword1.length < 8) {
+        if (action === 'changePassword' && newPassword.length < 8) {
             setError2(t('AuthForm.error.shortPassword'));
             return;
         }
+        // パスワードと確認用パスワードが一致しないならエラー
+        if (action === 'changePassword' && newPassword !== confirmPassword) {
+            setError2(t('AuthForm.error.passwordsDoNotMatch'));
+            return;
+        }
+        setError1('');
+        setError2('');
+        setActionType(action);
+        showModal(passwordCheckModalRef);
+        return;
+    };
 
+    const handleAction = async (): Promise<void> => {
+        // パスワードが空ならエラー
+        if (!currentPassword) {
+            setError3(t('AuthForm.error.emptyFields'));
+            return;
+        }
+        setError3('');
+
+        if (actionType === 'changeEmail') {
+            await handleEmailChange();
+        } else if (actionType === 'changePassword') {
+            await handlePasswordChange();
+        } else if (actionType === 'deleteAccount') {
+            await handleAccountDelete();
+        } else {
+            console.error('Error');
+            setError3(t('AuthForm.error.unknownError'));
+        }
+
+        closeModal(passwordCheckModalRef);
+        return;
+    };
+
+    const handleEmailChange = async (): Promise<void> => {
         // Set the language code for Firebase Auth
         auth.languageCode = locale;
 
         try {
             // 資格情報（credential）を作成
-            const credential = EmailAuthProvider.credential(auth.currentUser!.email!, currentPassword1);
+            const credential = EmailAuthProvider.credential(auth.currentUser!.email!, currentPassword);
             // 再認証実行
             const userCredential = await reauthenticateWithCredential(auth.currentUser!, credential);
             // メールアドレスを更新し、認証メールを送信
             await verifyBeforeUpdateEmail(userCredential.user, newEmail);
+            // ログアウト
             await signOut(auth);
             router.push('/verify-email', { locale: locale });
             return;
@@ -108,34 +162,19 @@ export default function UserSettings() {
     };
 
     const handlePasswordChange = async (): Promise<void> => {
-        // パスワードが空ならエラー
-        if (!currentPassword2 || !newPassword || !confirmPassword) {
-            setError2(t('AuthForm.error.emptyFields'));
-            return;
-        }
-        // パスワードが短すぎるならエラー
-        if (newPassword.length < 8) {
-            setError2(t('AuthForm.error.shortPassword'));
-            return;
-        }
-        // パスワードと確認用パスワードが一致しないならエラー
-        if (newPassword !== confirmPassword) {
-            setError2(t('AuthForm.error.passwordsDoNotMatch'));
-            return;
-        }
-
         // Set the language code for Firebase Auth
         auth.languageCode = locale;
 
         try {
             // 資格情報（credential）を作成
-            const credential = EmailAuthProvider.credential(auth.currentUser!.email!, currentPassword2);
+            const credential = EmailAuthProvider.credential(auth.currentUser!.email!, currentPassword);
             // 再認証実行
             const userCredential = await reauthenticateWithCredential(auth.currentUser!, credential);
             // パスワードを更新
             await updatePassword(userCredential.user, newPassword);
             alert('パスワードを更新しました。');
-            setCurrentPassword2('');
+            // パスワード入力欄を初期化
+            setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');
             return;
@@ -186,23 +225,35 @@ export default function UserSettings() {
         }
     };
 
-    const handleAccountDelete = () => {
-        // 確認ダイアログなど
-        if (confirm('本当にアカウントを削除しますか？')) {
-            alert('アカウントを削除しました');
+    const handleAccountDelete = async (): Promise<void> => {
+        try {
+            if (confirm('本当にアカウントを削除しますか？')) {
+                // 資格情報（credential）を作成
+                const credential = EmailAuthProvider.credential(auth.currentUser!.email!, currentPassword);
+                // 再認証実行
+                const userCredential = await reauthenticateWithCredential(auth.currentUser!, credential);
+                // アカウントを削除
+                await deleteUser(userCredential.user);
+                alert('アカウントを削除しました');
+                router.push('/register', { locale: locale });
+                return;
+            }
+            return;
+        } catch (error) {
+            if (error instanceof FirebaseError) {
+                console.error(error.code);
+                return;
+            } else {
+                console.error(error);
+                return;
+            }
         }
     };
 
     useEffect(() => {
         // コンポーネントマウント時に実行
         const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                console.log(user.email);
-                setCurrentEmail(user.email || '-');
-            } else {
-                console.log('ログインしていません。');
-                setCurrentEmail('');
-            }
+            setCurrentEmail(user?.email || '-');
         });
         // コンポーネントアンマウント時にリスナー解除
         return () => unsubscribe();
@@ -217,19 +268,13 @@ export default function UserSettings() {
                     <div className='card-body space-y-2'>
                         <h2 className='card-title text-lg font-semibold'>メールアドレス変更</h2>
                         <div>
-                            <p className='text-gray-600'>現在のアドレス</p>
+                            <p className='text-gray-600'>現在のメールアドレス</p>
                             <p className='text-base font-medium'>{currentEmail}</p>
                         </div>
-                        <input type='email' placeholder='新しいメールアドレス' value={newEmail} onChange={(e) => setNewEmail(e.target.value)} className='input text-base' />
-                        <input type='password' placeholder='現在のパスワード' value={currentPassword1} onChange={(e) => setCurrentPassword1(e.target.value)} className='input text-base' />
+                        <input type='email' placeholder='新しいメールアドレスを入力' value={newEmail} onChange={(e) => setNewEmail(e.target.value)} className='input text-base' />
                         <p className='text-sm text-error'>{error1}</p>
                         <div className='card-actions justify-start'>
-                            <button
-                                onClick={() => {
-                                    handleEmailChange();
-                                }}
-                                className='btn btn-soft'
-                            >
+                            <button onClick={() => checkInput('changeEmail')} className='btn btn-soft'>
                                 変更する
                             </button>
                         </div>
@@ -239,17 +284,11 @@ export default function UserSettings() {
                 <div className='card bg-base-100 shadow-md'>
                     <div className='card-body space-y-2'>
                         <h2 className='card-title text-lg font-semibold'>パスワード変更</h2>
-                        <input type='password' placeholder='現在のパスワード' value={currentPassword2} onChange={(e) => setCurrentPassword2(e.target.value)} className='input text-base' />
-                        <input type='password' placeholder='新しいパスワード' value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className='input text-base' />
+                        <input type='password' placeholder='新しいパスワードを入力' value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className='input text-base' />
                         <input type='password' placeholder='新しいパスワードを確認' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className='input text-base' />
                         <p className='text-sm text-error'>{error2}</p>
                         <div className='card-actions justify-start'>
-                            <button
-                                onClick={() => {
-                                    handlePasswordChange();
-                                }}
-                                className='btn btn-soft'
-                            >
+                            <button onClick={() => checkInput('changePassword')} className='btn btn-soft'>
                                 変更する
                             </button>
                         </div>
@@ -261,18 +300,32 @@ export default function UserSettings() {
                         <h2 className='card-title text-lg font-semibold text-red-600'>アカウント削除</h2>
                         <p className='text-gray-600'>アカウントを削除すると、すべてのデータが失われ復元できません。本当に削除しますか？</p>
                         <div className='card-actions justify-start'>
-                            <button
-                                onClick={() => {
-                                    handleAccountDelete();
-                                }}
-                                className='btn border-red-600 bg-red-600 text-white hover:bg-red-700'
-                            >
+                            <button onClick={() => checkInput('deleteAccount')} className='btn border-red-600 bg-red-600 text-white hover:bg-red-700'>
                                 アカウントを削除する
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {/*--------------------パスワード確認モーダル--------------------*/}
+            <dialog ref={passwordCheckModalRef} className='modal'>
+                <div className='modal-box min-w-xs max-w-sm space-y-3'>
+                    <h3 className='font-bold text-lg'>パスワードを確認</h3>
+                    <input type='password' placeholder='現在のパスワード' value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} className='input text-base' />
+                    <p className='text-sm text-error mt-2'>{error3}</p>
+
+                    <div className='flex justify-end space-x-2'>
+                        <button className='btn' onClick={() => closeModal(passwordCheckModalRef)}>
+                            キャンセル
+                        </button>
+                        <button className='btn btn-primary' onClick={() => handleAction()}>
+                            実行
+                        </button>
+                    </div>
+                </div>
+            </dialog>
+            {/*--------------------パスワード確認モーダル--------------------*/}
         </div>
     );
 }

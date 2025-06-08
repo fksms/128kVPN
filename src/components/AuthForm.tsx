@@ -9,8 +9,10 @@ import { app } from '@/lib/firebase';
 import LanguageDropdown from '@/components/LanguageDropdown';
 import SocialLoginButton from '@/components/SocialLoginButton';
 
+type AuthAction = 'login' | 'register' | 'forgotPassword' | 'verifyEmail' | 'forgotPasswordSentEmail';
+
 type Props = {
-    action: 'login' | 'register' | 'forgot-password' | 'verify-email' | 'forgot-password-sent-email';
+    action: AuthAction;
 };
 
 export default function AuthForm({ action }: Props) {
@@ -47,7 +49,7 @@ export default function AuthForm({ action }: Props) {
             return;
         }
         // パスワードが短すぎるならエラー
-        if ((action === 'login' || action === 'register') && password.length < 8) {
+        if (action === 'register' && password.length < 8) {
             setError(t('AuthForm.error.shortPassword'));
             return;
         }
@@ -56,6 +58,7 @@ export default function AuthForm({ action }: Props) {
             setError(t('AuthForm.error.passwordsDoNotMatch'));
             return;
         }
+        setError('');
 
         // Set the language code for Firebase Auth
         auth.languageCode = locale;
@@ -90,7 +93,7 @@ export default function AuthForm({ action }: Props) {
                 return;
             }
             // パスワードリセット時の処理
-            else if (action === 'forgot-password') {
+            else if (action === 'forgotPassword') {
                 // URLの一番後ろのパスを削除する
                 const url = new URL(window.location.href);
                 const fullPath = url.pathname;
@@ -160,7 +163,7 @@ export default function AuthForm({ action }: Props) {
                 <div className='w-full px-6 py-4 bg-base-100 rounded-md shadow-lg max-w-sm'>
                     <h1 className='text-3xl pb-6 font-semibold text-center text-gray-700'>Test</h1>
                     <form className='space-y-4' onSubmit={(e) => handleAuth(e)}>
-                        {(action === 'login' || action === 'register' || action === 'forgot-password') && (
+                        {(action === 'login' || action === 'register' || action === 'forgotPassword') && (
                             <div>
                                 <label className='label pb-1'>
                                     <span className='text-sm label-text'>{t('AuthForm.email')}</span>
@@ -205,7 +208,7 @@ export default function AuthForm({ action }: Props) {
                             </div>
                         )}
 
-                        {action === 'forgot-password' && (
+                        {action === 'forgotPassword' && (
                             <div className='py-2'>
                                 <button type='submit' className='btn btn-block'>
                                     {t('AuthForm.sendMailButton')}
@@ -229,7 +232,7 @@ export default function AuthForm({ action }: Props) {
                             </div>
                         )}
 
-                        {action === 'verify-email' && (
+                        {action === 'verifyEmail' && (
                             <p className='text-sm text-gray-600 mb-6'>
                                 {t('AuthForm.verifyEmail1')}
                                 <br />
@@ -237,7 +240,7 @@ export default function AuthForm({ action }: Props) {
                             </p>
                         )}
 
-                        {action === 'forgot-password-sent-email' && (
+                        {action === 'forgotPasswordSentEmail' && (
                             <p className='text-sm text-gray-600 mb-6'>
                                 {t('AuthForm.forgotPasswordSentEmail1')}
                                 <br />
@@ -245,7 +248,7 @@ export default function AuthForm({ action }: Props) {
                             </p>
                         )}
 
-                        {(action === 'register' || action === 'forgot-password' || action === 'verify-email' || action === 'forgot-password-sent-email') && (
+                        {(action === 'register' || action === 'forgotPassword' || action === 'verifyEmail' || action === 'forgotPasswordSentEmail') && (
                             <div>
                                 <a href='/login' className='text-sm text-blue-600 hover:text-blue-800 hover:underline'>
                                     {t('AuthForm.backToLogin')}

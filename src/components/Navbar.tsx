@@ -1,10 +1,40 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import { useRouter } from '@/i18n/navigation';
+import { FirebaseError } from 'firebase/app';
+import { getAuth, signOut } from 'firebase/auth';
+import { app } from '@/lib/firebase';
 import LanguageDropdown from '@/components/LanguageDropdown';
 
 export default function Navbar() {
     const t = useTranslations();
+
+    const router = useRouter();
+    const locale = useLocale();
+
+    const auth = getAuth(app);
+
+    const handleLogout = async (): Promise<void> => {
+        try {
+            if (confirm('ログアウトしますか？')) {
+                // ログアウト
+                await signOut(auth);
+                alert('ログアウトしました');
+                router.push('/login', { locale: locale });
+                return;
+            }
+            return;
+        } catch (error) {
+            if (error instanceof FirebaseError) {
+                console.error(error.code);
+                return;
+            } else {
+                console.error(error);
+                return;
+            }
+        }
+    };
 
     return (
         <div className='navbar'>
@@ -28,7 +58,12 @@ export default function Navbar() {
                             <a href='/settings'>{t('Navbar.settings')}</a>
                         </li>
                         <li>
-                            <a className='text-red-400'>
+                            <a
+                                onClick={() => {
+                                    handleLogout();
+                                }}
+                                className='text-red-400'
+                            >
                                 <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-5'>
                                     <path
                                         strokeLinecap='round'
