@@ -1,4 +1,19 @@
 {
+    "AuthError": {
+        "emptyFields": "Please fill in all fields",
+        "invalidEmail": "Invalid email address",
+        "invalidPassword": "Invalid password",
+        "passwordsDoNotMatch": "Passwords do not match",
+        "userDisabled": "This account has been disabled",
+        "userNotFound": "User not found",
+        "wrongPassword": "Incorrect password",
+        "invalidCredential": "Email or password is incorrect",
+        "emailAlreadyInUse": "This email is already in use",
+        "weakPassword": "Password is too weak",
+        "tooManyRequests": "Too many requests. Please try again later",
+        "networkError": "A network error occurred",
+        "unknownError": "An unknown error occurred"
+    },
     "AuthForm": {
         "email": "Email",
         "password": "Password",
@@ -12,28 +27,14 @@
         "verifyEmail1": "We've sent a verification link to your email address.",
         "verifyEmail2": "Please check your inbox and click the link to verify your email.",
         "forgotPasswordSentEmail1": "We've sent a password reset link to your email address.",
-        "forgotPasswordSentEmail2": "Please check your inbox and click the link to reset your password.",
-        "error": {
-            "emptyFields": "Please fill in all fields",
-            "invalidEmail": "Invalid email address",
-            "shortPassword": "Password is too short",
-            "passwordsDoNotMatch": "Passwords do not match",
-            "userDisabled": "This account has been disabled",
-            "userNotFound": "User not found",
-            "wrongPassword": "Incorrect password",
-            "invalidCredential": "Email or password is incorrect",
-            "emailAlreadyInUse": "This email is already in use",
-            "weakPassword": "Password is too weak",
-            "tooManyRequests": "Too many requests. Please try again later",
-            "networkError": "A network error occurred",
-            "unknownError": "An unknown error occurred"
-        }
+        "forgotPasswordSentEmail2": "Please check your inbox and click the link to reset your password."
     },
     "Navbar": {
         "title": "Test",
         "dashboard": "Dashboard",
         "settings": "Settings",
         "logout": "Logout",
+        "confirmLogout": "Do you want to log out?",
         "language": "Language",
         "languageSelect": {
             "en": "English",
@@ -80,5 +81,25 @@
             "expiringSoon": "Expiring Soon",
             "expired": "Expired"
         }
+    },
+    "UserSettings": {
+        "accountSettings": "Account Settings",
+        "changeEmail": "Change Email Address",
+        "currentEmail": "Current Email Address",
+        "newEmailPlaceholder": "Enter new email address",
+        "changeButton": "Change",
+        "changePassword": "Change Password",
+        "newPasswordPlaceholder": "Enter new password",
+        "confirmPasswordPlaceholder": "Confirm new password",
+        "deleteAccount": "Delete Account",
+        "deleteAccountWarning": "If you delete your account, all your data will be lost and cannot be recovered. Are you sure you want to proceed?",
+        "deleteAccountButton": "Delete Account",
+        "confirmPassword": "Confirm Password",
+        "enterCurrentPassword": "Enter your current password",
+        "cancel": "Cancel",
+        "execute": "Execute",
+        "passwordUpdated": "Your password has been updated.",
+        "confirmDeleteAccount": "Are you sure you want to delete your account?",
+        "accountDeleted": "Your account has been deleted."
     }
 }

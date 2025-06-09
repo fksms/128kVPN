@@ -5,7 +5,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, signOut } from 'firebase/auth';
-import { app } from '@/lib/firebase';
+import { app, handleFirebaseError } from '@/lib/firebase';
 import LanguageDropdown from '@/components/LanguageDropdown';
 import SocialLoginButton from '@/components/SocialLoginButton';
 
@@ -34,28 +34,28 @@ export default function AuthForm({ action }: Props) {
 
         // メールアドレスが空ならエラー
         if (!email) {
-            setError(t('AuthForm.error.emptyFields'));
+            setError(t('AuthError.emptyFields'));
             return;
         }
         // メールアドレスが正しい形式ではないならエラー
         // See: https://html.spec.whatwg.org/multipage/input.html#email-state-(type=email)
         if (!email.match(/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/)) {
-            setError(t('AuthForm.error.invalidEmail'));
+            setError(t('AuthError.invalidEmail'));
             return;
         }
         // パスワードが空ならエラー
         if ((action === 'login' || action === 'register') && !password) {
-            setError(t('AuthForm.error.emptyFields'));
+            setError(t('AuthError.emptyFields'));
             return;
         }
         // パスワードが短すぎるならエラー
         if (action === 'register' && password.length < 8) {
-            setError(t('AuthForm.error.shortPassword'));
+            setError(t('AuthError.invalidPassword'));
             return;
         }
         // パスワードと確認用パスワードが一致しないならエラー
         if (action === 'register' && password !== confirmPassword) {
-            setError(t('AuthForm.error.passwordsDoNotMatch'));
+            setError(t('AuthError.passwordsDoNotMatch'));
             return;
         }
         setError('');
@@ -70,6 +70,7 @@ export default function AuthForm({ action }: Props) {
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 // メール認証が完了している場合
                 if (userCredential.user.emailVerified) {
+                    // ページを切り替え
                     router.push('/dashboard', { locale: locale });
                     return;
                 }
@@ -77,7 +78,9 @@ export default function AuthForm({ action }: Props) {
                 else {
                     // 認証メールを送信
                     await sendEmailVerification(userCredential.user);
+                    // ログアウト
                     await signOut(auth);
+                    // ページを切り替え
                     router.push('/verify-email', { locale: locale });
                     return;
                 }
@@ -88,70 +91,34 @@ export default function AuthForm({ action }: Props) {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 // 認証メールを送信
                 await sendEmailVerification(userCredential.user);
+                // ログアウト
                 await signOut(auth);
+                // ページを切り替え
                 router.push('/verify-email', { locale: locale });
                 return;
             }
             // パスワードリセット時の処理
             else if (action === 'forgotPassword') {
-                // URLの一番後ろのパスを削除する
-                const url = new URL(window.location.href);
-                const fullPath = url.pathname;
-                url.pathname = fullPath.substring(0, fullPath.lastIndexOf('/'));
                 // パスワードリセットメールを送信
-                await sendPasswordResetEmail(auth, email, { url: url.href });
+                await sendPasswordResetEmail(auth, email);
+                // ログアウト
                 await signOut(auth);
+                // ページを切り替え
                 router.push('/forgot-password/sent', { locale: locale });
                 return;
             }
             // 不明なエラー
             else {
-                console.error(error);
-                setError(t('AuthForm.error.unknownError'));
+                console.error('UNDEFINED_ACTION');
                 return;
             }
         } catch (error) {
             if (error instanceof FirebaseError) {
-                switch (error.code) {
-                    case 'auth/invalid-email':
-                        setError(t('AuthForm.error.invalidEmail'));
-                        return;
-                    case 'auth/user-disabled':
-                        setError(t('AuthForm.error.userDisabled'));
-                        return;
-                    case 'auth/user-not-found':
-                        setError(t('AuthForm.error.userNotFound'));
-                        return;
-                    case 'auth/wrong-password':
-                        setError(t('AuthForm.error.wrongPassword'));
-                        return;
-                    case 'auth/missing-password':
-                        setError(t('AuthForm.error.wrongPassword'));
-                        return;
-                    // https://zenn.dev/mekk/articles/4b563dc3813cd7
-                    case 'auth/invalid-credential':
-                        setError(t('AuthForm.error.invalidCredential'));
-                        return;
-                    case 'auth/email-already-in-use':
-                        setError(t('AuthForm.error.emailAlreadyInUse'));
-                        return;
-                    case 'auth/weak-password':
-                        setError(t('AuthForm.error.weakPassword'));
-                        return;
-                    case 'auth/too-many-requests':
-                        setError(t('AuthForm.error.tooManyRequests'));
-                        return;
-                    case 'auth/network-request-failed':
-                        setError(t('AuthForm.error.networkError'));
-                        return;
-                    default:
-                        console.error(error.code);
-                        setError(t('AuthForm.error.unknownError'));
-                        return;
-                }
+                setError(t(handleFirebaseError(error)));
+                return;
             } else {
                 console.error(error);
-                setError(t('AuthForm.error.unknownError'));
+                setError(t('AuthError.unknownError'));
                 return;
             }
         }

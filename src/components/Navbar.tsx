@@ -17,10 +17,9 @@ export default function Navbar() {
 
     const handleLogout = async (): Promise<void> => {
         try {
-            if (confirm('ログアウトしますか？')) {
+            if (confirm(t('Navbar.confirmLogout'))) {
                 // ログアウト
                 await signOut(auth);
-                alert('ログアウトしました');
                 router.push('/login', { locale: locale });
                 return;
             }

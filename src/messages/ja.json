@@ -1,4 +1,19 @@
 {
+    "AuthError": {
+        "emptyFields": "すべてのフィールドを入力してください",
+        "invalidEmail": "無効なメールアドレスです",
+        "invalidPassword": "無効なパスワードです",
+        "passwordsDoNotMatch": "パスワードが一致しません",
+        "userDisabled": "このアカウントは無効化されています",
+        "userNotFound": "ユーザーが見つかりません",
+        "wrongPassword": "パスワードが間違っています",
+        "invalidCredential": "メールアドレスかパスワードが間違っています",
+        "emailAlreadyInUse": "このメールアドレスはすでに使用されています",
+        "weakPassword": "パスワードが弱すぎます",
+        "tooManyRequests": "リクエストが多すぎます。しばらく待ってから再試行してください",
+        "networkError": "ネットワークエラーが発生しました",
+        "unknownError": "不明なエラーが発生しました"
+    },
     "AuthForm": {
         "email": "メールアドレス",
         "password": "パスワード",
@@ -12,28 +27,14 @@
         "verifyEmail1": "メールアドレスに確認リンクを送信しました。",
         "verifyEmail2": "受信トレイを確認し、リンクをクリックしてメールアドレスを確認してください。",
         "forgotPasswordSentEmail1": "パスワードリセットリンクをメールアドレスに送信しました。",
-        "forgotPasswordSentEmail2": "受信トレイを確認し、リンクをクリックしてパスワードをリセットしてください。",
-        "error": {
-            "emptyFields": "すべてのフィールドを入力してください",
-            "invalidEmail": "無効なメールアドレスです",
-            "shortPassword": "パスワードが短すぎます",
-            "passwordsDoNotMatch": "パスワードが一致しません",
-            "userDisabled": "このアカウントは無効化されています",
-            "userNotFound": "ユーザーが見つかりません",
-            "wrongPassword": "パスワードが間違っています",
-            "invalidCredential": "メールアドレスかパスワードが間違っています",
-            "emailAlreadyInUse": "このメールアドレスはすでに使用されています",
-            "weakPassword": "パスワードが弱すぎます",
-            "tooManyRequests": "リクエストが多すぎます。しばらく待ってから再試行してください",
-            "networkError": "ネットワークエラーが発生しました",
-            "unknownError": "不明なエラーが発生しました"
-        }
+        "forgotPasswordSentEmail2": "受信トレイを確認し、リンクをクリックしてパスワードをリセットしてください。"
     },
     "Navbar": {
         "title": "テスト",
         "dashboard": "管理画面",
         "settings": "設定",
         "logout": "ログアウト",
+        "confirmLogout": "ログアウトしますか？",
         "language": "言語",
         "languageSelect": {
             "en": "English",
@@ -80,5 +81,25 @@
             "expiringSoon": "まもなく失効",
             "expired": "失効済み"
         }
+    },
+    "UserSettings": {
+        "accountSettings": "アカウント設定",
+        "changeEmail": "メールアドレス変更",
+        "currentEmail": "現在のメールアドレス",
+        "newEmailPlaceholder": "新しいメールアドレスを入力",
+        "changeButton": "変更する",
+        "changePassword": "パスワード変更",
+        "newPasswordPlaceholder": "新しいパスワードを入力",
+        "confirmPasswordPlaceholder": "新しいパスワードを確認",
+        "deleteAccount": "アカウント削除",
+        "deleteAccountWarning": "アカウントを削除すると、すべてのデータが失われ復元できません。本当に削除しますか？",
+        "deleteAccountButton": "アカウントを削除する",
+        "confirmPassword": "パスワードを確認",
+        "enterCurrentPassword": "現在のパスワードを入力",
+        "cancel": "キャンセル",
+        "execute": "実行",
+        "passwordUpdated": "パスワードを更新しました。",
+        "confirmDeleteAccount": "本当にアカウントを削除しますか？",
+        "accountDeleted": "アカウントを削除しました。"
     }
 }
