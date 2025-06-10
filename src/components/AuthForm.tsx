@@ -6,6 +6,7 @@ import { useRouter } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, signOut } from 'firebase/auth';
 import { app, handleFirebaseError } from '@/lib/firebase';
+import { handleSessionLogin } from '@/lib/handleSession';
 import LanguageDropdown from '@/components/LanguageDropdown';
 import SocialLoginButton from '@/components/SocialLoginButton';
 
@@ -70,9 +71,21 @@ export default function AuthForm({ action }: Props) {
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 // メール認証が完了している場合
                 if (userCredential.user.emailVerified) {
-                    // ページを切り替え
-                    router.push('/dashboard', { locale: locale });
-                    return;
+                    // セッションログインを試行
+                    const isSessionLoginSuccess = await handleSessionLogin(userCredential);
+                    // セッションログイン成功
+                    if (isSessionLoginSuccess) {
+                        // ページを切り替え
+                        router.push('/dashboard', { locale: locale });
+                        return;
+                    }
+                    // セッションログイン失敗
+                    else {
+                        // ログアウト
+                        await signOut(auth);
+                        setError(t('AuthError.sessionLoginFailed'));
+                        return;
+                    }
                 }
                 // メール認証が未完了の場合
                 else {

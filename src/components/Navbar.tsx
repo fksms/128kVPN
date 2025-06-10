@@ -5,6 +5,7 @@ import { useRouter } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
 import { getAuth, signOut } from 'firebase/auth';
 import { app } from '@/lib/firebase';
+import { handleSessionLogout } from '@/lib/handleSession';
 import LanguageDropdown from '@/components/LanguageDropdown';
 
 export default function Navbar() {
@@ -18,12 +19,23 @@ export default function Navbar() {
     const handleLogout = async (): Promise<void> => {
         try {
             if (confirm(t('Navbar.confirmLogout'))) {
-                // ログアウト
-                await signOut(auth);
-                router.push('/login', { locale: locale });
+                // セッションログアウトを試行
+                const isSessionLogoutSuccess = await handleSessionLogout();
+                // セッションログアウト成功
+                if (isSessionLogoutSuccess) {
+                    // ログアウト
+                    await signOut(auth);
+                    router.push('/login', { locale: locale });
+                    return;
+                }
+                // セッションログアウト失敗
+                else {
+                    alert(t('AuthError.sessionLogoutFailed'));
+                    return;
+                }
+            } else {
                 return;
             }
-            return;
         } catch (error) {
             if (error instanceof FirebaseError) {
                 console.error(error.code);

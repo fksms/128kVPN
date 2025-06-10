@@ -12,7 +12,9 @@
         "weakPassword": "パスワードが弱すぎます",
         "tooManyRequests": "リクエストが多すぎます。しばらく待ってから再試行してください",
         "networkError": "ネットワークエラーが発生しました",
-        "unknownError": "不明なエラーが発生しました"
+        "unknownError": "不明なエラーが発生しました",
+        "sessionLoginFailed": "セッションログインに失敗しました。再度ログインしてください",
+        "sessionLogoutFailed": "セッションログアウトに失敗しました。再試行してください"
     },
     "AuthForm": {
         "email": "メールアドレス",

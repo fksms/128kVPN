@@ -34,11 +34,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 export async function POST(req: NextRequest): Promise<NextResponse> {
     const body = await req.json();
 
-    const action = body.action;
-    const checkedAt = body.checkedAt;
-    const wgInterfaces = body.data;
-
-    if (!checkedAt) {
+    if (!body.action || !body.checkedAt || !body.data) {
         return NextResponse.json(
             {
                 success: false,
@@ -47,6 +43,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             { status: 400 }
         );
     }
+
+    const action = body.action;
+    const checkedAt = body.checkedAt;
+    const wgInterfaces = body.data;
 
     if (action === 'delete') {
         try {

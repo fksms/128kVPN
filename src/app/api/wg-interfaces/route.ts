@@ -40,10 +40,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     const body = await req.json();
 
-    const action = body.action;
-    const name = body.name;
-
-    if (!name) {
+    if (!body.action || !body.name) {
         return NextResponse.json(
             {
                 success: false,
@@ -52,6 +49,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             { status: 400 }
         );
     }
+
+    const action = body.action;
+    const name = body.name;
 
     if (action === 'create') {
         // 失効日時を計算（UNIXタイムスタンプ）

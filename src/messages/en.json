@@ -12,7 +12,9 @@
         "weakPassword": "Password is too weak",
         "tooManyRequests": "Too many requests. Please try again later",
         "networkError": "A network error occurred",
-        "unknownError": "An unknown error occurred"
+        "unknownError": "An unknown error occurred",
+        "sessionLoginFailed": "Session login failed. Please log in again",
+        "sessionLogoutFailed": "Session logout failed. Please try again"
     },
     "AuthForm": {
         "email": "Email",

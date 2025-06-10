@@ -6,6 +6,7 @@ import { useRouter } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
 import { getAuth, verifyBeforeUpdateEmail, updatePassword, signOut, deleteUser, onAuthStateChanged, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 import { app, handleFirebaseError } from '@/lib/firebase';
+import { handleSessionLogout } from '@/lib/handleSession';
 
 type AuthAction = 'changeEmail' | 'changePassword' | 'deleteAccount';
 
@@ -166,14 +167,25 @@ export default function UserSettings() {
                 const credential = EmailAuthProvider.credential(auth.currentUser!.email!, currentPassword);
                 // 再認証実行
                 const userCredential = await reauthenticateWithCredential(auth.currentUser!, credential);
-                // アカウントを削除
-                await deleteUser(userCredential.user);
-                alert(t('UserSettings.accountDeleted'));
-                // ページを切り替え
-                router.push('/register', { locale: locale });
+                // セッションログアウトを試行
+                const isSessionLogoutSuccess = await handleSessionLogout();
+                // セッションログアウト成功
+                if (isSessionLogoutSuccess) {
+                    // アカウントを削除
+                    await deleteUser(userCredential.user);
+                    alert(t('UserSettings.accountDeleted'));
+                    // ページを切り替え
+                    router.push('/register', { locale: locale });
+                    return;
+                }
+                // セッションログアウト失敗
+                else {
+                    alert(t('AuthError.sessionLogoutFailed'));
+                    return;
+                }
+            } else {
                 return;
             }
-            return;
         } catch (error) {
             if (error instanceof FirebaseError) {
                 setError3(t(handleFirebaseError(error)));
