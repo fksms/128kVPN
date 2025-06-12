@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { adminApp } from '@/lib/firebase-admin';
+import { getAuth } from 'firebase-admin/auth';
 import { ErrorCodes } from '@/lib/errorCodes';
+
+const auth = getAuth(adminApp);
 
 export async function POST(req: NextRequest) {
     const { token } = await req.json();
@@ -9,33 +12,44 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
             {
                 success: false,
-                code: ErrorCodes.TOKEN_MISSING,
+                code: ErrorCodes.INVALID_REQUEST,
             },
             { status: 400 }
         );
     }
 
     try {
-        const cookieStore = await cookies();
-        cookieStore.set('__session', token, {
+        // IDトークンを検証しデコード
+        const decoded = await auth.verifyIdToken(token);
+        // メール認証が完了していない場合
+        if (!decoded.email_verified) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: ErrorCodes.UNVERIFIED_EMAIL
+                },
+                { status: 403 }
+            );
+        }
+        // レスポンス生成（200 OK）
+        const response = NextResponse.json(
+            { success: true },
+            { status: 200 }
+        );
+        // セッションクッキーを設定
+        response.cookies.set('__session', token, {
             httpOnly: true,
             secure: true,
             path: '/',
-            maxAge: 60 * 60 * 24, // 1日
+            maxAge: 86400, // 86400秒=1日
             sameSite: 'strict',
         });
-        return NextResponse.json(
-            {
-                success: true,
-                data: '',
-            },
-            { status: 200 }
-        );
+        return response;
     } catch {
         return NextResponse.json(
             {
                 success: false,
-                code: ErrorCodes.COOKIE_SET_FAILED,
+                code: ErrorCodes.UNKNOWN_ERROR,
             },
             { status: 400 }
         );

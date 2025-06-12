@@ -38,9 +38,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const userid = 'testuser';
     const ip_address = 'test_ip';
 
-    const body = await req.json();
+    const { action, name } = await req.json();
 
-    if (!body.action || !body.name) {
+    if (!action || !name) {
         return NextResponse.json(
             {
                 success: false,
@@ -49,9 +49,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             { status: 400 }
         );
     }
-
-    const action = body.action;
-    const name = body.name;
 
     if (action === 'create') {
         // 失効日時を計算（UNIXタイムスタンプ）
@@ -65,10 +62,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             stmt.run(userid, name, ip_address, expires_at);
 
             return NextResponse.json(
-                {
-                    success: true,
-                    data: '',
-                },
+                { success: true },
                 { status: 200 }
             );
         } catch (error) {
@@ -90,10 +84,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             stmt.run(userid, name);
 
             return NextResponse.json(
-                {
-                    success: true,
-                    data: '',
-                },
+                { success: true },
                 { status: 200 }
             );
         } catch (error) {

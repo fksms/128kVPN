@@ -11,11 +11,8 @@ services:
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
-    environment:
-      # For `XXXXXXXX`, specify any string that is difficult to guess.
-      - BASE_URL=http://localhost
-      - PORT=8080
-      - SECRET_API_KEY=XXXXXXXX
+    env_file:
+      - .env
 
 volumes:
   temp:

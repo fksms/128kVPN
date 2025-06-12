@@ -32,9 +32,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
 // POSTリクエスト
 export async function POST(req: NextRequest): Promise<NextResponse> {
-    const body = await req.json();
+    const { action, checkedAt, data } = await req.json();
 
-    if (!body.action || !body.checkedAt || !body.data) {
+    if (!action || !checkedAt || !data) {
         return NextResponse.json(
             {
                 success: false,
@@ -43,10 +43,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             { status: 400 }
         );
     }
-
-    const action = body.action;
-    const checkedAt = body.checkedAt;
-    const wgInterfaces = body.data;
 
     if (action === 'delete') {
         try {
@@ -57,10 +53,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             stmt.run(checkedAt);
 
             return NextResponse.json(
-                {
-                    success: true,
-                    data: '',
-                },
+                { success: true },
                 { status: 200 }
             );
         } catch (error) {

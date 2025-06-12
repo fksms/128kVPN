@@ -1,25 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { ErrorCodes } from '@/lib/errorCodes';
 
 export async function POST(req: NextRequest) {
-    try {
-        const cookieStore = await cookies();
-        cookieStore.delete('__session');
-        return NextResponse.json(
-            {
-                success: true,
-                data: '',
-            },
-            { status: 200 }
-        );
-    } catch {
-        return NextResponse.json(
-            {
-                success: false,
-                code: ErrorCodes.COOKIE_DELETE_FAILED,
-            },
-            { status: 400 }
-        );
-    }
+    // レスポンス生成（200 OK）
+    const response = NextResponse.json(
+        { success: true },
+        { status: 200 }
+    );
+    // __sessionクッキーを削除（maxAge: 0）
+    response.cookies.set('__session', '', {
+        httpOnly: true,
+        secure: true,
+        path: '/',
+        maxAge: 0, // 即時無効化
+        sameSite: 'strict',
+    });
+    return response;
 }
