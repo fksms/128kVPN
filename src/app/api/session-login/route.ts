@@ -26,22 +26,23 @@ export async function POST(req: NextRequest) {
             return NextResponse.json(
                 {
                     success: false,
-                    error: ErrorCodes.UNVERIFIED_EMAIL
+                    error: ErrorCodes.UNVERIFIED_EMAIL,
                 },
                 { status: 403 }
             );
         }
+        // セッションの有効期限（1日 = 86400秒）
+        const expiresIn = 86400;
+        // セッションクッキーを作成
+        const sessionCookie = await auth.createSessionCookie(token, { expiresIn: expiresIn * 1000 });
         // レスポンス生成（200 OK）
-        const response = NextResponse.json(
-            { success: true },
-            { status: 200 }
-        );
+        const response = NextResponse.json({ success: true }, { status: 200 });
         // セッションクッキーを設定
-        response.cookies.set('__session', token, {
+        response.cookies.set('__session', sessionCookie, {
             httpOnly: true,
             secure: true,
             path: '/',
-            maxAge: 86400, // 86400秒=1日
+            maxAge: expiresIn,
             sameSite: 'strict',
         });
         return response;

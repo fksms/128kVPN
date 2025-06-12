@@ -1,6 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 import { routing } from '@/i18n/routing';
+import { verifySessionCookie } from '@/lib/verifySession';
 
 // next-intlのmiddlewareを事前に作成
 const intlMiddleware = createMiddleware(routing);
@@ -12,16 +13,13 @@ const locales = routing.locales;
 const protectedPaths = ['/dashboard', '/settings'];
 
 // ログイン時に見せないページ
-const nonProtectedPaths = ['/login', '/register', '/forgot-password', '/verify-email'];
+const publicPaths = ['/login', '/register', '/forgot-password', '/verify-email'];
 
-export function middleware(request: NextRequest): NextResponse {
+export async function middleware(request: NextRequest): Promise<NextResponse> {
     // パスを取得
     const pathname = request.nextUrl.pathname;
 
     // -------------------- 未ログイン時・ログイン時のリダイレクト用 --------------------
-    // トークンの取得
-    const token = request.cookies.get('__session')?.value;
-
     // localeを除いたパスを取得
     const pathnameWithoutLocale = (() => {
         const segments = pathname.split('/');
@@ -35,16 +33,39 @@ export function middleware(request: NextRequest): NextResponse {
     const isProtected = protectedPaths.some((path) => pathnameWithoutLocale.startsWith(path));
 
     // パスがプロテクト非対象か判定
-    const isNotProtected = nonProtectedPaths.some((path) => pathnameWithoutLocale.startsWith(path));
+    const isPublic = publicPaths.some((path) => pathnameWithoutLocale.startsWith(path));
 
-    // プロテクト対象かつトークン無しの場合は`/login`にリダイレクト
-    if (isProtected && !token) {
-        return NextResponse.redirect(new URL('/login', request.url));
+    // セッションクッキーの取得
+    const sessionCookie = request.cookies.get('__session')?.value;
+
+    // セッションクッキー無し
+    if (!sessionCookie) {
+        // プロテクト対象へのアクセスは`/login`にリダイレクト
+        if (isProtected) {
+            return NextResponse.redirect(new URL('/login', request.url));
+        }
     }
-    // プロテクト非対象かつトークン有りの場合は`/dashboard`にリダイレクト
-    if (isNotProtected && token) {
-        return NextResponse.redirect(new URL('/dashboard', request.url));
+    // セッションクッキー有り
+    else {
+        try {
+            // セッションクッキーの検証
+            const payload = await verifySessionCookie(sessionCookie);
+            console.log('SessionCookie Payload:', payload);
+            // セッションクッキーが有効な場合、
+            // プロテクト非対象へのアクセスは`/dashboard`にリダイレクト
+            if (isPublic) {
+                return NextResponse.redirect(new URL('/dashboard', request.url));
+            }
+        } catch (error) {
+            console.error('SessionCookie Error:', error);
+            // セッションクッキーが無効な場合、
+            // プロテクト対象へのアクセスは`/login`にリダイレクト
+            if (isProtected) {
+                return NextResponse.redirect(new URL('/login', request.url));
+            }
+        }
     }
+
     // -------------------- 未ログイン時・ログイン時のリダイレクト用 --------------------
 
     // -------------------- API保護用 --------------------

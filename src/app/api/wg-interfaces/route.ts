@@ -61,10 +61,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             // プレースホルダに値をバインド
             stmt.run(userid, name, ip_address, expires_at);
 
-            return NextResponse.json(
-                { success: true },
-                { status: 200 }
-            );
+            return NextResponse.json({ success: true }, { status: 200 });
         } catch (error) {
             console.error(error);
             return NextResponse.json(
@@ -83,10 +80,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             // プレースホルダに値をバインド
             stmt.run(userid, name);
 
-            return NextResponse.json(
-                { success: true },
-                { status: 200 }
-            );
+            return NextResponse.json({ success: true }, { status: 200 });
         } catch (error) {
             console.error(error);
             return NextResponse.json(
