@@ -112,6 +112,8 @@ export default function UserSettings() {
             const userCredential = await reauthenticateWithCredential(auth.currentUser!, credential);
             // メールアドレスを更新し、認証メールを送信
             await verifyBeforeUpdateEmail(userCredential.user, newEmail);
+            // セッションログアウトを試行
+            await handleSessionLogout();
             // ログアウト
             await signOut(auth);
             // ページを切り替え
@@ -168,21 +170,13 @@ export default function UserSettings() {
                 // 再認証実行
                 const userCredential = await reauthenticateWithCredential(auth.currentUser!, credential);
                 // セッションログアウトを試行
-                const isSessionLogoutSuccess = await handleSessionLogout();
-                // セッションログアウト成功
-                if (isSessionLogoutSuccess) {
-                    // アカウントを削除
-                    await deleteUser(userCredential.user);
-                    alert(t('UserSettings.accountDeleted'));
-                    // ページを切り替え
-                    router.push('/register', { locale: locale });
-                    return;
-                }
-                // セッションログアウト失敗
-                else {
-                    alert(t('AuthError.sessionLogoutFailed'));
-                    return;
-                }
+                await handleSessionLogout();
+                // アカウントを削除
+                await deleteUser(userCredential.user);
+                alert(t('UserSettings.accountDeleted'));
+                // ページを切り替え
+                router.push('/register', { locale: locale });
+                return;
             } else {
                 return;
             }

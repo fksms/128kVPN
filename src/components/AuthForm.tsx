@@ -69,34 +69,11 @@ export default function AuthForm({ action }: Props) {
             if (action === 'login') {
                 // サインイン
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                // メール認証が完了している場合
-                if (userCredential.user.emailVerified) {
-                    // セッションログインを試行
-                    const isSessionLoginSuccess = await handleSessionLogin(userCredential);
-                    // セッションログイン成功
-                    if (isSessionLoginSuccess) {
-                        // ページを切り替え
-                        router.push('/dashboard', { locale: locale });
-                        return;
-                    }
-                    // セッションログイン失敗
-                    else {
-                        // ログアウト
-                        await signOut(auth);
-                        setError(t('AuthError.sessionLoginFailed'));
-                        return;
-                    }
-                }
-                // メール認証が未完了の場合
-                else {
-                    // 認証メールを送信
-                    await sendEmailVerification(userCredential.user);
-                    // ログアウト
-                    await signOut(auth);
-                    // ページを切り替え
-                    router.push('/verify-email', { locale: locale });
-                    return;
-                }
+                // セッションログインを試行
+                await handleSessionLogin(userCredential);
+                // ページを切り替え
+                router.push('/dashboard', { locale: locale });
+                return;
             }
             // 登録時の処理
             else if (action === 'register') {
@@ -104,8 +81,6 @@ export default function AuthForm({ action }: Props) {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 // 認証メールを送信
                 await sendEmailVerification(userCredential.user);
-                // ログアウト
-                await signOut(auth);
                 // ページを切り替え
                 router.push('/verify-email', { locale: locale });
                 return;
@@ -114,8 +89,6 @@ export default function AuthForm({ action }: Props) {
             else if (action === 'forgotPassword') {
                 // パスワードリセットメールを送信
                 await sendPasswordResetEmail(auth, email);
-                // ログアウト
-                await signOut(auth);
                 // ページを切り替え
                 router.push('/forgot-password/sent', { locale: locale });
                 return;

@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 import { routing } from '@/i18n/routing';
-import { verifySessionCookie } from '@/lib/verifySession';
+import { verifySessionCookie } from '@/lib/verifySessionCookie';
 
 // next-intlのmiddlewareを事前に作成
 const intlMiddleware = createMiddleware(routing);
@@ -18,6 +18,21 @@ const publicPaths = ['/login', '/register', '/forgot-password', '/verify-email']
 export async function middleware(request: NextRequest): Promise<NextResponse> {
     // パスを取得
     const pathname = request.nextUrl.pathname;
+
+    // -------------------- API保護用 --------------------
+    // `/api/all-wg-interfaces`の場合はAPI_KEYをチェック
+    if (pathname === '/api/all-wg-interfaces') {
+        const apiKey = request.headers.get('x-api-key');
+
+        if (apiKey !== process.env.SECRET_API_KEY) {
+            // APIキーが無効な場合は404ページにリダイレクト
+            return NextResponse.rewrite(new URL('/not-found', request.url));
+        } else {
+            // APIキーが有効な場合は、次の処理を続行
+            return NextResponse.next();
+        }
+    }
+    // -------------------- API保護用 --------------------
 
     // -------------------- 未ログイン時・ログイン時のリダイレクト用 --------------------
     // localeを除いたパスを取得
@@ -51,37 +66,19 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
             // セッションクッキーの検証
             const payload = await verifySessionCookie(sessionCookie);
             console.log('SessionCookie Payload:', payload);
-            // セッションクッキーが有効な場合、
-            // プロテクト非対象へのアクセスは`/dashboard`にリダイレクト
+            // セッションクッキーが有効な場合、プロテクト非対象へのアクセスは`/dashboard`にリダイレクト
             if (isPublic) {
                 return NextResponse.redirect(new URL('/dashboard', request.url));
             }
         } catch (error) {
             console.error('SessionCookie Error:', error);
-            // セッションクッキーが無効な場合、
-            // プロテクト対象へのアクセスは`/login`にリダイレクト
+            // セッションクッキーが無効な場合、プロテクト対象へのアクセスは`/login`にリダイレクト
             if (isProtected) {
                 return NextResponse.redirect(new URL('/login', request.url));
             }
         }
     }
-
     // -------------------- 未ログイン時・ログイン時のリダイレクト用 --------------------
-
-    // -------------------- API保護用 --------------------
-    // `/api/all-wg-interfaces`の場合はAPI_KEYをチェック
-    if (pathname === '/api/all-wg-interfaces') {
-        const apiKey = request.headers.get('x-api-key');
-
-        if (apiKey !== process.env.SECRET_API_KEY) {
-            // APIキーが無効な場合は404ページにリダイレクト
-            return NextResponse.rewrite(new URL('/not-found', request.url));
-        } else {
-            // APIキーが有効な場合は、次の処理を続行
-            return NextResponse.next();
-        }
-    }
-    // -------------------- API保護用 --------------------
 
     // `next-intl`のmiddlewareを適用
     return intlMiddleware(request);

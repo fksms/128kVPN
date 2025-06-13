@@ -1,9 +1,10 @@
 import { UserCredential } from 'firebase/auth';
+import { ErrorCodes } from '@/lib/errorCodes';
 
-export const handleSessionLogin = async (userCredential: UserCredential): Promise<boolean> => {
+export const handleSessionLogin = async (userCredential: UserCredential): Promise<void> => {
     try {
         const token = await userCredential.user.getIdToken();
-        const res = await fetch('/api/session-login', {
+        const res = await fetch('/api/auth/session-login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -11,34 +12,26 @@ export const handleSessionLogin = async (userCredential: UserCredential): Promis
             body: JSON.stringify({ token }),
         });
         const data = await res.json();
-        if (data.success) {
-            // ログイン成功
-            return true;
-        } else {
+        if (!data.success) {
             // ログイン失敗
-            return false;
+            throw new Error(data.error);
         }
     } catch (error) {
-        console.error('UNKNOWN_ERROR');
         // ログイン失敗
-        return false;
+        throw new Error(error instanceof Error ? error.message : ErrorCodes.UNKNOWN_ERROR);
     }
 };
 
-export const handleSessionLogout = async (): Promise<boolean> => {
+export const handleSessionLogout = async (): Promise<void> => {
     try {
-        const res = await fetch('/api/session-logout', { method: 'POST' });
+        const res = await fetch('/api/auth/session-logout', { method: 'POST' });
         const data = await res.json();
-        if (data.success) {
-            // ログアウト成功
-            return true;
-        } else {
+        if (!data.success) {
             // ログアウト失敗
-            return false;
+            throw new Error(ErrorCodes.DELETE_SESSION_FAILED);
         }
     } catch (error) {
-        console.error('UNKNOWN_ERROR');
         // ログアウト失敗
-        return false;
+        throw new Error(error instanceof Error ? error.message : ErrorCodes.UNKNOWN_ERROR);
     }
 };

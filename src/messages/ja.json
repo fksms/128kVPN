@@ -14,7 +14,8 @@
         "networkError": "ネットワークエラーが発生しました",
         "unknownError": "不明なエラーが発生しました",
         "sessionLoginFailed": "セッションログインに失敗しました。再度ログインしてください",
-        "sessionLogoutFailed": "セッションログアウトに失敗しました。再試行してください"
+        "sessionLogoutFailed": "セッションログアウトに失敗しました。再試行してください",
+        "unverifiedEmail": "メールアドレスが確認されていません。続行するにはメールアドレスを確認してください"
     },
     "AuthForm": {
         "email": "メールアドレス",

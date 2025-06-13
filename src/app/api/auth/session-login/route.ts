@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json(
             {
                 success: false,
-                code: ErrorCodes.UNKNOWN_ERROR,
+                code: ErrorCodes.CREATE_SESSION_FAILED,
             },
             { status: 400 }
         );

@@ -20,19 +20,12 @@ export default function Navbar() {
         try {
             if (confirm(t('Navbar.confirmLogout'))) {
                 // セッションログアウトを試行
-                const isSessionLogoutSuccess = await handleSessionLogout();
-                // セッションログアウト成功
-                if (isSessionLogoutSuccess) {
-                    // ログアウト
-                    await signOut(auth);
-                    router.push('/login', { locale: locale });
-                    return;
-                }
-                // セッションログアウト失敗
-                else {
-                    alert(t('AuthError.sessionLogoutFailed'));
-                    return;
-                }
+                await handleSessionLogout();
+                // ログアウト
+                await signOut(auth);
+                // ページを切り替え
+                router.push('/login', { locale: locale });
+                return;
             } else {
                 return;
             }

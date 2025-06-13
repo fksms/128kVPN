@@ -14,7 +14,8 @@
         "networkError": "A network error occurred",
         "unknownError": "An unknown error occurred",
         "sessionLoginFailed": "Session login failed. Please log in again",
-        "sessionLogoutFailed": "Session logout failed. Please try again"
+        "sessionLogoutFailed": "Session logout failed. Please try again",
+        "unverifiedEmail": "Your email address is not verified. Please verify your email to continue"
     },
     "AuthForm": {
         "email": "Email",

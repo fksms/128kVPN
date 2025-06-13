@@ -1,7 +1,7 @@
-import { jwtVerify, importX509 } from 'jose';
+import { jwtVerify, importX509, JWTPayload } from 'jose';
 
 // Firebase公開鍵の取得（キャッシュ対応）
-async function getPublicKeys() {
+async function getPublicKeys(): Promise<Record<string, string>> {
     let cachedKeys = null;
     let cacheExpiresAt = 0;
 
@@ -32,9 +32,9 @@ async function getPublicKeys() {
     return cachedKeys;
 }
 
-// セッションCookieの検証関数
+// セッションCookieの検証
 // 参考：https://firebase.google.com/docs/auth/admin/manage-cookies?hl=ja#verify_session_cookies_using_a_third-party_jwt_library
-export async function verifySessionCookie(sessionCookie: string): Promise<any> {
+export async function verifySessionCookie(sessionCookie: string): Promise<JWTPayload> {
     const publicKeys = await getPublicKeys();
 
     // JWTのヘッダー部分をデコードして kid を取り出す
@@ -45,7 +45,7 @@ export async function verifySessionCookie(sessionCookie: string): Promise<any> {
     // kidに対応する公開鍵を取得
     const publicKeyPem = publicKeys[kid];
     if (!publicKeyPem) {
-        throw new Error('対応する公開鍵が見つかりません。');
+        throw new Error(`No certificate found for kid: ${kid}`);
     }
 
     // PEM形式の公開鍵をCryptoKeyに変換
@@ -53,9 +53,24 @@ export async function verifySessionCookie(sessionCookie: string): Promise<any> {
 
     // JWTの署名とクレームの検証
     const { payload } = await jwtVerify(sessionCookie, publicKey, {
+        algorithms: ['RS256'],
         issuer: `https://session.firebase.google.com/${process.env.NEXT_PUBLIC_FIREBASE_CONFIG_PROJECT_ID || ''}`,
         audience: process.env.NEXT_PUBLIC_FIREBASE_CONFIG_PROJECT_ID || '',
+        maxTokenAge: 60 * 60, // 1hour in seconds
+        requiredClaims: ['exp', 'sub', 'auth_time'],
     });
+
+    if (!payload.sub) {
+        throw new Error('sub is empty');
+    }
+
+    if (Number(payload.auth_time) >= Date.now()) {
+        throw new Error('auth_time is in the future');
+    }
+
+    if (!payload.email_verified) {
+        throw new Error('Email is not verified');
+    }
 
     return payload;
 }
