@@ -4,9 +4,9 @@ import { useState, useEffect, useRef, RefObject } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
-import { getAuth, verifyBeforeUpdateEmail, updatePassword, signOut, deleteUser, onAuthStateChanged, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
+import { getAuth, verifyBeforeUpdateEmail, updatePassword, deleteUser, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
 import { app, handleFirebaseError } from '@/lib/firebase';
-import { handleSessionLogout } from '@/lib/handleSession';
+import { sessionLogout } from '@/lib/handleSession';
 
 type AuthAction = 'changeEmail' | 'changePassword' | 'deleteAccount';
 
@@ -113,9 +113,7 @@ export default function UserSettings() {
             // メールアドレスを更新し、認証メールを送信
             await verifyBeforeUpdateEmail(userCredential.user, newEmail);
             // セッションログアウトを試行
-            await handleSessionLogout();
-            // ログアウト
-            await signOut(auth);
+            await sessionLogout();
             // ページを切り替え
             router.push('/verify-email', { locale: locale });
             return;
@@ -169,10 +167,10 @@ export default function UserSettings() {
                 const credential = EmailAuthProvider.credential(auth.currentUser!.email!, currentPassword);
                 // 再認証実行
                 const userCredential = await reauthenticateWithCredential(auth.currentUser!, credential);
-                // セッションログアウトを試行
-                await handleSessionLogout();
                 // アカウントを削除
                 await deleteUser(userCredential.user);
+                // セッションログアウトを試行
+                await sessionLogout();
                 alert(t('UserSettings.accountDeleted'));
                 // ページを切り替え
                 router.push('/register', { locale: locale });
@@ -193,11 +191,7 @@ export default function UserSettings() {
 
     useEffect(() => {
         // コンポーネントマウント時に実行
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setCurrentEmail(user?.email || '-');
-        });
-        // コンポーネントアンマウント時にリスナー解除
-        return () => unsubscribe();
+        setCurrentEmail(sessionStorage.getItem('email') || '-');
     }, []);
 
     return (

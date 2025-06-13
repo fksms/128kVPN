@@ -3,9 +3,8 @@
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
-import { getAuth, signOut } from 'firebase/auth';
-import { app } from '@/lib/firebase';
-import { handleSessionLogout } from '@/lib/handleSession';
+import { sessionLogout } from '@/lib/handleSession';
+import { handleFirebaseError } from '@/lib/firebase';
 import LanguageDropdown from '@/components/LanguageDropdown';
 
 export default function Navbar() {
@@ -14,15 +13,11 @@ export default function Navbar() {
     const router = useRouter();
     const locale = useLocale();
 
-    const auth = getAuth(app);
-
     const handleLogout = async (): Promise<void> => {
         try {
             if (confirm(t('Navbar.confirmLogout'))) {
                 // セッションログアウトを試行
-                await handleSessionLogout();
-                // ログアウト
-                await signOut(auth);
+                await sessionLogout();
                 // ページを切り替え
                 router.push('/login', { locale: locale });
                 return;
@@ -31,10 +26,11 @@ export default function Navbar() {
             }
         } catch (error) {
             if (error instanceof FirebaseError) {
-                console.error(error.code);
+                alert(t(handleFirebaseError(error)));
                 return;
             } else {
                 console.error(error);
+                alert(t('AuthError.unknownError'));
                 return;
             }
         }

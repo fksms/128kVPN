@@ -1,7 +1,7 @@
 import { UserCredential } from 'firebase/auth';
 import { ErrorCodes } from '@/lib/errorCodes';
 
-export const handleSessionLogin = async (userCredential: UserCredential): Promise<void> => {
+export const sessionLogin = async (userCredential: UserCredential): Promise<void> => {
     try {
         const token = await userCredential.user.getIdToken();
         const res = await fetch('/api/auth/session-login', {
@@ -22,7 +22,7 @@ export const handleSessionLogin = async (userCredential: UserCredential): Promis
     }
 };
 
-export const handleSessionLogout = async (): Promise<void> => {
+export const sessionLogout = async (): Promise<void> => {
     try {
         const res = await fetch('/api/auth/session-logout', { method: 'POST' });
         const data = await res.json();

@@ -4,9 +4,10 @@ import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, signOut } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification } from 'firebase/auth';
 import { app, handleFirebaseError } from '@/lib/firebase';
-import { handleSessionLogin } from '@/lib/handleSession';
+import { sessionLogin } from '@/lib/handleSession';
+import { ErrorCodes } from '@/lib/errorCodes';
 import LanguageDropdown from '@/components/LanguageDropdown';
 import SocialLoginButton from '@/components/SocialLoginButton';
 
@@ -70,7 +71,9 @@ export default function AuthForm({ action }: Props) {
                 // サインイン
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 // セッションログインを試行
-                await handleSessionLogin(userCredential);
+                await sessionLogin(userCredential);
+                // ログイン成功時にメールアドレスを保存
+                sessionStorage.setItem('email', email);
                 // ページを切り替え
                 router.push('/dashboard', { locale: locale });
                 return;
@@ -101,6 +104,9 @@ export default function AuthForm({ action }: Props) {
         } catch (error) {
             if (error instanceof FirebaseError) {
                 setError(t(handleFirebaseError(error)));
+                return;
+            } else if (error instanceof Error && error.message === ErrorCodes.UNVERIFIED_EMAIL) {
+                setError(t('AuthError.unverifiedEmail'));
                 return;
             } else {
                 console.error(error);
