@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, RefObject } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';

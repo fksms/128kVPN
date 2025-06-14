@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { maxInterfaceNameLength, maxInterfaces } from '@/env';
-import { WGInterface } from '@/lib/type';
+import { WGInterface } from '@/lib/sqlite';
 import { ErrorCodes } from '@/lib/errorCodes';
 import { showModal, closeModal } from './handleModal';
 import CountdownTimer from './CountdownTimer';

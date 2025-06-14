@@ -1,8 +1,9 @@
 'use client';
 
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
-import { useRouter } from '@/i18n/navigation';
+import { useRouter, Link } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
 import { sessionLogout } from '@/lib/handleSession';
 import { handleFirebaseError } from '@/lib/firebase';
@@ -56,7 +57,7 @@ export default function Navbar() {
                     {photoURL ? (
                         <div tabIndex={0} role='button' className='btn btn-ghost btn-circle avatar'>
                             <div className='w-10 rounded-full'>
-                                <img alt='My photo' src={photoURL} />
+                                <Image alt='My photo' src={photoURL} width={96} height={96} />
                             </div>
                         </div>
                     ) : (
@@ -68,10 +69,10 @@ export default function Navbar() {
                     )}
                     <ul tabIndex={0} className='menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 w-35 p-2 shadow-lg'>
                         <li>
-                            <a href='/dashboard'>{t('Navbar.dashboard')}</a>
+                            <Link href='/dashboard'>{t('Navbar.dashboard')}</Link>
                         </li>
                         <li>
-                            <a href='/settings'>{t('Navbar.settings')}</a>
+                            <Link href='/settings'>{t('Navbar.settings')}</Link>
                         </li>
                         <li>
                             <a onClick={() => logout()} className='text-red-400'>

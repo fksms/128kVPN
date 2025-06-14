@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
-import { useRouter } from '@/i18n/navigation';
+import { useRouter, Link } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification } from 'firebase/auth';
 import { auth, handleFirebaseError } from '@/lib/firebase';
@@ -173,17 +173,17 @@ export default function AuthForm({ action }: Props) {
 
                         {action === 'login' && (
                             <div>
-                                <a href='/register' className='text-sm text-blue-600 hover:text-blue-800 hover:underline'>
+                                <Link href='/register' className='text-sm text-blue-600 hover:text-blue-800 hover:underline'>
                                     {t('AuthForm.createAccount')}
-                                </a>
+                                </Link>
                             </div>
                         )}
 
                         {action === 'login' && (
                             <div>
-                                <a href='/forgot-password' className='text-sm text-blue-600 hover:text-blue-800 hover:underline'>
+                                <Link href='/forgot-password' className='text-sm text-blue-600 hover:text-blue-800 hover:underline'>
                                     {t('AuthForm.forgotPassword')}
-                                </a>
+                                </Link>
                             </div>
                         )}
 
@@ -205,9 +205,9 @@ export default function AuthForm({ action }: Props) {
 
                         {(action === 'register' || action === 'forgotPassword' || action === 'verifyEmail' || action === 'forgotPasswordSentEmail') && (
                             <div>
-                                <a href='/login' className='text-sm text-blue-600 hover:text-blue-800 hover:underline'>
+                                <Link href='/login' className='text-sm text-blue-600 hover:text-blue-800 hover:underline'>
                                     {t('AuthForm.backToLogin')}
-                                </a>
+                                </Link>
                             </div>
                         )}
                     </form>

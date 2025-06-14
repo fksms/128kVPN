@@ -3,10 +3,10 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "build:monitor": "tsc monitor.ts --outDir ./build",
-        "dev": "next dev --turbopack & node build/monitor.js & wait",
+        "dev": "next dev --turbopack",
         "build": "next build",
-        "start": "node .next/standalone/server.js & node build/monitor.js & wait",
+        "build:standalone": "NEXT_BUILD_MODE=standalone next build",
+        "start": "next start",
         "lint": "next lint",
         "format": "prettier --write './**/*.{js,mjs,jsx,ts,tsx,css,json}'"
     },

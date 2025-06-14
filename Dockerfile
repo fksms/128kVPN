@@ -8,11 +8,8 @@ RUN npm install
 # Copy Project
 COPY src ./
 
-# Build the `monitor.ts`
-RUN npm run build:monitor
-
-# Build
-RUN npm run build
+# Build (Standalone Mode)
+RUN npm run build:standalone
 
 # Copy build result to a new image.
 # This saves a lot of disk space.
@@ -24,9 +21,6 @@ WORKDIR /app
 COPY --from=build /app/.next/standalone/ /app/
 COPY --from=build /app/.next/static/ /app/.next/static/
 COPY --from=build /app/public/ /app/public/
-
-# Copy `monitor.js`
-COPY --from=build /app/build /app/
 
 # Install Linux packages
 RUN apk add --no-cache \
@@ -43,5 +37,4 @@ RUN update-alternatives --install /usr/sbin/iptables iptables /usr/sbin/iptables
 RUN update-alternatives --install /usr/sbin/ip6tables ip6tables /usr/sbin/ip6tables-legacy 10 --slave /usr/sbin/ip6tables-restore ip6tables-restore /usr/sbin/ip6tables-legacy-restore --slave /usr/sbin/ip6tables-save ip6tables-save /usr/sbin/ip6tables-legacy-save
 
 # Run Web UI
-ENTRYPOINT ["dumb-init", "--"]
-CMD ["/bin/sh", "-c", "node server.js & node monitor.js & wait"]
+CMD ["dumb-init", "node", "server.js"]

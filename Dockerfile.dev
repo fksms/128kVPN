@@ -22,8 +22,5 @@ RUN npm install
 # Copy Project
 COPY src ./
 
-# Build the `monitor.ts`
-RUN npm run build:monitor
-
 # Run Web UI
 CMD [ "npm", "run", "dev" ]
