@@ -15,7 +15,7 @@ export default function SocialLoginButton() {
     const router = useRouter();
     const locale = useLocale();
 
-    const handleLogin = async (action: AuthAction) => {
+    const login = async (action: AuthAction): Promise<void> => {
         try {
             // Googleでログイン
             if (action === 'loginWithGoogle') {
@@ -48,7 +48,7 @@ export default function SocialLoginButton() {
         <div>
             <div className='my-6 space-y-3'>
                 {/* Google */}
-                <button className='btn btn-block bg-white text-black border-[#e5e5e5]' onClick={() => handleLogin('loginWithGoogle')}>
+                <button className='btn btn-block bg-white text-black border-[#e5e5e5]' onClick={() => login('loginWithGoogle')}>
                     <svg aria-label='Google logo' width='25' height='25' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
                         <g>
                             <path d='m0 0H512V512H0' fill='#fff'></path>
@@ -61,6 +61,7 @@ export default function SocialLoginButton() {
                     {t('AuthForm.loginWithGoogle')}
                 </button>
                 {/* GitHub */}
+                {/*
                 <button className='btn btn-block bg-[#2F2F2F] text-white border-black'>
                     <svg aria-label='GitHub logo' width='22' height='22' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
                         <path
@@ -70,6 +71,7 @@ export default function SocialLoginButton() {
                     </svg>
                     {t('AuthForm.loginWithGitHub')}
                 </button>
+                */}
             </div>
         </div>
     );

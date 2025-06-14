@@ -11,12 +11,12 @@ import LanguageDropdown from '@/components/LanguageDropdown';
 export default function Navbar() {
     const t = useTranslations();
 
-    const [photoURL, setPhotoURL] = useState('');
+    const [photoURL, setPhotoURL] = useState<string | null>(null);
 
     const router = useRouter();
     const locale = useLocale();
 
-    const handleLogout = async (): Promise<void> => {
+    const logout = async (): Promise<void> => {
         try {
             if (confirm(t('Navbar.confirmLogout'))) {
                 // セッションログアウトを試行
@@ -41,7 +41,7 @@ export default function Navbar() {
 
     useEffect(() => {
         // コンポーネントマウント時に実行
-        setPhotoURL(sessionStorage.getItem('photoURL') || '');
+        setPhotoURL(sessionStorage.getItem('photoURL'));
     }, []);
 
     return (
@@ -74,7 +74,7 @@ export default function Navbar() {
                             <a href='/settings'>{t('Navbar.settings')}</a>
                         </li>
                         <li>
-                            <a onClick={() => handleLogout()} className='text-red-400'>
+                            <a onClick={() => logout()} className='text-red-400'>
                                 <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-5'>
                                     <path
                                         strokeLinecap='round'

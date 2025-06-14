@@ -214,7 +214,6 @@ export default function AuthForm({ action }: Props) {
 
                     {(action === 'login' || action === 'register') && (
                         <div>
-                            <hr className='w-full my-4 border-neutral-content' />
                             <SocialLoginButton />
                         </div>
                     )}

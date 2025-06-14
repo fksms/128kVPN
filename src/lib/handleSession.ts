@@ -19,12 +19,12 @@ export const sessionLogin = async (userCredential: UserCredential): Promise<void
         // ログイン成功時、セッションストレージに情報を保存
         if (userCredential.providerId) {
             // ソーシャルログインの場合
-            sessionStorage.setItem('email', userCredential.user.email || '');
-            sessionStorage.setItem('providerId', userCredential.user.providerId || '');
-            sessionStorage.setItem('photoURL', userCredential.user.photoURL || '');
+            userCredential.user.email && sessionStorage.setItem('email', userCredential.user.email);
+            userCredential.user.providerId && sessionStorage.setItem('providerId', userCredential.user.providerId);
+            userCredential.user.photoURL && sessionStorage.setItem('photoURL', userCredential.user.photoURL);
         } else {
             // メールアドレスログインの場合
-            sessionStorage.setItem('email', userCredential.user.email || '');
+            userCredential.user.email && sessionStorage.setItem('email', userCredential.user.email);
         }
         return;
     } catch (error) {

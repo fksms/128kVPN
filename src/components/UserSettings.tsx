@@ -4,11 +4,11 @@ import { useState, useEffect, useRef, RefObject } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
-import { verifyBeforeUpdateEmail, updatePassword, deleteUser, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
-import { auth, handleFirebaseError } from '@/lib/firebase';
+import { verifyBeforeUpdateEmail, updatePassword, deleteUser, EmailAuthProvider, reauthenticateWithCredential, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { auth, googleAuthProvider, handleFirebaseError } from '@/lib/firebase';
 import { sessionLogout } from '@/lib/handleSession';
 
-type AuthAction = 'changeEmail' | 'changePassword' | 'deleteAccount';
+type AuthAction = 'changeEmail' | 'changePassword' | 'deleteEmailAccount';
 
 export default function UserSettings() {
     const t = useTranslations();
@@ -22,6 +22,7 @@ export default function UserSettings() {
     const [error2, setError2] = useState('');
     const [error3, setError3] = useState('');
 
+    const [providerId, setProviderId] = useState<string | null>(null);
     const [actionType, setActionType] = useState<AuthAction | null>(null);
 
     const router = useRouter();
@@ -41,6 +42,7 @@ export default function UserSettings() {
         return;
     };
 
+    // 入力内容をチェック
     const checkInput = (action: AuthAction): void => {
         // メールアドレスが空ならエラー
         if (action === 'changeEmail' && !newEmail) {
@@ -76,6 +78,7 @@ export default function UserSettings() {
         return;
     };
 
+    // アクションを確認して実行
     const handleAction = async (): Promise<void> => {
         // パスワードが空ならエラー
         if (!currentPassword) {
@@ -85,13 +88,13 @@ export default function UserSettings() {
         setError3('');
 
         if (actionType === 'changeEmail') {
-            await handleEmailChange();
+            await changeEmail();
             return;
         } else if (actionType === 'changePassword') {
-            await handlePasswordChange();
+            await changePassword();
             return;
-        } else if (actionType === 'deleteAccount') {
-            await handleAccountDelete();
+        } else if (actionType === 'deleteEmailAccount') {
+            await deleteEmailAccount();
             return;
         } else {
             console.error('UNDEFINED_ACTION');
@@ -99,7 +102,8 @@ export default function UserSettings() {
         }
     };
 
-    const handleEmailChange = async (): Promise<void> => {
+    // メールアドレスを変更
+    const changeEmail = async (): Promise<void> => {
         // Set the language code for Firebase Auth
         auth.languageCode = locale;
 
@@ -127,7 +131,8 @@ export default function UserSettings() {
         }
     };
 
-    const handlePasswordChange = async (): Promise<void> => {
+    // パスワードを変更
+    const changePassword = async (): Promise<void> => {
         // Set the language code for Firebase Auth
         auth.languageCode = locale;
 
@@ -158,7 +163,8 @@ export default function UserSettings() {
         }
     };
 
-    const handleAccountDelete = async (): Promise<void> => {
+    // メールアドレスで登録されたアカウントを削除
+    const deleteEmailAccount = async (): Promise<void> => {
         try {
             if (confirm(t('UserSettings.confirmDeleteAccount'))) {
                 // 資格情報（credential）を作成
@@ -187,9 +193,42 @@ export default function UserSettings() {
         }
     };
 
+    // ソーシャルアカウントで登録されたアカウントを削除
+    const deleteSocialAccount = async (): Promise<void> => {
+        try {
+            if (confirm(t('UserSettings.confirmDeleteAccount'))) {
+                // サインイン
+                const userCredential = await signInWithPopup(auth, googleAuthProvider);
+                // 資格情報（credential）を作成
+                const credential = GoogleAuthProvider.credentialFromResult(userCredential);
+                // 再認証実行
+                await reauthenticateWithCredential(auth.currentUser!, credential!);
+                // アカウントを削除
+                await deleteUser(userCredential.user);
+                // セッションログアウトを試行
+                await sessionLogout();
+                alert(t('UserSettings.accountDeleted'));
+                // ページを切り替え
+                router.push('/register', { locale: locale });
+                return;
+            } else {
+                return;
+            }
+        } catch (error) {
+            if (error instanceof FirebaseError) {
+                alert(t(handleFirebaseError(error)));
+                return;
+            } else {
+                alert(t('AuthError.unknownError'));
+                return;
+            }
+        }
+    };
+
     useEffect(() => {
         // コンポーネントマウント時に実行
         setCurrentEmail(sessionStorage.getItem('email') || '-');
+        setProviderId(sessionStorage.getItem('providerId'));
     }, []);
 
     return (
@@ -204,10 +243,17 @@ export default function UserSettings() {
                             <p className='text-gray-600'>{t('UserSettings.currentEmail')}</p>
                             <p className='text-base font-medium'>{currentEmail}</p>
                         </div>
-                        <input type='email' placeholder={t('UserSettings.newEmailPlaceholder')} value={newEmail} onChange={(e) => setNewEmail(e.target.value)} className='input text-base' />
+                        <input
+                            type='email'
+                            placeholder={t('UserSettings.newEmailPlaceholder')}
+                            value={newEmail}
+                            onChange={(e) => setNewEmail(e.target.value)}
+                            className='input text-base'
+                            disabled={!!providerId}
+                        />
                         <p className='text-sm text-error'>{error1}</p>
                         <div className='card-actions justify-start'>
-                            <button onClick={() => checkInput('changeEmail')} className='btn btn-soft'>
+                            <button onClick={() => checkInput('changeEmail')} className='btn btn-soft' disabled={!!providerId}>
                                 {t('UserSettings.changeButton')}
                             </button>
                         </div>
@@ -223,6 +269,7 @@ export default function UserSettings() {
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
                             className='input text-base'
+                            disabled={!!providerId}
                         />
                         <input
                             type='password'
@@ -230,10 +277,11 @@ export default function UserSettings() {
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             className='input text-base'
+                            disabled={!!providerId}
                         />
                         <p className='text-sm text-error'>{error2}</p>
                         <div className='card-actions justify-start'>
-                            <button onClick={() => checkInput('changePassword')} className='btn btn-soft'>
+                            <button onClick={() => checkInput('changePassword')} className='btn btn-soft' disabled={!!providerId}>
                                 {t('UserSettings.changeButton')}
                             </button>
                         </div>
@@ -245,7 +293,12 @@ export default function UserSettings() {
                         <h2 className='card-title text-lg font-semibold text-red-600'>{t('UserSettings.deleteAccount')}</h2>
                         <p className='text-gray-600'>{t('UserSettings.deleteAccountWarning')}</p>
                         <div className='card-actions justify-start'>
-                            <button onClick={() => checkInput('deleteAccount')} className='btn border-red-600 bg-red-600 text-white hover:bg-red-700'>
+                            <button
+                                onClick={() => {
+                                    providerId ? deleteSocialAccount() : checkInput('deleteEmailAccount');
+                                }}
+                                className='btn border-red-600 bg-red-600 text-white hover:bg-red-700'
+                            >
                                 {t('UserSettings.deleteAccountButton')}
                             </button>
                         </div>
