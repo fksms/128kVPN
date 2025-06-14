@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState, useRef, RefObject } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { maxInterfaceNameLength, maxInterfaces } from '@/env';
 import { WGInterface } from '@/lib/type';
 import { ErrorCodes } from '@/lib/errorCodes';
+import { showModal, closeModal } from './handleModal';
 import CountdownTimer from './CountdownTimer';
 
 export default function WGInterfaceList() {
@@ -13,18 +14,6 @@ export default function WGInterfaceList() {
     const interfaceCreationModalRef = useRef<HTMLDialogElement>(null);
     const interfaceDeletionModalRef = useRef<HTMLDialogElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-
-    // Open the modal
-    const showModal = (ref: RefObject<HTMLDialogElement | null>): void => {
-        ref.current?.showModal();
-        return;
-    };
-
-    // Close the modal
-    const closeModal = (ref: RefObject<HTMLDialogElement | null>): void => {
-        ref.current?.close();
-        return;
-    };
 
     // -------------------- `getWGInterfaces` --------------------
     const [wgInterfaces, setWGInterfaces] = useState<WGInterface[]>([]);
@@ -58,22 +47,22 @@ export default function WGInterfaceList() {
     const createWGInterface = async (): Promise<void> => {
         // インターフェース名が空文字ならエラー
         if (createWGInterfaceName.length < 1) {
-            setCreateWGInterfaceError(t('DashboardPage.interfaceCreationModal.error.emptyName'));
+            setCreateWGInterfaceError(t('DashboardPage.interfaceConfigurationError.emptyName'));
             return;
         }
         // インターフェース名が長すぎるならエラー
         if (createWGInterfaceName.length > maxInterfaceNameLength) {
-            setCreateWGInterfaceError(t('DashboardPage.interfaceCreationModal.error.tooLongName'));
+            setCreateWGInterfaceError(t('DashboardPage.interfaceConfigurationError.tooLongName'));
             return;
         }
         // 登録済みのインターフェース数が多すぎるならエラー
         if (wgInterfaces.length >= maxInterfaces) {
-            setCreateWGInterfaceError(t('DashboardPage.interfaceCreationModal.error.tooManyInterfaces'));
+            setCreateWGInterfaceError(t('DashboardPage.interfaceConfigurationError.tooManyInterfaces'));
             return;
         }
         // 設定したインターフェース名と同名のインターフェース名がすでに存在しているならエラー
         if (wgInterfaces.some((wgInterface) => wgInterface.name === createWGInterfaceName)) {
-            setCreateWGInterfaceError(t('DashboardPage.interfaceCreationModal.error.alreadyexistsName'));
+            setCreateWGInterfaceError(t('DashboardPage.interfaceConfigurationError.alreadyExistsName'));
             return;
         }
 
@@ -102,20 +91,24 @@ export default function WGInterfaceList() {
                 getWGInterfaces();
                 return;
             } else if (data.code === ErrorCodes.INVALID_REQUEST) {
-                setCreateWGInterfaceError(t('DashboardPage.interfaceCreationModal.error.invalidRequest'));
+                setCreateWGInterfaceError(t('DashboardPage.interfaceConfigurationError.invalidRequest'));
                 console.error(data.code);
                 return;
             } else if (data.code === ErrorCodes.SQL_ERROR) {
-                setCreateWGInterfaceError(t('DashboardPage.interfaceCreationModal.error.sqlError'));
+                setCreateWGInterfaceError(t('DashboardPage.interfaceConfigurationError.sqlError'));
+                console.error(data.code);
+                return;
+            } else if (data.code === ErrorCodes.UNAUTHORIZED) {
+                setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.unauthorized'));
                 console.error(data.code);
                 return;
             } else {
-                setCreateWGInterfaceError(t('DashboardPage.interfaceCreationModal.error.unknownError'));
+                setCreateWGInterfaceError(t('DashboardPage.interfaceConfigurationError.unknownError'));
                 console.error(data.code);
                 return;
             }
         } catch (error) {
-            setCreateWGInterfaceError(t('DashboardPage.interfaceCreationModal.error.failedToFetch'));
+            setCreateWGInterfaceError(t('DashboardPage.interfaceConfigurationError.failedToFetch'));
             console.error(ErrorCodes.FAILED_TO_FETCH);
             return;
         }
@@ -153,20 +146,24 @@ export default function WGInterfaceList() {
                 getWGInterfaces();
                 return;
             } else if (data.code === ErrorCodes.INVALID_REQUEST) {
-                setDeleteWGInterfaceError(t('DashboardPage.interfaceDeletionModal.error.invalidRequest'));
+                setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.invalidRequest'));
                 console.error(data.code);
                 return;
             } else if (data.code === ErrorCodes.SQL_ERROR) {
-                setDeleteWGInterfaceError(t('DashboardPage.interfaceDeletionModal.error.sqlError'));
+                setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.sqlError'));
+                console.error(data.code);
+                return;
+            } else if (data.code === ErrorCodes.UNAUTHORIZED) {
+                setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.unauthorized'));
                 console.error(data.code);
                 return;
             } else {
-                setDeleteWGInterfaceError(t('DashboardPage.interfaceDeletionModal.error.unknownError'));
+                setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.unknownError'));
                 console.error(data.code);
                 return;
             }
         } catch (error) {
-            setDeleteWGInterfaceError(t('DashboardPage.interfaceDeletionModal.error.failedToFetch'));
+            setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.failedToFetch'));
             console.error(ErrorCodes.FAILED_TO_FETCH);
             return;
         }

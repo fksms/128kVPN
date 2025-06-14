@@ -1,5 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
-import db from '@/lib/sqlite';
+import { db } from '@/lib/sqlite';
 import { ErrorCodes } from '@/lib/errorCodes';
 
 // GETリクエスト

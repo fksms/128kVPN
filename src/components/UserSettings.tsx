@@ -7,6 +7,7 @@ import { FirebaseError } from 'firebase/app';
 import { verifyBeforeUpdateEmail, updatePassword, deleteUser, EmailAuthProvider, reauthenticateWithCredential, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth, googleAuthProvider, handleFirebaseError } from '@/lib/firebase';
 import { sessionLogout } from '@/lib/handleSession';
+import { showModal, closeModal } from './handleModal';
 
 type AuthAction = 'changeEmail' | 'changePassword' | 'deleteEmailAccount';
 
@@ -29,18 +30,6 @@ export default function UserSettings() {
     const locale = useLocale();
 
     const passwordCheckModalRef = useRef<HTMLDialogElement>(null);
-
-    // Open the modal
-    const showModal = (ref: RefObject<HTMLDialogElement | null>): void => {
-        ref.current?.showModal();
-        return;
-    };
-
-    // Close the modal
-    const closeModal = (ref: RefObject<HTMLDialogElement | null>): void => {
-        ref.current?.close();
-        return;
-    };
 
     // 入力内容をチェック
     const checkInput = (action: AuthAction): void => {
@@ -324,7 +313,7 @@ export default function UserSettings() {
                             {t('UserSettings.cancel')}
                         </button>
                         <button className='btn btn-primary' onClick={() => handleAction()}>
-                            {t('UserSettings.execute')}
+                            {t('UserSettings.submit')}
                         </button>
                     </div>
                 </div>

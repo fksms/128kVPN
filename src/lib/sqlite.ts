@@ -30,4 +30,4 @@ db.exec(`
   END;
 `);
 
-export default db;
+export { db };

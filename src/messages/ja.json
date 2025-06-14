@@ -10,7 +10,7 @@
         "invalidCredential": "メールアドレスかパスワードが間違っています",
         "emailAlreadyInUse": "このメールアドレスはすでに使用されています",
         "weakPassword": "パスワードが弱すぎます",
-        "tooManyRequests": "リクエストが多すぎます。しばらく待ってから再試行してください",
+        "tooManyRequests": "リクエストが多すぎます。しばらくしてから再試行してください",
         "networkError": "ネットワークエラーが発生しました",
         "unknownError": "不明なエラーが発生しました",
         "sessionLoginFailed": "セッションログインに失敗しました。再度ログインしてください",
@@ -20,9 +20,9 @@
     "AuthForm": {
         "email": "メールアドレス",
         "password": "パスワード",
-        "confirmPassword": "パスワードを確認",
+        "confirmPassword": "パスワード（確認）",
         "loginButton": "ログイン",
-        "registerButton": "登録",
+        "registerButton": "新規登録",
         "sendMailButton": "メールを送信",
         "createAccount": "アカウントを作成",
         "forgotPassword": "パスワードを忘れた場合",
@@ -47,7 +47,7 @@
         }
     },
     "DashboardPage": {
-        "new": "+ 新規",
+        "new": "+ 新規追加",
         "qrCode": "QRコード",
         "download": "ダウンロード",
         "delete": "削除",
@@ -56,29 +56,24 @@
             "description": "名前を入力してください",
             "placeholder": "ここに名前を入力",
             "submit": "作成",
-            "cancel": "キャンセル",
-            "error": {
-                "emptyName": "名前は必須です",
-                "tooLongName": "名前が長すぎます",
-                "tooManyInterfaces": "作成可能なインターフェース数を超えています",
-                "alreadyexistsName": "このインターフェース名はすでに存在します",
-                "sqlError": "SQLエラーが発生しました",
-                "invalidRequest": "無効なリクエストです",
-                "failedToFetch": "データの取得に失敗しました",
-                "unknownError": "不明なエラーが発生しました"
-            }
+            "cancel": "キャンセル"
         },
         "interfaceDeletionModal": {
             "title": "インターフェースを削除",
             "description": "本当にこのインターフェースを削除しますか？",
             "submit": "削除",
-            "cancel": "キャンセル",
-            "error": {
-                "sqlError": "SQLエラーが発生しました",
-                "invalidRequest": "無効なリクエストです",
-                "failedToFetch": "データの取得に失敗しました",
-                "unknownError": "不明なエラーが発生しました"
-            }
+            "cancel": "キャンセル"
+        },
+        "interfaceConfigurationError": {
+            "emptyName": "名前は必須です",
+            "tooLongName": "名前が長すぎます",
+            "tooManyInterfaces": "作成可能なインターフェース数を超えています",
+            "alreadyExistsName": "このインターフェース名はすでに存在します",
+            "sqlError": "SQLエラーが発生しました",
+            "invalidRequest": "無効なリクエストです",
+            "unauthorized": "認証されていません。ページを更新してください",
+            "failedToFetch": "データの取得に失敗しました",
+            "unknownError": "不明なエラーが発生しました"
         },
         "CountdownTimer": {
             "remaining": "残り:",
@@ -89,20 +84,20 @@
     },
     "UserSettings": {
         "accountSettings": "アカウント設定",
-        "changeEmail": "メールアドレス変更",
+        "changeEmail": "メールアドレスの変更",
         "currentEmail": "現在のメールアドレス",
         "newEmailPlaceholder": "新しいメールアドレスを入力",
         "changeButton": "変更する",
-        "changePassword": "パスワード変更",
+        "changePassword": "パスワードの変更",
         "newPasswordPlaceholder": "新しいパスワードを入力",
         "confirmPasswordPlaceholder": "新しいパスワードを確認",
         "deleteAccount": "アカウント削除",
-        "deleteAccountWarning": "アカウントを削除すると、すべてのデータが失われ復元できません。本当に削除しますか？",
+        "deleteAccountWarning": "アカウントを削除すると、すべてのデータが失われ、復元できません。本当に削除しますか？",
         "deleteAccountButton": "アカウントを削除する",
         "confirmPassword": "パスワードを確認",
         "enterCurrentPassword": "現在のパスワードを入力",
         "cancel": "キャンセル",
-        "execute": "実行",
+        "submit": "実行",
         "passwordUpdated": "パスワードを更新しました。",
         "confirmDeleteAccount": "本当にアカウントを削除しますか？",
         "accountDeleted": "アカウントを削除しました。"

@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
                 success: false,
                 code: ErrorCodes.CREATE_SESSION_FAILED,
             },
-            { status: 400 }
+            { status: 500 }
         );
     }
 }

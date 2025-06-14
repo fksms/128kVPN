@@ -1,11 +1,31 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { expirationDurationMinutes } from '@/env';
-import db from '@/lib/sqlite';
+import { db } from '@/lib/sqlite';
+import { adminAuth } from '@/lib/firebase-admin';
 import { ErrorCodes } from '@/lib/errorCodes';
 
 // GETリクエスト
 export async function GET(req: NextRequest): Promise<NextResponse> {
-    const userid = 'testuser';
+    // ユーザーID
+    let userid = '';
+
+    // セッションクッキーの取得
+    const sessionCookie = req.cookies.get('__session')?.value;
+
+    try {
+        // セッションクッキーの検証
+        const decodedIdToken = await adminAuth.verifySessionCookie(sessionCookie!, true);
+        userid = decodedIdToken.uid;
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json(
+            {
+                success: false,
+                code: ErrorCodes.UNAUTHORIZED,
+            },
+            { status: 401 }
+        );
+    }
 
     try {
         // プレースホルダを使ってSQLを準備
@@ -35,8 +55,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
 // POSTリクエスト
 export async function POST(req: NextRequest): Promise<NextResponse> {
-    const userid = 'testuser';
-    const ip_address = 'test_ip';
+    // ユーザーID
+    let userid = '';
+
+    const ip_address = '10.0.0.1';
 
     const { action, name } = await req.json();
 
@@ -47,6 +69,24 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
                 code: ErrorCodes.INVALID_REQUEST,
             },
             { status: 400 }
+        );
+    }
+
+    // セッションクッキーの取得
+    const sessionCookie = req.cookies.get('__session')?.value;
+
+    try {
+        // セッションクッキーの検証
+        const decodedIdToken = await adminAuth.verifySessionCookie(sessionCookie!, true);
+        userid = decodedIdToken.uid;
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json(
+            {
+                success: false,
+                code: ErrorCodes.UNAUTHORIZED,
+            },
+            { status: 401 }
         );
     }
 
