@@ -1,4 +1,5 @@
-import { initializeApp, cert, getApps, getApp, FirebaseError } from 'firebase-admin/app';
+import { initializeApp, cert, getApps, getApp } from 'firebase-admin/app';
+import { getAuth } from 'firebase-admin/auth';
 
 const firebaseAdminConfig = {
     credential: cert({
@@ -11,4 +12,6 @@ const firebaseAdminConfig = {
 // Initialize Firebase
 const adminApp = !getApps().length ? initializeApp(firebaseAdminConfig) : getApp();
 
-export { adminApp };
+const adminAuth = getAuth(adminApp);
+
+export { adminApp, adminAuth };

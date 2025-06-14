@@ -30,7 +30,9 @@
         "verifyEmail1": "We've sent a verification link to your email address.",
         "verifyEmail2": "Please check your inbox and click the link to verify your email.",
         "forgotPasswordSentEmail1": "We've sent a password reset link to your email address.",
-        "forgotPasswordSentEmail2": "Please check your inbox and click the link to reset your password."
+        "forgotPasswordSentEmail2": "Please check your inbox and click the link to reset your password.",
+        "loginWithGoogle": "Login with Google",
+        "loginWithGitHub": "Login with GitHub"
     },
     "Navbar": {
         "title": "Test",

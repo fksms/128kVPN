@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(req: NextRequest) {
+export function POST(req: NextRequest) {
     // レスポンス生成（200 OK）
     const response = NextResponse.json({ success: true }, { status: 200 });
     // __sessionクッキーを削除（maxAge: 0）

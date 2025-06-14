@@ -1,4 +1,5 @@
 import { initializeApp, getApps, getApp, FirebaseError } from 'firebase/app';
+import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getAnalytics } from 'firebase/analytics';
 
 const firebaseConfig = {
@@ -15,7 +16,10 @@ const firebaseConfig = {
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const analytics = typeof window !== 'undefined' ? getAnalytics(app) : undefined;
 
-export { app, analytics };
+const auth = getAuth(app);
+const googleAuthProvider = new GoogleAuthProvider();
+
+export { app, auth, googleAuthProvider, analytics };
 
 // Handle Firebase Error
 export const handleFirebaseError = (firebaseError: FirebaseError): string => {

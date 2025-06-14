@@ -4,8 +4,8 @@ import { useState, useEffect, useRef, RefObject } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
-import { getAuth, verifyBeforeUpdateEmail, updatePassword, deleteUser, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
-import { app, handleFirebaseError } from '@/lib/firebase';
+import { verifyBeforeUpdateEmail, updatePassword, deleteUser, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
+import { auth, handleFirebaseError } from '@/lib/firebase';
 import { sessionLogout } from '@/lib/handleSession';
 
 type AuthAction = 'changeEmail' | 'changePassword' | 'deleteAccount';
@@ -26,8 +26,6 @@ export default function UserSettings() {
 
     const router = useRouter();
     const locale = useLocale();
-
-    const auth = getAuth(app);
 
     const passwordCheckModalRef = useRef<HTMLDialogElement>(null);
 

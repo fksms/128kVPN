@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification } from 'firebase/auth';
-import { app, handleFirebaseError } from '@/lib/firebase';
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification } from 'firebase/auth';
+import { auth, handleFirebaseError } from '@/lib/firebase';
 import { sessionLogin } from '@/lib/handleSession';
 import { ErrorCodes } from '@/lib/errorCodes';
 import LanguageDropdown from '@/components/LanguageDropdown';
@@ -27,8 +27,6 @@ export default function AuthForm({ action }: Props) {
 
     const router = useRouter();
     const locale = useLocale();
-
-    const auth = getAuth(app);
 
     const handleAuth = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         // Prevent the default form submission
@@ -72,8 +70,6 @@ export default function AuthForm({ action }: Props) {
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 // セッションログインを試行
                 await sessionLogin(userCredential);
-                // ログイン成功時にメールアドレスを保存
-                sessionStorage.setItem('email', email);
                 // ページを切り替え
                 router.push('/dashboard', { locale: locale });
                 return;

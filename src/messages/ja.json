@@ -30,7 +30,9 @@
         "verifyEmail1": "メールアドレスに確認リンクを送信しました。",
         "verifyEmail2": "受信トレイを確認し、リンクをクリックしてメールアドレスを確認してください。",
         "forgotPasswordSentEmail1": "パスワードリセットリンクをメールアドレスに送信しました。",
-        "forgotPasswordSentEmail2": "受信トレイを確認し、リンクをクリックしてパスワードをリセットしてください。"
+        "forgotPasswordSentEmail2": "受信トレイを確認し、リンクをクリックしてパスワードをリセットしてください。",
+        "loginWithGoogle": "Googleでログイン",
+        "loginWithGitHub": "GitHubでログイン"
     },
     "Navbar": {
         "title": "テスト",

@@ -16,6 +16,17 @@ export const sessionLogin = async (userCredential: UserCredential): Promise<void
             // ログイン失敗
             throw new Error(data.error);
         }
+        // ログイン成功時、セッションストレージに情報を保存
+        if (userCredential.providerId) {
+            // ソーシャルログインの場合
+            sessionStorage.setItem('email', userCredential.user.email || '');
+            sessionStorage.setItem('providerId', userCredential.user.providerId || '');
+            sessionStorage.setItem('photoURL', userCredential.user.photoURL || '');
+        } else {
+            // メールアドレスログインの場合
+            sessionStorage.setItem('email', userCredential.user.email || '');
+        }
+        return;
     } catch (error) {
         // ログイン失敗
         throw new Error(error instanceof Error ? error.message : ErrorCodes.UNKNOWN_ERROR);
@@ -30,6 +41,9 @@ export const sessionLogout = async (): Promise<void> => {
             // ログアウト失敗
             throw new Error(ErrorCodes.DELETE_SESSION_FAILED);
         }
+        // ログアウト成功時、セッションストレージをクリア
+        sessionStorage.clear();
+        return;
     } catch (error) {
         // ログアウト失敗
         throw new Error(error instanceof Error ? error.message : ErrorCodes.UNKNOWN_ERROR);

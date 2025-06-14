@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { adminApp } from '@/lib/firebase-admin';
-import { getAuth } from 'firebase-admin/auth';
+import { adminAuth } from '@/lib/firebase-admin';
 import { ErrorCodes } from '@/lib/errorCodes';
-
-const auth = getAuth(adminApp);
 
 export async function POST(req: NextRequest) {
     const { token } = await req.json();
@@ -20,7 +17,7 @@ export async function POST(req: NextRequest) {
 
     try {
         // IDトークンを検証しデコード
-        const decoded = await auth.verifyIdToken(token);
+        const decoded = await adminAuth.verifyIdToken(token);
         // メール認証が完了していない場合
         if (!decoded.email_verified) {
             return NextResponse.json(
@@ -34,7 +31,7 @@ export async function POST(req: NextRequest) {
         // セッションの有効期限（1日 = 86400秒）
         const expiresIn = 86400;
         // セッションクッキーを作成
-        const sessionCookie = await auth.createSessionCookie(token, { expiresIn: expiresIn * 1000 });
+        const sessionCookie = await adminAuth.createSessionCookie(token, { expiresIn: expiresIn * 1000 });
         // レスポンス生成（200 OK）
         const response = NextResponse.json({ success: true }, { status: 200 });
         // セッションクッキーを設定

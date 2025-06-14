@@ -32,7 +32,7 @@ export default function WGInterfaceList() {
     // Fetch the list of interfaces
     const getWGInterfaces = async (): Promise<void> => {
         try {
-            const res = await fetch('/api/wg-interfaces', { method: 'GET' });
+            const res = await fetch('/api/wg-interfaces', { method: 'GET', credentials: 'include' });
             const data = await res.json();
 
             // 以下、エラーハンドリング
@@ -87,6 +87,7 @@ export default function WGInterfaceList() {
                     action: 'create',
                     name: createWGInterfaceName,
                 }),
+                credentials: 'include',
             });
             const data = await res.json();
 
@@ -137,6 +138,7 @@ export default function WGInterfaceList() {
                     action: 'delete',
                     name: deleteWGInterfaceName,
                 }),
+                credentials: 'include',
             });
             const data = await res.json();
 
@@ -214,12 +216,7 @@ export default function WGInterfaceList() {
                     <p className='text-sm text-error mt-2'>{createWGInterfaceError}</p>
 
                     <div className='flex justify-end space-x-2 mt-4'>
-                        <button
-                            className='btn btn-soft btn-primary'
-                            onClick={() => {
-                                createWGInterface();
-                            }}
-                        >
+                        <button className='btn btn-soft btn-primary' onClick={() => createWGInterface()}>
                             {t('DashboardPage.interfaceCreationModal.submit')}
                         </button>
                         <button
@@ -312,12 +309,7 @@ export default function WGInterfaceList() {
                     <p className='text-sm text-error mt-2'>{deleteWGInterfaceError}</p>
 
                     <div className='flex justify-end space-x-2 mt-4'>
-                        <button
-                            className='btn btn-soft btn-primary'
-                            onClick={() => {
-                                deleteWGInterface();
-                            }}
-                        >
+                        <button className='btn btn-soft btn-primary' onClick={() => deleteWGInterface()}>
                             {t('DashboardPage.interfaceDeletionModal.submit')}
                         </button>
                         <button
