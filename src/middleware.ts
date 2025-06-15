@@ -65,7 +65,7 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
         try {
             // セッションクッキーの検証
             const payload = await verifySessionCookie(sessionCookie);
-            console.log('SessionCookie Payload:', payload);
+            //console.log('SessionCookie Payload:', payload);
             // セッションクッキーが有効な場合、プロテクト非対象へのアクセスは`/dashboard`にリダイレクト
             if (isPublic) {
                 return NextResponse.redirect(new URL('/dashboard', req.url));

@@ -1,4 +1,4 @@
-## How to build
+## How to deploy
 
 Copy the `.env.sample` file and fill in the required information
 ```sh

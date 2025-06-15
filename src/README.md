@@ -1,4 +1,21 @@
-## How to build
+## How to deploy
+
+### MacOS
+
+#### Setup
+
+Install `nvm` and `wireguard-tools`
+```sh
+brew install nvm
+brew install wireguard-tools
+```
+
+Setup `nvm`
+```sh
+nvm install stable --latest-npm
+```
+
+#### Build
 
 Copy the `.env.sample` file and fill in the required information
 ```sh

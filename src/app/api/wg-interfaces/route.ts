@@ -16,6 +16,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         // セッションクッキーの検証
         const decodedIdToken = await adminAuth.verifySessionCookie(sessionCookie!, true);
         userid = decodedIdToken.uid;
+        if (!decodedIdToken.email_verified) {
+            throw new Error('Email is not verified');
+        }
     } catch (error) {
         console.error(error);
         return NextResponse.json(
@@ -79,6 +82,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         // セッションクッキーの検証
         const decodedIdToken = await adminAuth.verifySessionCookie(sessionCookie!, true);
         userid = decodedIdToken.uid;
+        if (!decodedIdToken.email_verified) {
+            throw new Error('Email is not verified');
+        }
     } catch (error) {
         console.error(error);
         return NextResponse.json(

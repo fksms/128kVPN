@@ -154,23 +154,22 @@ export default function UserSettings() {
 
     // メールアドレスで登録されたアカウントを削除
     const deleteEmailAccount = async (): Promise<void> => {
+        // Set the language code for Firebase Auth
+        auth.languageCode = locale;
+
         try {
-            if (confirm(t('UserSettings.confirmDeleteAccount'))) {
-                // 資格情報（credential）を作成
-                const credential = EmailAuthProvider.credential(auth.currentUser!.email!, currentPassword);
-                // 再認証実行
-                const userCredential = await reauthenticateWithCredential(auth.currentUser!, credential);
-                // アカウントを削除
-                await deleteUser(userCredential.user);
-                // セッションログアウトを試行
-                await sessionLogout();
-                alert(t('UserSettings.accountDeleted'));
-                // ページを切り替え
-                router.push('/register', { locale: locale });
-                return;
-            } else {
-                return;
-            }
+            // 資格情報（credential）を作成
+            const credential = EmailAuthProvider.credential(auth.currentUser!.email!, currentPassword);
+            // 再認証実行
+            const userCredential = await reauthenticateWithCredential(auth.currentUser!, credential);
+            // アカウントを削除
+            await deleteUser(userCredential.user);
+            // セッションログアウトを試行
+            await sessionLogout();
+            alert(t('UserSettings.accountDeleted'));
+            // ページを切り替え
+            router.push('/register', { locale: locale });
+            return;
         } catch (error) {
             if (error instanceof FirebaseError) {
                 setError3(t(handleFirebaseError(error)));
@@ -184,25 +183,24 @@ export default function UserSettings() {
 
     // ソーシャルアカウントで登録されたアカウントを削除
     const deleteSocialAccount = async (): Promise<void> => {
+        // Set the language code for Firebase Auth
+        auth.languageCode = locale;
+
         try {
-            if (confirm(t('UserSettings.confirmDeleteAccount'))) {
-                // サインイン
-                const userCredential = await signInWithPopup(auth, googleAuthProvider);
-                // 資格情報（credential）を作成
-                const credential = GoogleAuthProvider.credentialFromResult(userCredential);
-                // 再認証実行
-                await reauthenticateWithCredential(auth.currentUser!, credential!);
-                // アカウントを削除
-                await deleteUser(userCredential.user);
-                // セッションログアウトを試行
-                await sessionLogout();
-                alert(t('UserSettings.accountDeleted'));
-                // ページを切り替え
-                router.push('/register', { locale: locale });
-                return;
-            } else {
-                return;
-            }
+            // サインイン
+            const userCredential = await signInWithPopup(auth, googleAuthProvider);
+            // 資格情報（credential）を作成
+            const credential = GoogleAuthProvider.credentialFromResult(userCredential);
+            // 再認証実行
+            await reauthenticateWithCredential(auth.currentUser!, credential!);
+            // アカウントを削除
+            await deleteUser(userCredential.user);
+            // セッションログアウトを試行
+            await sessionLogout();
+            alert(t('UserSettings.accountDeleted'));
+            // ページを切り替え
+            router.push('/register', { locale: locale });
+            return;
         } catch (error) {
             if (error instanceof FirebaseError) {
                 alert(t(handleFirebaseError(error)));
@@ -284,7 +282,9 @@ export default function UserSettings() {
                         <div className='card-actions justify-start'>
                             <button
                                 onClick={() => {
-                                    providerId ? deleteSocialAccount() : checkInput('deleteEmailAccount');
+                                    if (confirm(t('UserSettings.confirmDeleteAccount'))) {
+                                        providerId ? deleteSocialAccount() : checkInput('deleteEmailAccount');
+                                    }
                                 }}
                                 className='btn border-red-600 bg-red-600 text-white hover:bg-red-700'
                             >

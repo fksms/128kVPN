@@ -52,12 +52,13 @@ export async function verifySessionCookie(sessionCookie: string): Promise<JWTPay
     const publicKey = await importX509(publicKeyPem, 'RS256');
 
     // JWTの署名とクレームの検証
+    // 参考：https://zenn.dev/link/comments/8bfcdafbf344da
     const { payload } = await jwtVerify(sessionCookie, publicKey, {
         algorithms: ['RS256'],
         issuer: `https://session.firebase.google.com/${process.env.NEXT_PUBLIC_FIREBASE_CONFIG_PROJECT_ID || ''}`,
         audience: process.env.NEXT_PUBLIC_FIREBASE_CONFIG_PROJECT_ID || '',
-        maxTokenAge: 60 * 60, // 1hour in seconds
-        requiredClaims: ['exp', 'sub', 'auth_time'],
+        maxTokenAge: 3600, // 1時間
+        requiredClaims: ['exp', 'sub', 'auth_time', 'email_verified'],
     });
 
     if (!payload.sub) {
