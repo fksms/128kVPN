@@ -47,7 +47,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     if (action === 'delete') {
         try {
             // プレースホルダを使ってSQLを準備
-            const stmt = db.prepare('DELETE FROM wg_interfaces WHERE expires_at < ?');
+            const stmt = db.prepare('DELETE FROM wg_interfaces WHERE expire_at < ?');
 
             // プレースホルダに値をバインド
             stmt.run(checkedAt);

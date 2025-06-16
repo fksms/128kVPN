@@ -17,6 +17,7 @@ export const sessionLogin = async (userCredential: UserCredential): Promise<void
             throw new Error(data.error);
         }
         // ログイン成功時、セッションストレージに情報を保存
+        sessionStorage.clear();
         if (userCredential.providerId) {
             // ソーシャルログインの場合
             userCredential.user.email && sessionStorage.setItem('email', userCredential.user.email);

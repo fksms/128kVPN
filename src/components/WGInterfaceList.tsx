@@ -3,10 +3,15 @@
 import { useEffect, useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { maxInterfaceNameLength, maxInterfaces } from '@/env';
-import { WGInterface } from '@/lib/sqlite';
 import { ErrorCodes } from '@/lib/errorCodes';
 import { showModal, closeModal } from './handleModal';
 import CountdownTimer from './CountdownTimer';
+
+export type WGInterface = {
+    name: string;
+    ipAddress: string;
+    expireAt: number; // UNIXタイムスタンプで保持
+};
 
 export default function WGInterfaceList() {
     const t = useTranslations();
@@ -238,12 +243,12 @@ export default function WGInterfaceList() {
                             <div className='flex max-sm:flex-col sm:flex-row justify-between max-sm:space-y-4'>
                                 <div>
                                     <div className='font-medium card-title'>{wgInterface.name}</div>
-                                    <div className='text-sm text-gray-500'>{wgInterface.ip_address}</div>
+                                    <div className='text-sm text-gray-500'>{wgInterface.ipAddress}</div>
                                 </div>
 
                                 <div className='flex items-center max-sm:justify-end space-x-2'>
                                     <div className='mr-4'>
-                                        <CountdownTimer expireAt={wgInterface.expires_at} />
+                                        <CountdownTimer expireAt={wgInterface.expireAt} />
                                     </div>
 
                                     <button onClick={() => {}} className='btn btn-square btn-md' title={t('DashboardPage.qrCode')}>

@@ -24,3 +24,7 @@ const wgPostUp = process.env.WG_POST_UP || '';
 const wgPreDown = process.env.WG_PRE_DOWN || '';
 // WireGuardインターフェース停止後に実行するスクリプト
 const wgPostDown = process.env.WG_POST_DOWN || '';
+
+const addPeer = async (): Promise<void> => {};
+
+const removePeer = async (): Promise<void> => {};
