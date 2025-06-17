@@ -5,12 +5,10 @@ import { useTranslations } from 'next-intl';
 import { maxInterfaceNameLength, maxInterfaces } from '@/env';
 import { ErrorCodes } from '@/lib/errorCodes';
 import { showModal, closeModal } from './handleModal';
-import CountdownTimer from './CountdownTimer';
 
 export type WGInterface = {
     name: string;
     ipAddress: string;
-    expireAt: number; // UNIXタイムスタンプで保持
 };
 
 export default function WGInterfaceList() {
@@ -97,19 +95,18 @@ export default function WGInterfaceList() {
                 return;
             } else if (data.code === ErrorCodes.INVALID_REQUEST) {
                 setCreateWGInterfaceError(t('DashboardPage.interfaceConfigurationError.invalidRequest'));
-                console.error(data.code);
                 return;
             } else if (data.code === ErrorCodes.SQL_ERROR) {
                 setCreateWGInterfaceError(t('DashboardPage.interfaceConfigurationError.sqlError'));
-                console.error(data.code);
                 return;
             } else if (data.code === ErrorCodes.UNAUTHORIZED) {
                 setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.unauthorized'));
-                console.error(data.code);
+                return;
+            } else if (data.code === ErrorCodes.NO_AVAILABLE_IP) {
+                setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.noAvailableIP'));
                 return;
             } else {
                 setCreateWGInterfaceError(t('DashboardPage.interfaceConfigurationError.unknownError'));
-                console.error(data.code);
                 return;
             }
         } catch (error) {
@@ -152,19 +149,18 @@ export default function WGInterfaceList() {
                 return;
             } else if (data.code === ErrorCodes.INVALID_REQUEST) {
                 setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.invalidRequest'));
-                console.error(data.code);
                 return;
             } else if (data.code === ErrorCodes.SQL_ERROR) {
                 setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.sqlError'));
-                console.error(data.code);
                 return;
             } else if (data.code === ErrorCodes.UNAUTHORIZED) {
                 setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.unauthorized'));
-                console.error(data.code);
+                return;
+            } else if (data.code === ErrorCodes.NO_AVAILABLE_IP) {
+                setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.noAvailableIP'));
                 return;
             } else {
                 setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.unknownError'));
-                console.error(data.code);
                 return;
             }
         } catch (error) {
@@ -178,6 +174,10 @@ export default function WGInterfaceList() {
     useEffect(() => {
         // コンポーネントマウント時に実行
         getWGInterfaces();
+        // 60秒ごとに実行
+        const interval = setInterval(getWGInterfaces, 60 * 1000);
+        // アンマウント時にインターバル解除
+        return () => clearInterval(interval);
     }, []);
 
     return (
@@ -217,6 +217,13 @@ export default function WGInterfaceList() {
                     />
                     <p className='text-sm text-error mt-2'>{createWGInterfaceError}</p>
 
+                    <div role='alert' className='alert alert-info alert-soft mt-4'>
+                        <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' className='stroke-info h-6 w-6 shrink-0'>
+                            <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'></path>
+                        </svg>
+                        <span>{t('DashboardPage.interfaceCreationModal.notice')}</span>
+                    </div>
+
                     <div className='flex justify-end space-x-2 mt-4'>
                         <button className='btn btn-soft btn-primary' onClick={() => createWGInterface()}>
                             {t('DashboardPage.interfaceCreationModal.submit')}
@@ -245,12 +252,7 @@ export default function WGInterfaceList() {
                                     <div className='font-medium card-title'>{wgInterface.name}</div>
                                     <div className='text-sm text-gray-500'>{wgInterface.ipAddress}</div>
                                 </div>
-
                                 <div className='flex items-center max-sm:justify-end space-x-2'>
-                                    <div className='mr-4'>
-                                        <CountdownTimer expireAt={wgInterface.expireAt} />
-                                    </div>
-
                                     <button onClick={() => {}} className='btn btn-square btn-md' title={t('DashboardPage.qrCode')}>
                                         <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-6'>
                                             <path

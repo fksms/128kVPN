@@ -56,7 +56,8 @@
             "description": "名前を入力してください",
             "placeholder": "ここに名前を入力",
             "submit": "作成",
-            "cancel": "キャンセル"
+            "cancel": "キャンセル",
+            "notice": "作成されたインターフェースは30〜60分後に自動的に削除されます"
         },
         "interfaceDeletionModal": {
             "title": "インターフェースを削除",
@@ -72,6 +73,7 @@
             "sqlError": "SQLエラーが発生しました",
             "invalidRequest": "無効なリクエストです",
             "unauthorized": "認証されていません。ページを更新してください",
+            "noAvailableIP": "利用可能なIPアドレスがありません",
             "failedToFetch": "データの取得に失敗しました",
             "unknownError": "不明なエラーが発生しました"
         },

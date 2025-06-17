@@ -49,7 +49,6 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
                 data: wgInterfaces.map((wgInterface) => ({
                     name: wgInterface.name,
                     ipAddress: wgInterface.ip_address,
-                    expireAt: wgInterface.expire_at,
                 })),
             },
             { status: 200 }

@@ -56,7 +56,8 @@
             "description": "Please enter a name",
             "placeholder": "Enter name here",
             "submit": "Create",
-            "cancel": "Cancel"
+            "cancel": "Cancel",
+            "notice": "The created interface will be automatically deleted after 30 to 60 minutes"
         },
         "interfaceDeletionModal": {
             "title": "Delete Interface",
@@ -72,6 +73,7 @@
             "sqlError": "An SQL error occurred",
             "invalidRequest": "Invalid request",
             "unauthorized": "Unauthorized access. Please refresh the page",
+            "noAvailableIP": "No available IP addresses",
             "failedToFetch": "Failed to fetch data",
             "unknownError": "An unknown error occurred"
         },
