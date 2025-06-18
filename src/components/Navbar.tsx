@@ -3,23 +3,29 @@
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
-import { useRouter, Link } from '@/i18n/navigation';
+import { useRouter, usePathname } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
 import { sessionLogout } from '@/lib/handleSession';
 import { handleFirebaseError } from '@/lib/firebase';
+import { useLoading } from '@/contexts/LoadingContext';
 import LanguageDropdown from '@/components/LanguageDropdown';
 
 export default function Navbar() {
     const t = useTranslations();
 
+    const { setLoading } = useLoading();
+
     const [photoURL, setPhotoURL] = useState<string | null>(null);
 
     const router = useRouter();
     const locale = useLocale();
+    const currentPathname = usePathname();
 
     const logout = async (): Promise<void> => {
         try {
             if (confirm(t('Navbar.confirmLogout'))) {
+                // ローディング開始
+                setLoading(true);
                 // セッションログアウトを試行
                 await sessionLogout();
                 // ページを切り替え
@@ -37,6 +43,14 @@ export default function Navbar() {
                 alert(t('AuthError.unknownError'));
                 return;
             }
+        }
+    };
+
+    const goTo = (pathname: string): void => {
+        if (currentPathname !== pathname) {
+            // ローディング開始
+            setLoading(true);
+            router.push(pathname, { locale: locale });
         }
     };
 
@@ -69,10 +83,10 @@ export default function Navbar() {
                     )}
                     <ul tabIndex={0} className='menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 w-35 p-2 shadow-lg'>
                         <li>
-                            <Link href='/dashboard'>{t('Navbar.dashboard')}</Link>
+                            <a onClick={() => goTo('/dashboard')}>{t('Navbar.dashboard')}</a>
                         </li>
                         <li>
-                            <Link href='/settings'>{t('Navbar.settings')}</Link>
+                            <a onClick={() => goTo('/settings')}>{t('Navbar.settings')}</a>
                         </li>
                         <li>
                             <a onClick={() => logout()} className='text-red-400'>

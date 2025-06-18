@@ -15,7 +15,7 @@ export type WGInterface = {
 export default function WGInterfaceList() {
     const t = useTranslations();
 
-    const { setIsLoading } = useLoading();
+    const { setLoading } = useLoading();
 
     const interfaceCreationModalRef = useRef<HTMLDialogElement>(null);
     const interfaceDeletionModalRef = useRef<HTMLDialogElement>(null);
@@ -177,8 +177,8 @@ export default function WGInterfaceList() {
     useEffect(() => {
         // コンポーネントマウント時に実行
         getWGInterfaces();
-        // ローディングを終了
-        setIsLoading(false);
+        // ローディング停止
+        setLoading(false);
         // 60秒ごとに実行
         const interval = setInterval(getWGInterfaces, 60 * 1000);
         // アンマウント時にインターバル解除

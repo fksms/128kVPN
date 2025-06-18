@@ -6,11 +6,14 @@ import { FirebaseError } from 'firebase/app';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleAuthProvider, handleFirebaseError } from '@/lib/firebase';
 import { sessionLogin } from '@/lib/handleSession';
+import { useLoading } from '@/contexts/LoadingContext';
 
 type AuthAction = 'loginWithGoogle' | 'loginWithGitHub';
 
 export default function SocialLoginButton() {
     const t = useTranslations();
+
+    const { setLoading } = useLoading();
 
     const router = useRouter();
     const locale = useLocale();
@@ -21,6 +24,8 @@ export default function SocialLoginButton() {
             if (action === 'loginWithGoogle') {
                 // サインイン
                 const userCredential = await signInWithPopup(auth, googleAuthProvider);
+                // ローディング開始
+                setLoading(true);
                 // セッションログインを試行
                 await sessionLogin(userCredential);
                 // ページを切り替え

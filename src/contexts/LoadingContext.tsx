@@ -4,13 +4,13 @@ import { createContext, useState, useContext, useEffect } from 'react';
 
 const LoadingContext = createContext({
     isLoading: false,
-    setIsLoading: (loading: boolean) => {},
+    setLoading: (loading: boolean) => {},
 });
 
 export const useLoading = () => useContext(LoadingContext);
 
 export function LoadingProvider({ children }: { children: React.ReactNode }) {
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setLoading] = useState(false);
 
     // ローディング中はスクロールを無効化
     useEffect(() => {
@@ -21,5 +21,5 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
         }
     }, [isLoading]);
 
-    return <LoadingContext.Provider value={{ isLoading, setIsLoading }}>{children}</LoadingContext.Provider>;
+    return <LoadingContext.Provider value={{ isLoading, setLoading }}>{children}</LoadingContext.Provider>;
 }

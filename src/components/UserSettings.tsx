@@ -8,11 +8,14 @@ import { verifyBeforeUpdateEmail, updatePassword, deleteUser, EmailAuthProvider,
 import { auth, googleAuthProvider, handleFirebaseError } from '@/lib/firebase';
 import { sessionLogout } from '@/lib/handleSession';
 import { showModal, closeModal } from './handleModal';
+import { useLoading } from '@/contexts/LoadingContext';
 
 type AuthAction = 'changeEmail' | 'changePassword' | 'deleteEmailAccount';
 
 export default function UserSettings() {
     const t = useTranslations();
+
+    const { setLoading } = useLoading();
 
     const [currentPassword, setCurrentPassword] = useState('');
     const [currentEmail, setCurrentEmail] = useState('');
@@ -97,6 +100,8 @@ export default function UserSettings() {
         auth.languageCode = locale;
 
         try {
+            // ローディング開始
+            setLoading(true);
             // 資格情報（credential）を作成
             const credential = EmailAuthProvider.credential(auth.currentUser!.email!, currentPassword);
             // 再認証実行
@@ -109,6 +114,8 @@ export default function UserSettings() {
             router.push('/verify-email', { locale: locale });
             return;
         } catch (error) {
+            // ローディング停止
+            setLoading(false);
             if (error instanceof FirebaseError) {
                 setError3(t(handleFirebaseError(error)));
                 return;
@@ -158,6 +165,8 @@ export default function UserSettings() {
         auth.languageCode = locale;
 
         try {
+            // ローディング開始
+            setLoading(true);
             // 資格情報（credential）を作成
             const credential = EmailAuthProvider.credential(auth.currentUser!.email!, currentPassword);
             // 再認証実行
@@ -171,6 +180,8 @@ export default function UserSettings() {
             router.push('/register', { locale: locale });
             return;
         } catch (error) {
+            // ローディング停止
+            setLoading(false);
             if (error instanceof FirebaseError) {
                 setError3(t(handleFirebaseError(error)));
                 return;
@@ -189,6 +200,8 @@ export default function UserSettings() {
         try {
             // サインイン
             const userCredential = await signInWithPopup(auth, googleAuthProvider);
+            // ローディング開始
+            setLoading(true);
             // 資格情報（credential）を作成
             const credential = GoogleAuthProvider.credentialFromResult(userCredential);
             // 再認証実行
@@ -202,6 +215,8 @@ export default function UserSettings() {
             router.push('/register', { locale: locale });
             return;
         } catch (error) {
+            // ローディング停止
+            setLoading(false);
             if (error instanceof FirebaseError) {
                 alert(t(handleFirebaseError(error)));
                 return;
@@ -216,6 +231,8 @@ export default function UserSettings() {
         // コンポーネントマウント時に実行
         setCurrentEmail(sessionStorage.getItem('email') || '-');
         setProviderId(sessionStorage.getItem('providerId'));
+        // ローディング停止
+        setLoading(false);
     }, []);
 
     return (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter, Link } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
@@ -21,7 +21,7 @@ type Props = {
 export default function AuthForm({ action }: Props) {
     const t = useTranslations();
 
-    const { setIsLoading } = useLoading();
+    const { setLoading } = useLoading();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -64,7 +64,7 @@ export default function AuthForm({ action }: Props) {
         setError('');
 
         // ローディング開始
-        setIsLoading(true);
+        setLoading(true);
 
         // Set the language code for Firebase Auth
         auth.languageCode = locale;
@@ -100,14 +100,12 @@ export default function AuthForm({ action }: Props) {
             }
             // 不明なエラー
             else {
-                // ローディング終了
-                setIsLoading(false);
                 console.error('UNDEFINED_ACTION');
                 return;
             }
         } catch (error) {
-            // ローディング終了
-            setIsLoading(false);
+            // ローディング停止
+            setLoading(false);
             if (error instanceof FirebaseError) {
                 setError(t(handleFirebaseError(error)));
                 return;
@@ -121,6 +119,11 @@ export default function AuthForm({ action }: Props) {
             }
         }
     };
+
+    useEffect(() => {
+        // ローディングを終了
+        setLoading(false);
+    }, []);
 
     return (
         <div>
