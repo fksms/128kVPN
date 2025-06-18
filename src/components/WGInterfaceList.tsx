@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { maxInterfaceNameLength, maxInterfaces } from '@/env';
 import { ErrorCodes } from '@/lib/errorCodes';
+import { useLoading } from '@/contexts/LoadingContext';
 import { showModal, closeModal } from './handleModal';
 
 export type WGInterface = {
@@ -13,6 +14,8 @@ export type WGInterface = {
 
 export default function WGInterfaceList() {
     const t = useTranslations();
+
+    const { setIsLoading } = useLoading();
 
     const interfaceCreationModalRef = useRef<HTMLDialogElement>(null);
     const interfaceDeletionModalRef = useRef<HTMLDialogElement>(null);
@@ -174,6 +177,8 @@ export default function WGInterfaceList() {
     useEffect(() => {
         // コンポーネントマウント時に実行
         getWGInterfaces();
+        // ローディングを終了
+        setIsLoading(false);
         // 60秒ごとに実行
         const interval = setInterval(getWGInterfaces, 60 * 1000);
         // アンマウント時にインターバル解除

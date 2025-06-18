@@ -4,6 +4,7 @@ import { db } from '@/lib/sqlite';
 import { adminAuth } from '@/lib/firebase-admin';
 import { ErrorCodes } from '@/lib/errorCodes';
 import { wgInterfaceCIDR } from '@/env';
+import { addPeer } from '@/lib/wireguard';
 
 type WgInterface = {
     id: number;
@@ -18,9 +19,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     // ユーザーID
     let userId = null;
 
+    // -------------------- セッションクッキーの検証 --------------------
     // セッションクッキーの取得
     const sessionCookie = req.cookies.get('__session')?.value;
-
     try {
         // セッションクッキーの検証
         const decodedIdToken = await adminAuth.verifySessionCookie(sessionCookie!, true);
@@ -38,7 +39,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
             { status: 401 }
         );
     }
+    // -------------------- セッションクッキーの検証 --------------------
 
+    // -------------------- データの取得 --------------------
     try {
         // プレースホルダを使ってSQLを準備
         const stmt = db.prepare('SELECT * FROM wg_interfaces WHERE userid = ?');
@@ -63,6 +66,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
             { status: 500 }
         );
     }
+    // -------------------- データの取得 --------------------
 }
 
 // POSTリクエスト
@@ -70,8 +74,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // ユーザーID
     let userId = null;
 
+    // -------------------- リクエストボディの検証 --------------------
     const { action, name } = await req.json();
-
     if (!action || !name) {
         return NextResponse.json(
             {
@@ -81,10 +85,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             { status: 400 }
         );
     }
+    // -------------------- リクエストボディの検証 --------------------
 
+    // -------------------- セッションクッキーの検証 --------------------
     // セッションクッキーの取得
     const sessionCookie = req.cookies.get('__session')?.value;
-
     try {
         // セッションクッキーの検証
         const decodedIdToken = await adminAuth.verifySessionCookie(sessionCookie!, true);
@@ -102,13 +107,14 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             { status: 401 }
         );
     }
+    // -------------------- セッションクッキーの検証 --------------------
 
     if (action === 'create') {
         // 失効日時を計算（UNIXタイムスタンプ）
         const expireAt = Date.now() + expirationDurationMinutes * 60 * 1000;
 
+        // -------------------- 利用可能なIPアドレスの取得 --------------------
         let availableIP = null;
-
         try {
             // プレースホルダを使ってSQLを準備
             const stmt = db.prepare('SELECT ip_address FROM wg_interfaces');
@@ -131,15 +137,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
                 { status: 503 }
             );
         }
+        // -------------------- 利用可能なIPアドレスの取得 --------------------
 
+        // -------------------- データベースの更新 --------------------
         try {
             // プレースホルダを使ってSQLを準備
             const stmt = db.prepare('INSERT INTO wg_interfaces (userid, name, ip_address, expire_at) VALUES (?, ?, ?, ?)');
 
             // プレースホルダに値をバインド
             stmt.run(userId, name, availableIP, expireAt);
-
-            return NextResponse.json({ success: true }, { status: 200 });
         } catch (error) {
             console.error(error);
             return NextResponse.json(
@@ -150,7 +156,26 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
                 { status: 500 }
             );
         }
+        // -------------------- データベースの更新 --------------------
+
+        // -------------------- WireGuardのコンフィグ更新 --------------------
+        try {
+            addPeer();
+
+            return NextResponse.json({ success: true }, { status: 200 });
+        } catch (error) {
+            console.error(error);
+            return NextResponse.json(
+                {
+                    success: false,
+                    code: ErrorCodes.UNKNOWN_ERROR,
+                },
+                { status: 500 }
+            );
+        }
+        // -------------------- WireGuardのコンフィグ更新 --------------------
     } else if (action === 'delete') {
+        // -------------------- データベースの更新 --------------------
         try {
             // プレースホルダを使ってSQLを準備
             const stmt = db.prepare('DELETE FROM wg_interfaces WHERE userid = ? AND name = ?');
@@ -169,6 +194,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
                 { status: 500 }
             );
         }
+        // -------------------- データベースの更新 --------------------
+
+        // -------------------- WireGuardのコンフィグ更新 --------------------
+
+        // -------------------- WireGuardのコンフィグ更新 --------------------
     } else {
         return NextResponse.json(
             {

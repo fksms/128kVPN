@@ -8,6 +8,7 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswor
 import { auth, handleFirebaseError } from '@/lib/firebase';
 import { sessionLogin } from '@/lib/handleSession';
 import { ErrorCodes } from '@/lib/errorCodes';
+import { useLoading } from '@/contexts/LoadingContext';
 import LanguageDropdown from '@/components/LanguageDropdown';
 import SocialLoginButton from '@/components/SocialLoginButton';
 
@@ -19,6 +20,8 @@ type Props = {
 
 export default function AuthForm({ action }: Props) {
     const t = useTranslations();
+
+    const { setIsLoading } = useLoading();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -60,6 +63,9 @@ export default function AuthForm({ action }: Props) {
         }
         setError('');
 
+        // ローディング開始
+        setIsLoading(true);
+
         // Set the language code for Firebase Auth
         auth.languageCode = locale;
 
@@ -94,10 +100,14 @@ export default function AuthForm({ action }: Props) {
             }
             // 不明なエラー
             else {
+                // ローディング終了
+                setIsLoading(false);
                 console.error('UNDEFINED_ACTION');
                 return;
             }
         } catch (error) {
+            // ローディング終了
+            setIsLoading(false);
             if (error instanceof FirebaseError) {
                 setError(t(handleFirebaseError(error)));
                 return;

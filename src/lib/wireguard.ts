@@ -1,3 +1,5 @@
+import path from 'path';
+
 // WireGuardのアドレス（クライアントが接続するアドレス）
 const wgHost = process.env.WG_HOST;
 // WireGuardのポート（クライアントが接続するポート）
@@ -25,6 +27,11 @@ const wgPreDown = process.env.WG_PRE_DOWN || '';
 // WireGuardインターフェース停止後に実行するスクリプト
 const wgPostDown = process.env.WG_POST_DOWN || '';
 
-const addPeer = async (): Promise<void> => {};
+const getConfig = (): void => {};
 
-const removePeer = async (): Promise<void> => {};
+export const addPeer = async (): Promise<void> => {
+    console.log(process.cwd());
+    console.log(path.join(process.cwd(), 'wg0.conf'));
+};
+
+export const removePeer = async (): Promise<void> => {};
