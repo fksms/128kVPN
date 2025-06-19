@@ -10,6 +10,7 @@ db.exec(`
     userid TEXT NOT NULL,
     name TEXT NOT NULL CHECK(name <> '') CHECK(LENGTH(name) <= ${maxInterfaceNameLength}),
     ip_address TEXT NOT NULL,
+    client_config TEXT NOT NULL,
     expire_at INTEGER NOT NULL,
     UNIQUE(userid, name)
   );

@@ -1,6 +1,7 @@
+import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
-const nextConfig = {
+const nextConfig: NextConfig = {
     /* config options here */
     output: process.env.NEXT_BUILD_MODE === 'standalone' ? 'standalone' : undefined,
     images: {

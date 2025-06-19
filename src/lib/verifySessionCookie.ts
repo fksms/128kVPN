@@ -1,10 +1,11 @@
 import { jwtVerify, importX509, JWTPayload } from 'jose';
 
-// Firebase公開鍵の取得（キャッシュ対応）
-async function getPublicKeys(): Promise<Record<string, string>> {
-    let cachedKeys = null;
-    let cacheExpiresAt = 0;
+// Firebase公開鍵をキャッシュ
+let cachedKeys: Record<string, string> | null = null;
+let cacheExpiresAt = 0;
 
+// Firebase公開鍵の取得（キャッシュ対応）
+async function getPublicKeys(): Promise<Record<string, string> | null> {
     const now = Date.now();
 
     if (cachedKeys && cacheExpiresAt > now) {
@@ -35,12 +36,16 @@ async function getPublicKeys(): Promise<Record<string, string>> {
 // セッションCookieの検証
 // 参考：https://firebase.google.com/docs/auth/admin/manage-cookies?hl=ja#verify_session_cookies_using_a_third-party_jwt_library
 export async function verifySessionCookie(sessionCookie: string): Promise<JWTPayload> {
-    const publicKeys = await getPublicKeys();
-
     // JWTのヘッダー部分をデコードして kid を取り出す
     const [encodedHeader] = sessionCookie.split('.');
     const header = JSON.parse(Buffer.from(encodedHeader, 'base64url').toString());
     const kid = header.kid;
+
+    // 公開鍵リストを取得
+    const publicKeys = await getPublicKeys();
+    if (!publicKeys) {
+        throw new Error('Failed to fetch public keys');
+    }
 
     // kidに対応する公開鍵を取得
     const publicKeyPem = publicKeys[kid];

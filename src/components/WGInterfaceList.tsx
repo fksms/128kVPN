@@ -3,13 +3,15 @@
 import { useEffect, useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { maxInterfaceNameLength, maxInterfaces } from '@/env';
-import { ErrorCodes } from '@/lib/errorCodes';
+import { handleError } from '@/lib/errorCodes';
 import { useLoading } from '@/contexts/LoadingContext';
 import { showModal, closeModal } from './handleModal';
+import QRCode from 'qrcode';
 
 export type WGInterface = {
     name: string;
     ipAddress: string;
+    clientConfig: string;
 };
 
 export default function WGInterfaceList() {
@@ -39,7 +41,7 @@ export default function WGInterfaceList() {
                 return;
             }
         } catch (error) {
-            console.error(ErrorCodes.FAILED_TO_FETCH);
+            console.error(error);
             return;
         }
     };
@@ -96,25 +98,13 @@ export default function WGInterfaceList() {
                 // Refresh the list
                 getWGInterfaces();
                 return;
-            } else if (data.code === ErrorCodes.INVALID_REQUEST) {
-                setCreateWGInterfaceError(t('DashboardPage.interfaceConfigurationError.invalidRequest'));
-                return;
-            } else if (data.code === ErrorCodes.SQL_ERROR) {
-                setCreateWGInterfaceError(t('DashboardPage.interfaceConfigurationError.sqlError'));
-                return;
-            } else if (data.code === ErrorCodes.UNAUTHORIZED) {
-                setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.unauthorized'));
-                return;
-            } else if (data.code === ErrorCodes.NO_AVAILABLE_IP) {
-                setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.noAvailableIP'));
-                return;
             } else {
-                setCreateWGInterfaceError(t('DashboardPage.interfaceConfigurationError.unknownError'));
+                setCreateWGInterfaceError(t(handleError(data.code)));
                 return;
             }
         } catch (error) {
+            console.error(error);
             setCreateWGInterfaceError(t('DashboardPage.interfaceConfigurationError.failedToFetch'));
-            console.error(ErrorCodes.FAILED_TO_FETCH);
             return;
         }
     };
@@ -150,29 +140,30 @@ export default function WGInterfaceList() {
                 // Refresh the list
                 getWGInterfaces();
                 return;
-            } else if (data.code === ErrorCodes.INVALID_REQUEST) {
-                setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.invalidRequest'));
-                return;
-            } else if (data.code === ErrorCodes.SQL_ERROR) {
-                setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.sqlError'));
-                return;
-            } else if (data.code === ErrorCodes.UNAUTHORIZED) {
-                setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.unauthorized'));
-                return;
-            } else if (data.code === ErrorCodes.NO_AVAILABLE_IP) {
-                setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.noAvailableIP'));
-                return;
             } else {
-                setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.unknownError'));
+                setDeleteWGInterfaceError(t(handleError(data.code)));
                 return;
             }
         } catch (error) {
+            console.error(error);
             setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.failedToFetch'));
-            console.error(ErrorCodes.FAILED_TO_FETCH);
             return;
         }
     };
     // -------------------- `deleteWGInterface` --------------------
+
+    // ファイルのダウンロード機能
+    const handleDownload = (text: string, filename: string) => {
+        const blob = new Blob([text], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url); // メモリ解放
+    };
 
     useEffect(() => {
         // コンポーネントマウント時に実行
@@ -272,7 +263,7 @@ export default function WGInterfaceList() {
                                             />
                                         </svg>
                                     </button>
-                                    <button onClick={() => {}} className='btn btn-square btn-md' title={t('DashboardPage.download')}>
+                                    <button onClick={() => handleDownload(wgInterface.clientConfig, `${wgInterface.name}.conf`)} className='btn btn-square btn-md' title={t('DashboardPage.download')}>
                                         <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-6'>
                                             <path
                                                 strokeLinecap='round'

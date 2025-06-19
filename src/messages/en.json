@@ -74,6 +74,7 @@
             "invalidRequest": "Invalid request",
             "unauthorized": "Unauthorized access. Please refresh the page",
             "noAvailableIP": "No available IP addresses",
+            "createInterfaceFailed": "Failed to create interface",
             "failedToFetch": "Failed to fetch data",
             "unknownError": "An unknown error occurred"
         },

@@ -11,13 +11,17 @@ type WgInterface = {
     userid: string;
     name: string;
     ip_address: string;
+    client_config: string;
     expire_at: number;
 };
+
+// IPアドレスの予約済みリスト（重複時はエラー応答）
+let reservedIPs = new Set();
 
 // GETリクエスト
 export async function GET(req: NextRequest): Promise<NextResponse> {
     // ユーザーID
-    let userId = null;
+    let userId: string;
 
     // -------------------- セッションクッキーの検証 --------------------
     // セッションクッキーの取得
@@ -52,6 +56,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
                 data: wgInterfaces.map((wgInterface) => ({
                     name: wgInterface.name,
                     ipAddress: wgInterface.ip_address,
+                    clientConfig: wgInterface.client_config,
                 })),
             },
             { status: 200 }
@@ -72,7 +77,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 // POSTリクエスト
 export async function POST(req: NextRequest): Promise<NextResponse> {
     // ユーザーID
-    let userId = null;
+    let userId: string;
 
     // -------------------- リクエストボディの検証 --------------------
     const { action, name } = await req.json();
@@ -114,7 +119,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         const expireAt = Date.now() + expirationDurationMinutes * 60 * 1000;
 
         // -------------------- 利用可能なIPアドレスの取得 --------------------
-        let availableIP = null;
+        let availableIP: string;
         try {
             // プレースホルダを使ってSQLを準備
             const stmt = db.prepare('SELECT ip_address FROM wg_interfaces');
@@ -139,15 +144,50 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         }
         // -------------------- 利用可能なIPアドレスの取得 --------------------
 
+        // -------------------- 取得したIPアドレスを予約済みに登録 --------------------
+        if (reservedIPs.has(availableIP)) {
+            console.error('IP address already reserved:', availableIP);
+            return NextResponse.json(
+                {
+                    success: false,
+                    code: ErrorCodes.NO_AVAILABLE_IP,
+                },
+                { status: 503 }
+            );
+        }
+        // 予約済みに登録
+        reservedIPs.add(availableIP);
+        // -------------------- 取得したIPアドレスを予約済みに登録 --------------------
+
+        // -------------------- WireGuardのコンフィグ更新 --------------------
+        let clientConfig: string;
+        try {
+            clientConfig = await addPeer(availableIP);
+        } catch (error) {
+            console.error(error);
+            // 予約済みIPアドレスを開放
+            reservedIPs.delete(availableIP);
+            return NextResponse.json(
+                {
+                    success: false,
+                    code: ErrorCodes.CREATE_INTERFACE_FAILED,
+                },
+                { status: 500 }
+            );
+        }
+        // -------------------- WireGuardのコンフィグ更新 --------------------
+
         // -------------------- データベースの更新 --------------------
         try {
             // プレースホルダを使ってSQLを準備
-            const stmt = db.prepare('INSERT INTO wg_interfaces (userid, name, ip_address, expire_at) VALUES (?, ?, ?, ?)');
+            const stmt = db.prepare('INSERT INTO wg_interfaces (userid, name, ip_address, client_config, expire_at) VALUES (?, ?, ?, ?, ?)');
 
             // プレースホルダに値をバインド
-            stmt.run(userId, name, availableIP, expireAt);
+            stmt.run(userId, name, availableIP, clientConfig, expireAt);
         } catch (error) {
             console.error(error);
+            // 予約済みIPアドレスを開放
+            reservedIPs.delete(availableIP);
             return NextResponse.json(
                 {
                     success: false,
@@ -158,22 +198,19 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         }
         // -------------------- データベースの更新 --------------------
 
-        // -------------------- WireGuardのコンフィグ更新 --------------------
-        try {
-            addPeer();
-
-            return NextResponse.json({ success: true }, { status: 200 });
-        } catch (error) {
-            console.error(error);
-            return NextResponse.json(
-                {
-                    success: false,
-                    code: ErrorCodes.UNKNOWN_ERROR,
+        // -------------------- 200 OK --------------------
+        return NextResponse.json(
+            {
+                success: true,
+                data: {
+                    name: name,
+                    ipAddress: availableIP,
+                    clientConfig: clientConfig,
                 },
-                { status: 500 }
-            );
-        }
-        // -------------------- WireGuardのコンフィグ更新 --------------------
+            },
+            { status: 200 }
+        );
+        // -------------------- 200 OK --------------------
     } else if (action === 'delete') {
         // -------------------- データベースの更新 --------------------
         try {

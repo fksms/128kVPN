@@ -7,5 +7,23 @@ export const ErrorCodes = {
     UNKNOWN_ERROR: 'UNKNOWN_ERROR',
     SQL_ERROR: 'SQL_ERROR',
     NO_AVAILABLE_IP: 'NO_AVAILABLE_IP',
-    FAILED_TO_FETCH: 'FAILED_TO_FETCH',
+    CREATE_INTERFACE_FAILED: 'CREATE_INTERFACE_FAILED',
 } as const;
+
+export const handleError = (error: string): string => {
+    switch (error) {
+        case ErrorCodes.INVALID_REQUEST:
+            return 'DashboardPage.interfaceConfigurationError.invalidRequest';
+        case ErrorCodes.SQL_ERROR:
+            return 'DashboardPage.interfaceConfigurationError.sqlError';
+        case ErrorCodes.UNAUTHORIZED:
+            return 'DashboardPage.interfaceConfigurationError.unauthorized';
+        case ErrorCodes.NO_AVAILABLE_IP:
+            return 'DashboardPage.interfaceConfigurationError.noAvailableIP';
+        case ErrorCodes.CREATE_INTERFACE_FAILED:
+            return 'DashboardPage.interfaceConfigurationError.createInterfaceFailed';
+        default:
+            console.error(error);
+            return 'DashboardPage.interfaceConfigurationError.unknownError';
+    }
+};

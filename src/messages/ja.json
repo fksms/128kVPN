@@ -74,6 +74,7 @@
             "invalidRequest": "無効なリクエストです",
             "unauthorized": "認証されていません。ページを更新してください",
             "noAvailableIP": "利用可能なIPアドレスがありません",
+            "createInterfaceFailed": "インターフェースの作成に失敗しました",
             "failedToFetch": "データの取得に失敗しました",
             "unknownError": "不明なエラーが発生しました"
         },
