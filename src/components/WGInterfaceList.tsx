@@ -174,7 +174,7 @@ export default function WGInterfaceList() {
         const interval = setInterval(getWGInterfaces, 60 * 1000);
         // アンマウント時にインターバル解除
         return () => clearInterval(interval);
-    }, []);
+    }, [setLoading]);
 
     return (
         <div className='space-y-4'>

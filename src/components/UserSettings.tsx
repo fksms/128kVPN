@@ -233,7 +233,7 @@ export default function UserSettings() {
         setProviderId(sessionStorage.getItem('providerId'));
         // ローディング停止
         setLoading(false);
-    }, []);
+    }, [setLoading]);
 
     return (
         <div>

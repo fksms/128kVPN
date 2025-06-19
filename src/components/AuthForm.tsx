@@ -123,7 +123,7 @@ export default function AuthForm({ action }: Props) {
     useEffect(() => {
         // ローディングを終了
         setLoading(false);
-    }, []);
+    }, [setLoading]);
 
     return (
         <div>

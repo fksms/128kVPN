@@ -4,7 +4,7 @@ import { db } from '@/lib/sqlite';
 import { adminAuth } from '@/lib/firebase-admin';
 import { ErrorCodes } from '@/lib/errorCodes';
 import { wgInterfaceCIDR } from '@/env';
-import { addPeer } from '@/lib/wireguard';
+import { createPeerConfig, addPeer, removePeer } from '@/lib/wireguard';
 
 type WgInterface = {
     id: number;
@@ -15,8 +15,8 @@ type WgInterface = {
     expire_at: number;
 };
 
-// IPアドレスの予約済みリスト（重複時はエラー応答）
-let reservedIPs = new Set();
+// IPアドレスの予約済みリスト（排他制御用）（重複時はエラー応答）
+const reservedIPs = new Set<string>();
 
 // GETリクエスト
 export async function GET(req: NextRequest): Promise<NextResponse> {
@@ -115,23 +115,26 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // -------------------- セッションクッキーの検証 --------------------
 
     if (action === 'create') {
-        // 失効日時を計算（UNIXタイムスタンプ）
-        const expireAt = Date.now() + expirationDurationMinutes * 60 * 1000;
-
+        // ============================== `Create` ==============================
+        //
         // -------------------- 利用可能なIPアドレスの取得 --------------------
-        let availableIP: string;
+        let ipToAssign: string;
         try {
             // プレースホルダを使ってSQLを準備
             const stmt = db.prepare('SELECT ip_address FROM wg_interfaces');
-
             // 現在使用中のIPアドレスを取得
             const assignedIPs = stmt.all() as { ip_address: string }[];
-
             // 利用可能なIPアドレスを取得
-            availableIP = getRandomAvailableIpFromCidr(
+            ipToAssign = getRandomAvailableIpFromCidr(
                 wgInterfaceCIDR,
                 assignedIPs.map((item) => item.ip_address)
             );
+            // 取得したIPアドレスが予約されている場合はエラー
+            if (reservedIPs.has(ipToAssign)) {
+                throw new Error('IP address is already reserved');
+            }
+            // 取得したIPを予約済みに登録してブロック
+            reservedIPs.add(ipToAssign);
         } catch (error) {
             console.error(error);
             return NextResponse.json(
@@ -144,29 +147,105 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         }
         // -------------------- 利用可能なIPアドレスの取得 --------------------
 
-        // -------------------- 取得したIPアドレスを予約済みに登録 --------------------
-        if (reservedIPs.has(availableIP)) {
-            console.error('IP address already reserved:', availableIP);
-            return NextResponse.json(
-                {
-                    success: false,
-                    code: ErrorCodes.NO_AVAILABLE_IP,
-                },
-                { status: 503 }
-            );
-        }
-        // 予約済みに登録
-        reservedIPs.add(availableIP);
-        // -------------------- 取得したIPアドレスを予約済みに登録 --------------------
-
-        // -------------------- WireGuardのコンフィグ更新 --------------------
+        // -------------------- WireGuardのコンフィグを取得 --------------------
+        let serverPeerConfig: string;
         let clientConfig: string;
         try {
-            clientConfig = await addPeer(availableIP);
+            ({ serverPeerConfig, clientConfig } = await createPeerConfig(ipToAssign));
         } catch (error) {
             console.error(error);
             // 予約済みIPアドレスを開放
-            reservedIPs.delete(availableIP);
+            reservedIPs.delete(ipToAssign);
+            return NextResponse.json(
+                {
+                    success: false,
+                    code: ErrorCodes.CREATE_INTERFACE_FAILED,
+                },
+                { status: 500 }
+            );
+        }
+        // -------------------- WireGuardのコンフィグを取得 --------------------
+
+        // -------------------- データベースの更新 --------------------
+        // 失効日時を計算（UNIXタイムスタンプ）
+        const expireAt = Date.now() + expirationDurationMinutes * 60 * 1000;
+        try {
+            // プレースホルダを使ってSQLを準備
+            const stmt = db.prepare('INSERT INTO wg_interfaces (userid, name, ip_address, client_config, expire_at) VALUES (?, ?, ?, ?, ?)');
+            // プレースホルダに値をバインド
+            stmt.run(userId, name, ipToAssign, clientConfig, expireAt);
+        } catch (error) {
+            console.error(error);
+            return NextResponse.json(
+                {
+                    success: false,
+                    code: ErrorCodes.SQL_ERROR,
+                },
+                { status: 500 }
+            );
+        } finally {
+            // 予約済みIPアドレスを開放
+            reservedIPs.delete(ipToAssign);
+        }
+        // -------------------- データベースの更新 --------------------
+
+        // -------------------- WireGuardのピアの追加を反映 --------------------
+        try {
+            // WireGuardのピアを追加
+            await addPeer(serverPeerConfig);
+        } catch (error) {
+            console.error(error);
+            return NextResponse.json(
+                {
+                    success: false,
+                    code: ErrorCodes.CREATE_INTERFACE_FAILED,
+                },
+                { status: 500 }
+            );
+        }
+        // -------------------- WireGuardのピアの追加を反映 --------------------
+
+        // -------------------- 200 OK --------------------
+        return NextResponse.json(
+            {
+                success: true,
+                data: {
+                    name: name,
+                    ipAddress: ipToAssign,
+                    clientConfig: clientConfig,
+                },
+            },
+            { status: 200 }
+        );
+        // -------------------- 200 OK --------------------
+    } else if (action === 'delete') {
+        // ============================== `Delete` ==============================
+        //
+        // -------------------- 削除するIPアドレスの取得 --------------------
+        let ipToRelease: string;
+        try {
+            // プレースホルダを使ってSQLを準備
+            const stmt = db.prepare('SELECT ip_address FROM wg_interfaces WHERE userid = ? AND name = ?');
+            // 現在使用中のIPアドレスを取得
+            ipToRelease = (stmt.get(userId, name) as { ip_address: string }).ip_address;
+        } catch (error) {
+            console.error(error);
+            return NextResponse.json(
+                {
+                    success: false,
+                    code: ErrorCodes.SQL_ERROR,
+                },
+                { status: 500 }
+            );
+        }
+        // -------------------- 削除するIPアドレスの取得 --------------------
+
+        // -------------------- WireGuardのコンフィグ更新 --------------------
+        try {
+            // WireGuardのピアを追加
+            await removePeer(ipToRelease);
+        } catch (error) {
+            console.error(error);
             return NextResponse.json(
                 {
                     success: false,
@@ -180,47 +259,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         // -------------------- データベースの更新 --------------------
         try {
             // プレースホルダを使ってSQLを準備
-            const stmt = db.prepare('INSERT INTO wg_interfaces (userid, name, ip_address, client_config, expire_at) VALUES (?, ?, ?, ?, ?)');
-
-            // プレースホルダに値をバインド
-            stmt.run(userId, name, availableIP, clientConfig, expireAt);
-        } catch (error) {
-            console.error(error);
-            // 予約済みIPアドレスを開放
-            reservedIPs.delete(availableIP);
-            return NextResponse.json(
-                {
-                    success: false,
-                    code: ErrorCodes.SQL_ERROR,
-                },
-                { status: 500 }
-            );
-        }
-        // -------------------- データベースの更新 --------------------
-
-        // -------------------- 200 OK --------------------
-        return NextResponse.json(
-            {
-                success: true,
-                data: {
-                    name: name,
-                    ipAddress: availableIP,
-                    clientConfig: clientConfig,
-                },
-            },
-            { status: 200 }
-        );
-        // -------------------- 200 OK --------------------
-    } else if (action === 'delete') {
-        // -------------------- データベースの更新 --------------------
-        try {
-            // プレースホルダを使ってSQLを準備
             const stmt = db.prepare('DELETE FROM wg_interfaces WHERE userid = ? AND name = ?');
-
             // プレースホルダに値をバインド
             stmt.run(userId, name);
-
-            return NextResponse.json({ success: true }, { status: 200 });
         } catch (error) {
             console.error(error);
             return NextResponse.json(
@@ -233,9 +274,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         }
         // -------------------- データベースの更新 --------------------
 
-        // -------------------- WireGuardのコンフィグ更新 --------------------
-
-        // -------------------- WireGuardのコンフィグ更新 --------------------
+        // -------------------- 200 OK --------------------
+        return NextResponse.json({ success: true }, { status: 200 });
+        // -------------------- 200 OK --------------------
     } else {
         return NextResponse.json(
             {
