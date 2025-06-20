@@ -7,7 +7,10 @@ export const ErrorCodes = {
     UNKNOWN_ERROR: 'UNKNOWN_ERROR',
     SQL_ERROR: 'SQL_ERROR',
     NO_AVAILABLE_IP: 'NO_AVAILABLE_IP',
+    CREATE_CONFIG_FAILED: 'CREATE_CONFIG_FAILED',
     CREATE_INTERFACE_FAILED: 'CREATE_INTERFACE_FAILED',
+    DELETE_INTERFACE_FAILED: 'DELETE_INTERFACE_FAILED',
+    GET_IP_FAILED: 'GET_IP_FAILED',
 } as const;
 
 export const handleError = (error: string): string => {
@@ -20,8 +23,14 @@ export const handleError = (error: string): string => {
             return 'DashboardPage.interfaceConfigurationError.unauthorized';
         case ErrorCodes.NO_AVAILABLE_IP:
             return 'DashboardPage.interfaceConfigurationError.noAvailableIP';
+        case ErrorCodes.CREATE_CONFIG_FAILED:
+            return 'DashboardPage.interfaceConfigurationError.createConfigFailed';
         case ErrorCodes.CREATE_INTERFACE_FAILED:
             return 'DashboardPage.interfaceConfigurationError.createInterfaceFailed';
+        case ErrorCodes.DELETE_INTERFACE_FAILED:
+            return 'DashboardPage.interfaceConfigurationError.deleteInterfaceFailed';
+        case ErrorCodes.GET_IP_FAILED:
+            return 'DashboardPage.interfaceConfigurationError.getIPFailed';
         default:
             console.error(error);
             return 'DashboardPage.interfaceConfigurationError.unknownError';

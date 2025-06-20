@@ -152,8 +152,8 @@ export default function WGInterfaceList() {
     };
     // -------------------- `deleteWGInterface` --------------------
 
-    // ファイルのダウンロード機能
-    const handleDownload = (text: string, filename: string) => {
+    // ファイルのダウンロード
+    const downloadConfig = (text: string, filename: string) => {
         const blob = new Blob([text], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -164,6 +164,16 @@ export default function WGInterfaceList() {
         document.body.removeChild(a);
         URL.revokeObjectURL(url); // メモリ解放
     };
+
+    // QRコードの生成
+    async function generateQRCode(config: string): Promise<string> {
+        try {
+            return await QRCode.toDataURL(config);
+        } catch (err) {
+            console.error('QRコード生成エラー:', err);
+            throw err;
+        }
+    }
 
     useEffect(() => {
         // コンポーネントマウント時に実行
@@ -249,7 +259,7 @@ export default function WGInterfaceList() {
                                     <div className='text-sm text-gray-500'>{wgInterface.ipAddress}</div>
                                 </div>
                                 <div className='flex items-center max-sm:justify-end space-x-2'>
-                                    <button onClick={() => {}} className='btn btn-square btn-md' title={t('DashboardPage.qrCode')}>
+                                    <button onClick={() => { }} className='btn btn-square btn-md' title={t('DashboardPage.qrCode')}>
                                         <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-6'>
                                             <path
                                                 strokeLinecap='round'
@@ -263,7 +273,7 @@ export default function WGInterfaceList() {
                                             />
                                         </svg>
                                     </button>
-                                    <button onClick={() => handleDownload(wgInterface.clientConfig, `${wgInterface.name}.conf`)} className='btn btn-square btn-md' title={t('DashboardPage.download')}>
+                                    <button onClick={() => downloadConfig(wgInterface.clientConfig, `${wgInterface.name}.conf`)} className='btn btn-square btn-md' title={t('DashboardPage.download')}>
                                         <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-6'>
                                             <path
                                                 strokeLinecap='round'

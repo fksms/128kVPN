@@ -159,7 +159,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             return NextResponse.json(
                 {
                     success: false,
-                    code: ErrorCodes.CREATE_INTERFACE_FAILED,
+                    code: ErrorCodes.CREATE_CONFIG_FAILED,
                 },
                 { status: 500 }
             );
@@ -233,7 +233,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             return NextResponse.json(
                 {
                     success: false,
-                    code: ErrorCodes.SQL_ERROR,
+                    code: ErrorCodes.GET_IP_FAILED,
                 },
                 { status: 500 }
             );
@@ -249,7 +249,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             return NextResponse.json(
                 {
                     success: false,
-                    code: ErrorCodes.CREATE_INTERFACE_FAILED,
+                    code: ErrorCodes.DELETE_INTERFACE_FAILED,
                 },
                 { status: 500 }
             );
