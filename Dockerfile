@@ -7,6 +7,7 @@ RUN npm install
 
 # Copy Project
 COPY src ./
+COPY .env ./
 
 # Build (Standalone Mode)
 RUN npm run build:standalone

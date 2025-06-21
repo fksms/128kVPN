@@ -7,7 +7,7 @@ services:
       - temp:/app/node_modules/
     ports:
       - "51820:51820/udp"
-      - "8080:8080/tcp"
+      - "3000:3000/tcp"
     cap_add:
       - NET_ADMIN
       - SYS_MODULE

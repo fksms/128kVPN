@@ -1,4 +1,4 @@
 FROM docker.io/library/node:lts-alpine
 
-# Install Linux packages
+# Install Git
 RUN apk add --no-cache git
