@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { maxInterfaceNameLength, maxInterfaces } from '@/env';
@@ -21,11 +22,20 @@ export default function WGInterfaceList() {
 
     const interfaceCreationModalRef = useRef<HTMLDialogElement>(null);
     const interfaceDeletionModalRef = useRef<HTMLDialogElement>(null);
+    const qrDisplayModalRef = useRef<HTMLDialogElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // -------------------- `getWGInterfaces` --------------------
     const [wgInterfaces, setWGInterfaces] = useState<WGInterface[]>([]);
+    const [createWGInterfaceName, setCreateWGInterfaceName] = useState('');
+    const [createWGInterfaceError, setCreateWGInterfaceError] = useState('');
+    const [deleteWGInterfaceName, setDeleteWGInterfaceName] = useState('');
+    const [deleteWGInterfaceError, setDeleteWGInterfaceError] = useState('');
 
+    const [isModalLoading, setModalLoading] = useState(false);
+
+    const [qrCodeDataURL, setQRCodeDataURL] = useState<string | null>(null);
+
+    // -------------------- `getWGInterfaces` --------------------
     // Fetch the list of interfaces
     const getWGInterfaces = async (): Promise<void> => {
         try {
@@ -48,9 +58,6 @@ export default function WGInterfaceList() {
     // -------------------- `getWGInterfaces` --------------------
 
     // -------------------- `createWGInterface` --------------------
-    const [createWGInterfaceName, setCreateWGInterfaceName] = useState('');
-    const [createWGInterfaceError, setCreateWGInterfaceError] = useState('');
-
     // Create a new interface
     const createWGInterface = async (): Promise<void> => {
         // インターフェース名が空文字ならエラー
@@ -74,6 +81,9 @@ export default function WGInterfaceList() {
             return;
         }
 
+        // ローディング開始
+        setModalLoading(true);
+
         try {
             const res = await fetch('/api/wg-interfaces', {
                 method: 'POST',
@@ -93,10 +103,10 @@ export default function WGInterfaceList() {
                 // Reset the input field
                 setCreateWGInterfaceName('');
                 setCreateWGInterfaceError('');
-                // Close the modal
-                closeModal(interfaceCreationModalRef);
                 // Refresh the list
                 getWGInterfaces();
+                // Close the modal
+                closeModal(interfaceCreationModalRef);
                 return;
             } else {
                 setCreateWGInterfaceError(t(handleError(data.code)));
@@ -106,16 +116,19 @@ export default function WGInterfaceList() {
             console.error(error);
             setCreateWGInterfaceError(t('DashboardPage.interfaceConfigurationError.failedToFetch'));
             return;
+        } finally {
+            // ローディング停止
+            setModalLoading(false);
         }
     };
     // -------------------- `createWGInterface` --------------------
 
     // -------------------- `deleteWGInterface` --------------------
-    const [deleteWGInterfaceName, setDeleteWGInterfaceName] = useState('');
-    const [deleteWGInterfaceError, setDeleteWGInterfaceError] = useState('');
-
     // Delete an interface
     const deleteWGInterface = async (): Promise<void> => {
+        // ローディング開始
+        setModalLoading(true);
+
         try {
             const res = await fetch('/api/wg-interfaces', {
                 method: 'POST',
@@ -135,10 +148,10 @@ export default function WGInterfaceList() {
                 // Reset the input field
                 setDeleteWGInterfaceName('');
                 setDeleteWGInterfaceError('');
-                // Close the modal
-                closeModal(interfaceDeletionModalRef);
                 // Refresh the list
                 getWGInterfaces();
+                // Close the modal
+                closeModal(interfaceDeletionModalRef);
                 return;
             } else {
                 setDeleteWGInterfaceError(t(handleError(data.code)));
@@ -148,12 +161,15 @@ export default function WGInterfaceList() {
             console.error(error);
             setDeleteWGInterfaceError(t('DashboardPage.interfaceConfigurationError.failedToFetch'));
             return;
+        } finally {
+            // ローディング停止
+            setModalLoading(false);
         }
     };
     // -------------------- `deleteWGInterface` --------------------
 
     // ファイルのダウンロード
-    const downloadConfig = (text: string, filename: string) => {
+    const downloadConfig = (text: string, filename: string): void => {
         const blob = new Blob([text], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -163,17 +179,21 @@ export default function WGInterfaceList() {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url); // メモリ解放
+        return;
     };
 
     // QRコードの生成
-    async function generateQRCode(config: string): Promise<string> {
+    const generateQRCode = async (config: string): Promise<void> => {
         try {
-            return await QRCode.toDataURL(config);
-        } catch (err) {
-            console.error('QRコード生成エラー:', err);
-            throw err;
+            const dataURL = await QRCode.toDataURL(config, { type: 'image/webp' });
+            setQRCodeDataURL(dataURL);
+            return;
+        } catch (error) {
+            setQRCodeDataURL(null);
+            console.error(error);
+            return;
         }
-    }
+    };
 
     useEffect(() => {
         // コンポーネントマウント時に実行
@@ -231,11 +251,13 @@ export default function WGInterfaceList() {
                     </div>
 
                     <div className='flex justify-end space-x-2 mt-4'>
-                        <button className='btn btn-soft btn-primary' onClick={() => createWGInterface()}>
+                        {isModalLoading && <span className='loading loading-spinner loading-lg'></span>}
+                        <button className='btn btn-soft btn-primary' disabled={isModalLoading} onClick={() => createWGInterface()}>
                             {t('DashboardPage.interfaceCreationModal.submit')}
                         </button>
                         <button
                             className='btn'
+                            disabled={isModalLoading}
                             onClick={() => {
                                 closeModal(interfaceCreationModalRef);
                                 setCreateWGInterfaceError('');
@@ -259,7 +281,16 @@ export default function WGInterfaceList() {
                                     <div className='text-sm text-gray-500'>{wgInterface.ipAddress}</div>
                                 </div>
                                 <div className='flex items-center max-sm:justify-end space-x-2'>
-                                    <button onClick={() => { }} className='btn btn-square btn-md' title={t('DashboardPage.qrCode')}>
+                                    <button
+                                        onClick={() => {
+                                            // Generate QR code
+                                            generateQRCode(wgInterface.clientConfig);
+                                            // Open the modal
+                                            showModal(qrDisplayModalRef);
+                                        }}
+                                        className='btn btn-square btn-md'
+                                        title={t('DashboardPage.qrCode')}
+                                    >
                                         <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-6'>
                                             <path
                                                 strokeLinecap='round'
@@ -308,6 +339,25 @@ export default function WGInterfaceList() {
             </div>
             {/*--------------------リスト部--------------------*/}
 
+            {/*--------------------QR表示モーダル--------------------*/}
+            <dialog ref={qrDisplayModalRef} className='modal'>
+                <div className='modal-box min-w-xs max-w-sm'>
+                    <button
+                        className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2 z-10'
+                        onClick={() => {
+                            closeModal(qrDisplayModalRef);
+                            setQRCodeDataURL(null);
+                        }}
+                    >
+                        <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-6'>
+                            <path strokeLinecap='round' strokeLinejoin='round' d='M6 18 18 6M6 6l12 12' />
+                        </svg>
+                    </button>
+                    <div className='flex justify-center items-center h-85 relative'>{qrCodeDataURL && <Image alt='QR Code' src={qrCodeDataURL} fill objectFit='contain' />}</div>
+                </div>
+            </dialog>
+            {/*--------------------QR表示モーダル--------------------*/}
+
             {/*--------------------インターフェース削除モーダル--------------------*/}
             <dialog ref={interfaceDeletionModalRef} className='modal'>
                 <div className='modal-box min-w-xs max-w-sm'>
@@ -319,11 +369,13 @@ export default function WGInterfaceList() {
                     <p className='text-sm text-error mt-2'>{deleteWGInterfaceError}</p>
 
                     <div className='flex justify-end space-x-2 mt-4'>
-                        <button className='btn btn-soft btn-primary' onClick={() => deleteWGInterface()}>
+                        {isModalLoading && <span className='loading loading-spinner loading-lg'></span>}
+                        <button className='btn btn-soft btn-primary' disabled={isModalLoading} onClick={() => deleteWGInterface()}>
                             {t('DashboardPage.interfaceDeletionModal.submit')}
                         </button>
                         <button
                             className='btn'
+                            disabled={isModalLoading}
                             onClick={() => {
                                 closeModal(interfaceDeletionModalRef);
                                 setDeleteWGInterfaceError('');

@@ -29,7 +29,11 @@ const wgPreDown = process.env.WG_PRE_DOWN || '';
 const wgPostDown = process.env.WG_POST_DOWN || '';
 
 // WireGuardのコンフィグファイルのパスを指定
-const serverConfigPath = path.join(process.cwd(), `${wgInterfaceName}.conf`);
+const serverWGConfigPath = path.join(process.cwd(), `${wgInterfaceName}.conf`);
+
+// サーバー用キーペアのパスを指定
+const serverPrivateKeyPath = path.join(process.cwd(), 'privateKey');
+const serverPublicKeyPath = path.join(process.cwd(), 'publicKey');
 
 // キーペアをキャッシュ
 let __privateKey: string | null = null;
@@ -42,22 +46,18 @@ async function generateKeyPairForServer(): Promise<{ privateKey: string; publicK
         return { privateKey: __privateKey, publicKey: __publicKey };
     }
 
-    // キーペアのパスを指定
-    const privateKeyPath = path.join(process.cwd(), 'privateKey');
-    const publicKeyPath = path.join(process.cwd(), 'publicKey');
-
     try {
         // 既存のキーペアがあれば読み込み、キャッシュして返す
-        __privateKey = (await readFile(privateKeyPath, 'utf-8')).trim();
-        __publicKey = (await readFile(publicKeyPath, 'utf-8')).trim();
+        __privateKey = (await readFile(serverPrivateKeyPath, 'utf-8')).trim();
+        __publicKey = (await readFile(serverPublicKeyPath, 'utf-8')).trim();
     } catch {
         // キーペアが存在しない場合は新規作成、保存、キャッシュして返す
         const stdoutPrivateKey = await execSync('wg genkey');
         const stdoutPublicKey = await execSync(`echo ${stdoutPrivateKey.toString().trim()} | wg pubkey`);
         __privateKey = stdoutPrivateKey.toString().trim();
         __publicKey = stdoutPublicKey.toString().trim();
-        await writeFile(privateKeyPath, __privateKey);
-        await writeFile(publicKeyPath, __publicKey);
+        await writeFile(serverPrivateKeyPath, __privateKey);
+        await writeFile(serverPublicKeyPath, __publicKey);
     }
 
     return { privateKey: __privateKey, publicKey: __publicKey };
@@ -129,12 +129,12 @@ PersistentKeepalive = ${wgPersistentKeepalive}`;
 
     try {
         // 存在チェック
-        await access(serverConfigPath);
+        await access(serverWGConfigPath);
     } catch {
         // 存在しなければ作成
         try {
             // 初期設定を書き込み
-            await writeFile(serverConfigPath, serverInterfaceConfig);
+            await writeFile(serverWGConfigPath, serverInterfaceConfig);
         } catch (error) {
             console.error(error);
             throw new Error('Failed to write initial WireGuard config file');
@@ -148,7 +148,7 @@ PersistentKeepalive = ${wgPersistentKeepalive}`;
 export const addPeer = async (serverPeerConfig: string): Promise<void> => {
     try {
         // 既存の設定ファイルにピアの設定を追加
-        await appendFile(serverConfigPath, serverPeerConfig);
+        await appendFile(serverWGConfigPath, serverPeerConfig);
     } catch (error) {
         console.error(error);
         throw new Error('Failed to append peer configuration to WireGuard config file');
@@ -159,7 +159,7 @@ export const addPeer = async (serverPeerConfig: string): Promise<void> => {
 export const removePeer = async (ipAddress: string): Promise<void> => {
     try {
         // コンフィグファイルの読み込み
-        const configContent = await readFile(serverConfigPath, 'utf-8');
+        const configContent = await readFile(serverWGConfigPath, 'utf-8');
 
         const peerSections = configContent.split(/\n(?=\[Peer\])/); // [Peer]の前の改行でセクション分割
 
@@ -182,7 +182,7 @@ export const removePeer = async (ipAddress: string): Promise<void> => {
 
         const newConfigContent = filteredSections.join('\n');
 
-        await writeFile(serverConfigPath, newConfigContent);
+        await writeFile(serverWGConfigPath, newConfigContent);
     } catch (error) {
         console.error(error);
         throw new Error('Failed to remove peer from WireGuard config file');

@@ -30,7 +30,7 @@ export const sessionLogin = async (userCredential: UserCredential): Promise<void
         return;
     } catch (error) {
         // ログイン失敗
-        throw new Error(error instanceof Error ? error.message : ErrorCodes.UNKNOWN_ERROR);
+        throw error;
     }
 };
 
@@ -47,6 +47,6 @@ export const sessionLogout = async (): Promise<void> => {
         return;
     } catch (error) {
         // ログアウト失敗
-        throw new Error(error instanceof Error ? error.message : ErrorCodes.UNKNOWN_ERROR);
+        throw error;
     }
 };

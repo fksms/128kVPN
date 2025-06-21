@@ -121,7 +121,7 @@ export default function AuthForm({ action }: Props) {
     };
 
     useEffect(() => {
-        // ローディングを終了
+        // ローディング停止
         setLoading(false);
     }, [setLoading]);
 

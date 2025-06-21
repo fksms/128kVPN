@@ -1,7 +1,10 @@
+import path from 'path';
 import Database from 'better-sqlite3';
 import { maxInterfaceNameLength, maxInterfaces } from '@/env';
 
-const db = new Database('wg_interfaces.db');
+const interfacesDBPath = path.join(process.cwd(), 'wg_interfaces.db');
+
+const db = new Database(interfacesDBPath);
 
 // テーブル作成（重複作成はされない）
 db.exec(`
