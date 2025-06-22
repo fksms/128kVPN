@@ -25,6 +25,7 @@ COPY --from=build /app/public/ /app/public/
 
 # Install Linux packages
 RUN apk add --no-cache \
+    bash \
     dpkg \
     dumb-init \
     iptables \

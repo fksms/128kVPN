@@ -1,14 +1,11 @@
 import path from 'path';
 import { execSync } from 'child_process';
 import { access, appendFile, writeFile, readFile } from 'fs/promises';
-import { wgInterfaceCIDR } from '@/env';
 
 // WireGuardのアドレス（クライアントが接続するアドレス）
 const wgHost = process.env.WG_HOST;
 // WireGuardのポート（クライアントが接続するポート）
 const wgPort = process.env.WG_PORT || '51820';
-// サーバー・クライアント間のMTU値
-const wgMtu = process.env.WG_MTU || '1420';
 // DNSの設定（クライアントが使用するDNSサーバー）
 const wgDefaultDNS = process.env.WG_DEFAULT_DNS || '8.8.8.8';
 // KeepAliveの設定
@@ -16,18 +13,6 @@ const wgPersistentKeepalive = process.env.WG_PERSISTENT_KEEPALIVE || '25';
 
 // WireGuardインターフェース名（クライアント側のインターフェース）
 const wgInterfaceName = process.env.WG_INTERFACE_NAME || 'wg0';
-// 外部接続用のインターフェース名（サーバー側のインターフェース）
-const publicInterfaceName = process.env.PUBLIC_INTERFACE_NAME || 'eth0';
-
-// WireGuardインターフェース起動前に実行するスクリプト
-const wgPreUp = process.env.WG_PRE_UP || '';
-// WireGuardインターフェース起動後に実行するスクリプト
-const wgPostUp = process.env.WG_POST_UP || '';
-// WireGuardインターフェース停止前に実行するスクリプト
-const wgPreDown = process.env.WG_PRE_DOWN || '';
-// WireGuardインターフェース停止後に実行するスクリプト
-const wgPostDown = process.env.WG_POST_DOWN || '';
-
 // WireGuardのコンフィグファイルのパスを指定
 const serverWGConfigPath = path.join(process.cwd(), `${wgInterfaceName}.conf`);
 
@@ -100,14 +85,8 @@ export const createPeerConfig = async (ipAddress: string): Promise<{ serverPeerC
 
     // サーバー側[Interface]セクション
     const serverInterfaceConfig = `[Interface]
-Address = ${wgInterfaceCIDR}
-ListenPort = ${wgPort}
 PrivateKey = ${serverPrivateKey}
-MTU = ${wgMtu}
-PostUp = ${wgPostUp}
-PostDown = ${wgPostDown}
-PreUp = ${wgPreUp}
-PreDown = ${wgPreDown}`;
+ListenPort = ${wgPort}`;
 
     // サーバー側[Peer]セクション
     const serverPeerConfig = `\n\n[Peer]
@@ -153,6 +132,12 @@ export const addPeer = async (serverPeerConfig: string): Promise<void> => {
         console.error(error);
         throw new Error('Failed to append peer configuration to WireGuard config file');
     }
+
+    try {
+        await syncConfig();
+    } catch (error) {
+        throw error;
+    }
 };
 
 // WireGuardのピアを削除して反映
@@ -187,4 +172,20 @@ export const removePeer = async (ipAddress: string): Promise<void> => {
         console.error(error);
         throw new Error('Failed to remove peer from WireGuard config file');
     }
+
+    try {
+        await syncConfig();
+    } catch (error) {
+        throw error;
+    }
 };
+
+// WireGuardの設定を同期
+async function syncConfig() {
+    try {
+        await execSync(`wg syncconf ${wgInterfaceName} <(wg-quick strip ${serverWGConfigPath})`, { shell: 'bash' });
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to sync WireGuard configuration');
+    }
+}

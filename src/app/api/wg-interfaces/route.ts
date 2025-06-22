@@ -3,7 +3,6 @@ import { expirationDurationMinutes } from '@/env';
 import { db } from '@/lib/sqlite';
 import { adminAuth } from '@/lib/firebase-admin';
 import { ErrorCodes } from '@/lib/errorCodes';
-import { wgInterfaceCIDR } from '@/env';
 import { createPeerConfig, addPeer, removePeer } from '@/lib/wireguard';
 
 type WgInterface = {
@@ -119,6 +118,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         //
         // -------------------- 利用可能なIPアドレスの取得 --------------------
         let ipToAssign: string;
+        const wgInterfaceCIDR = process.env.WG_INTERFACE_CIDR;
         try {
             // プレースホルダを使ってSQLを準備
             const stmt = db.prepare('SELECT ip_address FROM wg_interfaces');
@@ -126,7 +126,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             const assignedIPs = stmt.all() as { ip_address: string }[];
             // 利用可能なIPアドレスを取得
             ipToAssign = getRandomAvailableIpFromCidr(
-                wgInterfaceCIDR,
+                wgInterfaceCIDR!,
                 assignedIPs.map((item) => item.ip_address)
             );
             // 取得したIPアドレスが予約されている場合はエラー
@@ -320,7 +320,8 @@ function getRandomAvailableIpFromCidr(cidr: string, assignedIPs: string[]): stri
 
     // 利用可能なIPの候補リストを作成
     const availableIPs: number[] = [];
-    for (let i = networkAddress + 1; i < broadcastAddress; i++) {
+    // ネットワークアドレスとネットワークアドレスの次のアドレス（ホスト用）、ブロードキャストアドレスを除外
+    for (let i = networkAddress + 2; i < broadcastAddress; i++) {
         if (!assignedIpNums.has(i)) {
             availableIPs.push(i);
         }
