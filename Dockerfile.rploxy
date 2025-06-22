@@ -1,0 +1,14 @@
+FROM docker.io/library/nginx:stable-alpine
+WORKDIR /app
+
+# Copy Config
+COPY nginx.conf /etc/nginx/
+
+# Install Linux packages
+RUN apk add --no-cache bash
+
+# Copy Entrypoint
+COPY entrypoint.rploxy.sh ./
+
+# Run Web UI
+CMD ["bash", "entrypoint.rploxy.sh"]

@@ -1,10 +1,18 @@
 services:
-  wg-test-prod:
+
+  rploxy:
     build:
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile.rploxy
     ports:
-      - "51820:51820/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+
+  app:
+    build:
+      dockerfile: ./Dockerfile.app.prod
+    ports:
       - "3000:3000/tcp"
+      - "51820:51820/udp" # ホスト側のポート:コンテナ内のポート
     cap_add:
       - NET_ADMIN
       - SYS_MODULE

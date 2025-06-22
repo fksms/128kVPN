@@ -1,13 +1,21 @@
 services:
-  wg-test-dev:
+
+  rploxy:
     build:
-      dockerfile: ./Dockerfile.dev
+      dockerfile: ./Dockerfile.rploxy
+    ports:
+      - "80:80/tcp"
+      - "443:443/tcp"
+
+  app-dev:
+    build:
+      dockerfile: ./Dockerfile.app.dev
     volumes:
       - ./src/:/app/
       - temp:/app/node_modules/
     ports:
-      - "51820:51820/udp"
       - "3000:3000/tcp"
+      - "51820:51820/udp" # ホスト側のポート:コンテナ内のポート
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
@@ -16,4 +24,3 @@ services:
 
 volumes:
   temp:
-    driver: local
