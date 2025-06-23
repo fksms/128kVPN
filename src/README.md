@@ -2,6 +2,9 @@
 
 ### MacOS
 
+> [!IMPORTANT]
+> The GUI works perfectly, but the VPN is not available.
+
 #### Setup
 
 Install `nvm` and `wireguard-tools`
