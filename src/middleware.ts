@@ -21,21 +21,21 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
     const pathname = req.nextUrl.pathname;
 
     // -------------------- API保護用 --------------------
-    // `/api/all-wg-interfaces`の場合はAPI_KEYをチェック
-    if (pathname === '/api/all-wg-interfaces') {
+    // パスが`/api/admin`から始まる場合はアクセスキーをチェック
+    if (pathname.startsWith('/api/admin')) {
         const apiKey = req.headers.get('x-api-key');
 
-        if (apiKey !== process.env.SECRET_API_KEY) {
-            // APIキーが無効な場合は404ページに書き換え（リダイレクト先のURLは見せない）
+        if (apiKey !== process.env.SECRET_ACCESS_KEY) {
+            // アクセスキーが無効な場合は404ページに書き換え（リダイレクト先のURLは見せない）
             return NextResponse.rewrite(new URL('/not-found', req.url));
         } else {
-            // APIキーが有効な場合は、次の処理を続行
+            // アクセスキーが有効な場合は、次の処理を続行
             return NextResponse.next();
         }
     }
 
-    // `/api/wg-interfaces`の場合はセッションクッキーを検証
-    if (pathname === '/api/wg-interfaces') {
+    // パスが`/api/wg-interfaces`から始まる場合はセッションクッキーを検証
+    if (pathname.startsWith('/api/wg-interfaces')) {
         // セッションクッキーの取得
         const sessionCookie = req.cookies.get('__session')?.value;
 
@@ -104,7 +104,7 @@ export const config = {
     // - … the ones containing a dot (e.g. `favicon.ico`)
     matcher: [
         // API保護用
-        '/api/all-wg-interfaces',
+        '/api/admin',
         '/api/wg-interfaces',
         // 特定のパスはMiddlewareの適用から除外する
         '/((?!api|trpc|_next|_vercel|.*\\..*).*)',

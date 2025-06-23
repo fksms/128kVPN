@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
             },
         ],
     },
+    trailingSlash: false, // パスの末尾にスラッシュがある場合は削除してリダイレクト（デフォルト動作）
 };
 
 const withNextIntl = createNextIntlPlugin();
