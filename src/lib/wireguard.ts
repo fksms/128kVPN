@@ -6,6 +6,8 @@ import { access, appendFile, writeFile, readFile } from 'fs/promises';
 const wgHost = process.env.WG_HOST;
 // WireGuardのポート（クライアントが接続するポート）
 const wgPort = process.env.WG_PORT || '51820';
+// サーバー・クライアント間のMTU値
+const wgMtu = process.env.WG_INTERFACE_MTU || '1280';
 // DNSの設定（クライアントが使用するDNSサーバー）
 const wgDefaultDNS = process.env.WG_DEFAULT_DNS || '8.8.8.8';
 // KeepAliveの設定
@@ -98,6 +100,7 @@ PersistentKeepalive = ${wgPersistentKeepalive}`;
     const clientConfig = `[Interface]
 Address = ${ipAddress}/32
 PrivateKey = ${clientPrivateKey}
+MTU = ${wgMtu}
 DNS = ${wgDefaultDNS}
 
 [Peer]

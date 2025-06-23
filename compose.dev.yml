@@ -1,18 +1,21 @@
 services:
 
   rploxy:
-    build:
-      dockerfile: ./Dockerfile.rploxy
+    image: nginx:stable-alpine
+    container_name: rploxy
     ports:
       - "80:80/tcp"
       - "443:443/tcp"
+    restart: always
+    volumes:
+      - type: bind
+        source: ./nginx # ローカルのパス
+        target: /etc/nginx # コンテナ内のパス
 
   app-dev:
     build:
       dockerfile: ./Dockerfile.app.dev
-    volumes:
-      - ./src/:/app/
-      - temp:/app/node_modules/
+    container_name: app-dev
     ports:
       - "3000:3000/tcp"
       - "51820:51820/udp" # ホスト側のポート:コンテナ内のポート
@@ -21,6 +24,9 @@ services:
       - SYS_MODULE
     env_file:
       - .env
+    volumes:
+      - ./src/:/app/
+      - temp:/app/node_modules/
 
 volumes:
   temp:
