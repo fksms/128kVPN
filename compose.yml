@@ -14,7 +14,7 @@ services:
 
   app:
     build:
-      dockerfile: ./Dockerfile.app.prod
+      dockerfile: ./Dockerfile
     container_name: app
     ports:
       - "3000:3000/tcp"
@@ -24,4 +24,6 @@ services:
       - SYS_MODULE
     env_file:
       - .env
+    environment:
+      - BANDWIDTH_LIMIT=false # `true`の場合は速度制限有りモードで起動、`false`の場合は速度制限無しモードで起動
     restart: always

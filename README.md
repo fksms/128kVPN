@@ -34,22 +34,34 @@ sudo docker compose up -d
 sudo docker compose down
 ```
 
-### MacOS
+### MacOS or Windows
 
 > [!IMPORTANT]
 > The GUI works perfectly, but the VPN is not available.
 
 #### Setup
 
+Please start DevContainer.
+
+#### Build
+
 Copy the `.env.sample` file and fill in the required information
 ```sh
 cp .env.sample .env
 ```
 
-#### Deploy
-
-Build (Dev)
+Install dependencies
 ```sh
-docker compose -f compose.dev.yml up -d
-docker compose -f compose.dev.yml down
+npm install
+```
+
+Build (Dev)<br>
+```sh
+npm run dev
+```
+
+Build (Prod)<br>
+```sh
+npm run build
+npm run start
 ```
