@@ -34,7 +34,7 @@ sudo docker compose up -d
 sudo docker compose down
 ```
 
-### MacOS or Windows
+### MacOS and Windows
 
 > [!IMPORTANT]
 > The GUI works perfectly, but the VPN is not available.
@@ -48,6 +48,21 @@ Please start DevContainer.
 Copy the `.env.sample` file and fill in the required information
 ```sh
 cp .env.sample .env
+```
+
+Copy the `.env` file into the `src/`
+```sh
+cp .env src/
+```
+
+Run `entrypoint.dev.sh`
+```sh
+bash entrypoint.dev.sh
+```
+
+Change to the `src/` directory
+```sh
+cd src/
 ```
 
 Install dependencies

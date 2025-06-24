@@ -1,11 +1,6 @@
 {
-    "name": "wg-test-dev",
-    "build": {
-        "dockerfile": "Dockerfile",
-        "context": ".."
-    },
-    "forwardPorts": [
-        3000
-    ],
-    "remoteUser": "node"
+    "name": "app-dev",
+    "dockerComposeFile": "../compose.dev.yml",
+    "service": "app",
+    "workspaceFolder": "/app"
 }

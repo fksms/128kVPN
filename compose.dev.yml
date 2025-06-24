@@ -1,0 +1,17 @@
+services:
+
+  app:
+    build:
+      dockerfile: ./Dockerfile.dev
+    container_name: app
+    ports:
+      - "3000:3000/tcp"
+      - "51820:51820/udp" # ホスト側のポート:コンテナ内のポート
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    env_file:
+      - .env
+    volumes:
+      - ./:/app:cached
+    tty: true
