@@ -1,7 +1,10 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import WGInterfaceList from '@/components/WGInterfaceList';
+
+export const metadata: Metadata = {
+    title: '128kVPN | Dashboard',
+};
 
 export default function DashboardPage() {
     return (

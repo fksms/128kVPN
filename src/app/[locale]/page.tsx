@@ -1,3 +1,10 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: '128kVPN',
+    description: 'Offers a speed-limited VPN.',
+};
+
 export default function HomePage() {
     return (
         <div className='flex items-center justify-center h-screen'>

@@ -1,7 +1,10 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Navbar from '@/components/Navbar';
 import UserSettings from '@/components/UserSettings';
+
+export const metadata: Metadata = {
+    title: '128kVPN | Settings',
+};
 
 export default function SettingsPage() {
     return (
