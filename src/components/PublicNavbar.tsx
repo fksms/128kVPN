@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import LanguageDropdown from '@/components/LanguageDropdown';
+import LoginRegisterButtons from './LoginRegisterButtons';
 
 export default function PublicNavbar() {
     const t = useTranslations();
@@ -12,8 +13,9 @@ export default function PublicNavbar() {
                 <a className='text-lg font-bold'>{t('Navbar.title')}</a>
             </div>
 
-            <div className='flex gap-1'>
+            <div className='flex gap-3'>
                 <LanguageDropdown size='md' direction='end' />
+                <LoginRegisterButtons />
             </div>
         </div>
     );
