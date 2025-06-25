@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Navbar from '@/components/Navbar';
+import PrivateNavbar from '@/components/PrivateNavbar';
 import WGInterfaceList from '@/components/WGInterfaceList';
 
 export const metadata: Metadata = {
@@ -11,7 +11,7 @@ export default function DashboardPage() {
         <div>
             <div className='flex justify-center max-w-full min-w-xs'>
                 <div className='w-3xl px-4 py-4 space-y-4'>
-                    <Navbar />
+                    <PrivateNavbar />
                     <WGInterfaceList />
                 </div>
             </div>

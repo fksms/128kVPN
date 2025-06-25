@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/navigation';
 
 type Props = {
@@ -14,6 +14,7 @@ export default function LanguageDropdown({ direction = 'start', size = 'md', but
 
     const pathname = usePathname();
     const router = useRouter();
+    const locale = useLocale();
 
     const dropdownDirectionClass = {
         start: 'dropdown-start',
@@ -32,6 +33,12 @@ export default function LanguageDropdown({ direction = 'start', size = 'md', but
         md: 'menu-md',
     }[size];
 
+    const changeLocale = (newLocale: string): void => {
+        if (locale !== newLocale) {
+            router.push(pathname, { locale: newLocale });
+        }
+    };
+
     return (
         <div>
             <div className={`dropdown ${dropdownDirectionClass}`} title={t('Navbar.language')}>
@@ -49,10 +56,10 @@ export default function LanguageDropdown({ direction = 'start', size = 'md', but
                 </div>
                 <ul tabIndex={0} className={`menu ${menuSizeClass} dropdown-content bg-base-100 rounded-box z-1 mt-2 w-25 p-2 shadow-md`}>
                     <li>
-                        <a onClick={() => router.push(pathname, { locale: 'ja' })}>{t('Navbar.languageSelect.ja')}</a>
+                        <a onClick={() => changeLocale('ja')}>{t('Navbar.languageSelect.ja')}</a>
                     </li>
                     <li>
-                        <a onClick={() => router.push(pathname, { locale: 'en' })}>{t('Navbar.languageSelect.en')}</a>
+                        <a onClick={() => changeLocale('en')}>{t('Navbar.languageSelect.en')}</a>
                     </li>
                 </ul>
             </div>
