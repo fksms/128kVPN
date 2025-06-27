@@ -41,24 +41,14 @@ sudo docker compose down
 
 #### Setup
 
-Please start DevContainer.
-
-#### Build
-
 Copy the `.env.sample` file and fill in the required information
 ```sh
 cp .env.sample .env
 ```
 
-Copy the `.env` file into the `src/`
-```sh
-cp .env src/
-```
+Please start DevContainer.
 
-Run `entrypoint.dev.sh`
-```sh
-bash entrypoint.dev.sh
-```
+#### Build
 
 Change to the `src/` directory
 ```sh
@@ -70,12 +60,12 @@ Install dependencies
 npm install
 ```
 
-Build (Dev)<br>
+Build (Dev)
 ```sh
 npm run dev
 ```
 
-Build (Prod)<br>
+Build (Prod)
 ```sh
 npm run build
 npm run start

@@ -2,5 +2,6 @@
     "name": "app-dev",
     "dockerComposeFile": "../compose.dev.yml",
     "service": "app",
-    "workspaceFolder": "/app"
+    "workspaceFolder": "/app",
+    "postStartCommand": "bash entrypoint.dev.sh && cp .env src/"
 }

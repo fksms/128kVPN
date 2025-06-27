@@ -18,24 +18,24 @@ Setup `nvm`
 nvm install stable --latest-npm
 ```
 
-#### Build
-
 Copy the `.env.sample` file and fill in the required information
 ```sh
 cp .env.sample .env
 ```
+
+#### Build
 
 Install dependencies
 ```sh
 npm install
 ```
 
-Build (Dev)<br>
+Build (Dev)
 ```sh
 npm run dev
 ```
 
-Build (Prod)<br>
+Build (Prod)
 ```sh
 npm run build
 npm run start
