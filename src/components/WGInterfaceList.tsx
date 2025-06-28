@@ -207,26 +207,122 @@ export default function WGInterfaceList() {
     }, [setLoading]);
 
     return (
-        <div className='space-y-4'>
-            {/*--------------------ボタン部--------------------*/}
-            <div className='flex justify-center pb-4'>
-                <button
-                    className='btn btn-accent'
-                    onClick={() => {
-                        // Open the modal
-                        showModal(interfaceCreationModalRef);
-                        // inputにフォーカスを当てる（実行に50ミリ秒遅延させる）
-                        /*
-                        setTimeout(() => {
-                            inputRef.current?.focus();
-                        }, 50);
-                        */
-                    }}
-                >
-                    {t('DashboardPage.new')}
-                </button>
+        <div>
+            <div className='flex justify-center max-w-full min-w-xs'>
+                <div className='w-3xl px-4 py-4'>
+                    {/*--------------------ボタン部--------------------*/}
+                    <div className='flex justify-center pb-8'>
+                        <button
+                            className='btn btn-accent'
+                            onClick={() => {
+                                // Open the modal
+                                showModal(interfaceCreationModalRef);
+                                // inputにフォーカスを当てる（実行に50ミリ秒遅延させる）
+                                /*
+                                setTimeout(() => {
+                                    inputRef.current?.focus();
+                                }, 50);
+                                */
+                            }}
+                        >
+                            {t('DashboardPage.new')}
+                        </button>
+                    </div>
+                    {/*--------------------ボタン部--------------------*/}
+
+                    {/*--------------------リスト部--------------------*/}
+                    <div className='flex flex-col space-y-5'>
+                        {wgInterfaces.map((wgInterface) => (
+                            <div className='card bg-base-100 shadow-md' key={wgInterface.name}>
+                                <div className='card-body'>
+                                    <div className='flex max-sm:flex-col sm:flex-row justify-between max-sm:space-y-4'>
+                                        <div>
+                                            <div className='font-medium card-title'>{wgInterface.name}</div>
+                                            <div className='text-sm text-gray-500'>{wgInterface.ipAddress}</div>
+                                        </div>
+                                        <div className='flex items-center max-sm:justify-end space-x-2'>
+                                            <button
+                                                onClick={() => {
+                                                    // Generate QR code
+                                                    generateQRCode(wgInterface.clientConfig);
+                                                    // Open the modal
+                                                    showModal(qrDisplayModalRef);
+                                                }}
+                                                className='btn btn-square btn-md'
+                                                title={t('DashboardPage.qrCode')}
+                                            >
+                                                <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-6'>
+                                                    <path
+                                                        strokeLinecap='round'
+                                                        strokeLinejoin='round'
+                                                        d='M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z'
+                                                    />
+                                                    <path
+                                                        strokeLinecap='round'
+                                                        strokeLinejoin='round'
+                                                        d='M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z'
+                                                    />
+                                                </svg>
+                                            </button>
+                                            <button
+                                                onClick={() => downloadConfig(wgInterface.clientConfig, `${wgInterface.name}.conf`)}
+                                                className='btn btn-square btn-md'
+                                                title={t('DashboardPage.download')}
+                                            >
+                                                <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-6'>
+                                                    <path
+                                                        strokeLinecap='round'
+                                                        strokeLinejoin='round'
+                                                        d='M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3'
+                                                    />
+                                                </svg>
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    // Set the interface name to delete
+                                                    setDeleteWGInterfaceName(wgInterface.name);
+                                                    // Open the modal
+                                                    showModal(interfaceDeletionModalRef);
+                                                }}
+                                                className='btn btn-square btn-md'
+                                                title={t('DashboardPage.delete')}
+                                            >
+                                                <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-6'>
+                                                    <path
+                                                        strokeLinecap='round'
+                                                        strokeLinejoin='round'
+                                                        d='m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0'
+                                                    />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
-            {/*--------------------ボタン部--------------------*/}
+            {/*--------------------リスト部--------------------*/}
+
+            {/*--------------------QR表示モーダル--------------------*/}
+            <dialog ref={qrDisplayModalRef} className='modal'>
+                <div className='modal-box min-w-xs max-w-sm'>
+                    <button
+                        className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2 z-10'
+                        onClick={() => {
+                            closeModal(qrDisplayModalRef);
+                            setQRCodeDataURL(null);
+                        }}
+                    >
+                        <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-6'>
+                            <path strokeLinecap='round' strokeLinejoin='round' d='M6 18 18 6M6 6l12 12' />
+                        </svg>
+                    </button>
+                    <div className='flex justify-center items-center h-85 relative'>{qrCodeDataURL && <Image alt='QR Code' src={qrCodeDataURL} fill objectFit='contain' />}</div>
+                </div>
+            </dialog>
+            {/*--------------------QR表示モーダル--------------------*/}
 
             {/*--------------------インターフェース作成モーダル--------------------*/}
             <dialog ref={interfaceCreationModalRef} className='modal'>
@@ -269,94 +365,6 @@ export default function WGInterfaceList() {
                 </div>
             </dialog>
             {/*--------------------インターフェース作成モーダル--------------------*/}
-
-            {/*--------------------リスト部--------------------*/}
-            <div className='flex flex-col space-y-5'>
-                {wgInterfaces.map((wgInterface) => (
-                    <div className='card bg-base-100 shadow-md' key={wgInterface.name}>
-                        <div className='card-body'>
-                            <div className='flex max-sm:flex-col sm:flex-row justify-between max-sm:space-y-4'>
-                                <div>
-                                    <div className='font-medium card-title'>{wgInterface.name}</div>
-                                    <div className='text-sm text-gray-500'>{wgInterface.ipAddress}</div>
-                                </div>
-                                <div className='flex items-center max-sm:justify-end space-x-2'>
-                                    <button
-                                        onClick={() => {
-                                            // Generate QR code
-                                            generateQRCode(wgInterface.clientConfig);
-                                            // Open the modal
-                                            showModal(qrDisplayModalRef);
-                                        }}
-                                        className='btn btn-square btn-md'
-                                        title={t('DashboardPage.qrCode')}
-                                    >
-                                        <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-6'>
-                                            <path
-                                                strokeLinecap='round'
-                                                strokeLinejoin='round'
-                                                d='M3.75 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 3.75 9.375v-4.5ZM3.75 14.625c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5a1.125 1.125 0 0 1-1.125-1.125v-4.5ZM13.5 4.875c0-.621.504-1.125 1.125-1.125h4.5c.621 0 1.125.504 1.125 1.125v4.5c0 .621-.504 1.125-1.125 1.125h-4.5A1.125 1.125 0 0 1 13.5 9.375v-4.5Z'
-                                            />
-                                            <path
-                                                strokeLinecap='round'
-                                                strokeLinejoin='round'
-                                                d='M6.75 6.75h.75v.75h-.75v-.75ZM6.75 16.5h.75v.75h-.75v-.75ZM16.5 6.75h.75v.75h-.75v-.75ZM13.5 13.5h.75v.75h-.75v-.75ZM13.5 19.5h.75v.75h-.75v-.75ZM19.5 13.5h.75v.75h-.75v-.75ZM19.5 19.5h.75v.75h-.75v-.75ZM16.5 16.5h.75v.75h-.75v-.75Z'
-                                            />
-                                        </svg>
-                                    </button>
-                                    <button onClick={() => downloadConfig(wgInterface.clientConfig, `${wgInterface.name}.conf`)} className='btn btn-square btn-md' title={t('DashboardPage.download')}>
-                                        <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-6'>
-                                            <path
-                                                strokeLinecap='round'
-                                                strokeLinejoin='round'
-                                                d='M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3'
-                                            />
-                                        </svg>
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            // Set the interface name to delete
-                                            setDeleteWGInterfaceName(wgInterface.name);
-                                            // Open the modal
-                                            showModal(interfaceDeletionModalRef);
-                                        }}
-                                        className='btn btn-square btn-md'
-                                        title={t('DashboardPage.delete')}
-                                    >
-                                        <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-6'>
-                                            <path
-                                                strokeLinecap='round'
-                                                strokeLinejoin='round'
-                                                d='m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0'
-                                            />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
-            {/*--------------------リスト部--------------------*/}
-
-            {/*--------------------QR表示モーダル--------------------*/}
-            <dialog ref={qrDisplayModalRef} className='modal'>
-                <div className='modal-box min-w-xs max-w-sm'>
-                    <button
-                        className='btn btn-sm btn-circle btn-ghost absolute right-2 top-2 z-10'
-                        onClick={() => {
-                            closeModal(qrDisplayModalRef);
-                            setQRCodeDataURL(null);
-                        }}
-                    >
-                        <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-6'>
-                            <path strokeLinecap='round' strokeLinejoin='round' d='M6 18 18 6M6 6l12 12' />
-                        </svg>
-                    </button>
-                    <div className='flex justify-center items-center h-85 relative'>{qrCodeDataURL && <Image alt='QR Code' src={qrCodeDataURL} fill objectFit='contain' />}</div>
-                </div>
-            </dialog>
-            {/*--------------------QR表示モーダル--------------------*/}
 
             {/*--------------------インターフェース削除モーダル--------------------*/}
             <dialog ref={interfaceDeletionModalRef} className='modal'>

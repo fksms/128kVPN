@@ -237,76 +237,78 @@ export default function UserSettings() {
 
     return (
         <div>
-            <div className='space-y-4'>
-                <h1 className='text-2xl font-bold'>{t('UserSettings.accountSettings')}</h1>
+            <div className='flex justify-center max-w-full min-w-xs'>
+                <div className='w-3xl px-4 py-4 space-y-4'>
+                    <h1 className='text-2xl font-bold'>{t('UserSettings.accountSettings')}</h1>
 
-                <div className='card bg-base-100 shadow-md'>
-                    <div className='card-body space-y-2'>
-                        <h2 className='card-title text-lg font-semibold'>{t('UserSettings.changeEmail')}</h2>
-                        <div>
-                            <p className='text-gray-600'>{t('UserSettings.currentEmail')}</p>
-                            <p className='text-base font-medium'>{currentEmail}</p>
-                        </div>
-                        <input
-                            type='email'
-                            placeholder={t('UserSettings.newEmailPlaceholder')}
-                            value={newEmail}
-                            onChange={(e) => setNewEmail(e.target.value)}
-                            className='input text-base'
-                            disabled={!!providerId}
-                        />
-                        <p className='text-sm text-error'>{error1}</p>
-                        <div className='card-actions justify-start'>
-                            <button onClick={() => checkInput('changeEmail')} className='btn btn-soft' disabled={!!providerId}>
-                                {t('UserSettings.changeButton')}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div className='card bg-base-100 shadow-md'>
-                    <div className='card-body space-y-2'>
-                        <h2 className='card-title text-lg font-semibold'>{t('UserSettings.changePassword')}</h2>
-                        <input
-                            type='password'
-                            placeholder={t('UserSettings.newPasswordPlaceholder')}
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            className='input text-base'
-                            disabled={!!providerId}
-                        />
-                        <input
-                            type='password'
-                            placeholder={t('UserSettings.confirmPasswordPlaceholder')}
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            className='input text-base'
-                            disabled={!!providerId}
-                        />
-                        <p className='text-sm text-error'>{error2}</p>
-                        <div className='card-actions justify-start'>
-                            <button onClick={() => checkInput('changePassword')} className='btn btn-soft' disabled={!!providerId}>
-                                {t('UserSettings.changeButton')}
-                            </button>
+                    <div className='card bg-base-100 shadow-md'>
+                        <div className='card-body space-y-2'>
+                            <h2 className='card-title text-lg font-semibold'>{t('UserSettings.changeEmail')}</h2>
+                            <div>
+                                <p className='text-gray-600'>{t('UserSettings.currentEmail')}</p>
+                                <p className='text-base font-medium'>{currentEmail}</p>
+                            </div>
+                            <input
+                                type='email'
+                                placeholder={t('UserSettings.newEmailPlaceholder')}
+                                value={newEmail}
+                                onChange={(e) => setNewEmail(e.target.value)}
+                                className='input text-base'
+                                disabled={!!providerId}
+                            />
+                            <p className='text-sm text-error'>{error1}</p>
+                            <div className='card-actions justify-start'>
+                                <button onClick={() => checkInput('changeEmail')} className='btn btn-soft' disabled={!!providerId}>
+                                    {t('UserSettings.changeButton')}
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div className='card bg-base-100 shadow-md'>
-                    <div className='card-body space-y-2'>
-                        <h2 className='card-title text-lg font-semibold text-red-600'>{t('UserSettings.deleteAccount')}</h2>
-                        <p className='text-gray-600'>{t('UserSettings.deleteAccountWarning')}</p>
-                        <div className='card-actions justify-start'>
-                            <button
-                                onClick={() => {
-                                    if (confirm(t('UserSettings.confirmDeleteAccount'))) {
-                                        providerId ? deleteSocialAccount() : checkInput('deleteEmailAccount');
-                                    }
-                                }}
-                                className='btn border-red-600 bg-red-600 text-white hover:bg-red-700'
-                            >
-                                {t('UserSettings.deleteAccountButton')}
-                            </button>
+                    <div className='card bg-base-100 shadow-md'>
+                        <div className='card-body space-y-2'>
+                            <h2 className='card-title text-lg font-semibold'>{t('UserSettings.changePassword')}</h2>
+                            <input
+                                type='password'
+                                placeholder={t('UserSettings.newPasswordPlaceholder')}
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                className='input text-base'
+                                disabled={!!providerId}
+                            />
+                            <input
+                                type='password'
+                                placeholder={t('UserSettings.confirmPasswordPlaceholder')}
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                className='input text-base'
+                                disabled={!!providerId}
+                            />
+                            <p className='text-sm text-error'>{error2}</p>
+                            <div className='card-actions justify-start'>
+                                <button onClick={() => checkInput('changePassword')} className='btn btn-soft' disabled={!!providerId}>
+                                    {t('UserSettings.changeButton')}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className='card bg-base-100 shadow-md'>
+                        <div className='card-body space-y-2'>
+                            <h2 className='card-title text-lg font-semibold text-red-600'>{t('UserSettings.deleteAccount')}</h2>
+                            <p className='text-gray-600'>{t('UserSettings.deleteAccountWarning')}</p>
+                            <div className='card-actions justify-start'>
+                                <button
+                                    onClick={() => {
+                                        if (confirm(t('UserSettings.confirmDeleteAccount'))) {
+                                            providerId ? deleteSocialAccount() : checkInput('deleteEmailAccount');
+                                        }
+                                    }}
+                                    className='btn border-red-600 bg-red-600 text-white hover:bg-red-700'
+                                >
+                                    {t('UserSettings.deleteAccountButton')}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
