@@ -11,6 +11,7 @@ import { ErrorCodes } from '@/lib/errorCodes';
 import { useLoading } from '@/contexts/LoadingContext';
 import LanguageDropdown from '@/components/LanguageDropdown';
 import SocialLoginButton from '@/components/SocialLoginButton';
+import MainLogo from './MainLogo';
 
 type AuthAction = 'login' | 'register' | 'forgotPassword' | 'verifyEmail' | 'forgotPasswordSentEmail';
 
@@ -129,7 +130,11 @@ export default function AuthForm({ action }: Props) {
         <div>
             <div className='relative flex flex-col items-center justify-center h-screen overflow-hidden px-8'>
                 <div className='w-full px-6 py-4 bg-base-100 rounded-md shadow-lg max-w-sm'>
-                    <h1 className='text-3xl pb-6 font-semibold text-center text-gray-700'>Test</h1>
+                    <div className='flex flex-col justify-center items-center gap-2'>
+                        <MainLogo size={60} />
+                        <span className='text-2xl text-gray-600 font-bold font-sans select-none'>128kVPN</span>
+                    </div>
+                    <div className='py-4' />
                     <form className='space-y-4' onSubmit={(e) => handleAuth(e)}>
                         {(action === 'login' || action === 'register' || action === 'forgotPassword') && (
                             <div>

@@ -56,10 +56,10 @@ export default function LanguageDropdown({ direction = 'start', size = 'md', but
                 </div>
                 <ul tabIndex={0} className={`menu ${menuSizeClass} dropdown-content bg-base-100 rounded-box z-1 mt-2 w-25 p-2 shadow-md`}>
                     <li>
-                        <a onClick={() => changeLocale('ja')}>{t('Navbar.languageSelect.ja')}</a>
+                        <span onClick={() => changeLocale('ja')}>{t('Navbar.languageSelect.ja')}</span>
                     </li>
                     <li>
-                        <a onClick={() => changeLocale('en')}>{t('Navbar.languageSelect.en')}</a>
+                        <span onClick={() => changeLocale('en')}>{t('Navbar.languageSelect.en')}</span>
                     </li>
                 </ul>
             </div>

@@ -35,7 +35,6 @@
         "loginWithGitHub": "Login with GitHub"
     },
     "Navbar": {
-        "title": "Test",
         "dashboard": "Dashboard",
         "settings": "Settings",
         "logout": "Logout",

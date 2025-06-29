@@ -76,13 +76,13 @@ export default function UserDropdown() {
                 )}
                 <ul tabIndex={0} className='menu menu-md dropdown-content bg-base-100 rounded-box z-1 mt-3 w-35 p-2 shadow-lg'>
                     <li>
-                        <a onClick={() => goTo('/dashboard')}>{t('Navbar.dashboard')}</a>
+                        <span onClick={() => goTo('/dashboard')}>{t('Navbar.dashboard')}</span>
                     </li>
                     <li>
-                        <a onClick={() => goTo('/settings')}>{t('Navbar.settings')}</a>
+                        <span onClick={() => goTo('/settings')}>{t('Navbar.settings')}</span>
                     </li>
                     <li>
-                        <a onClick={() => logout()} className='text-red-400'>
+                        <span onClick={() => logout()} className='text-red-400'>
                             <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-5'>
                                 <path
                                     strokeLinecap='round'
@@ -91,7 +91,7 @@ export default function UserDropdown() {
                                 />
                             </svg>
                             {t('Navbar.logout')}
-                        </a>
+                        </span>
                     </li>
                 </ul>
             </div>

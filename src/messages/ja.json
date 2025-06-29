@@ -35,7 +35,6 @@
         "loginWithGitHub": "GitHubでログイン"
     },
     "Navbar": {
-        "title": "テスト",
         "dashboard": "管理画面",
         "settings": "設定",
         "logout": "ログアウト",
