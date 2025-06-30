@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import PublicNavbar from '@/components/PublicNavbar';
 import TopPage from '@/components/TopPage';
+import PublicFooter from '@/components/PublicFooter';
 
 export const metadata: Metadata = {
     title: '128kVPN',
@@ -12,6 +13,7 @@ export default function HomePage() {
         <div>
             <PublicNavbar />
             <TopPage />
+            <PublicFooter />
         </div>
     );
 }

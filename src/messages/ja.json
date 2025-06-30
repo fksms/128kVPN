@@ -1,21 +1,37 @@
 {
+    "TopPage": {
+        "Headline": {
+            "before": "手軽に",
+            "highlight": "速度制限",
+            "after": "を体験しよう"
+        },
+        "Description": {
+            "line1": "ログインすれば無料で利用可能です。",
+            "line2": "専用ページから簡単にVPN接続が可能 ※1 で、速度制限環境 ※2 を体験できます。",
+            "line3": "高度な暗号化によって安全な通信を実現します。"
+        },
+        "Notes": {
+            "note1": "WireGuard® のインストールが必要です。",
+            "note2": "通信速度は128kbpsに制限されています。"
+        }
+    },
     "AuthError": {
-        "emptyFields": "すべてのフィールドを入力してください",
-        "invalidEmail": "無効なメールアドレスです",
-        "invalidPassword": "無効なパスワードです",
-        "passwordsDoNotMatch": "パスワードが一致しません",
-        "userDisabled": "このアカウントは無効化されています",
-        "userNotFound": "ユーザーが見つかりません",
-        "wrongPassword": "パスワードが間違っています",
-        "invalidCredential": "メールアドレスかパスワードが間違っています",
-        "emailAlreadyInUse": "このメールアドレスはすでに使用されています",
-        "weakPassword": "パスワードが弱すぎます",
-        "tooManyRequests": "リクエストが多すぎます。しばらくしてから再試行してください",
-        "networkError": "ネットワークエラーが発生しました",
-        "unknownError": "不明なエラーが発生しました",
-        "sessionLoginFailed": "セッションログインに失敗しました。再度ログインしてください",
-        "sessionLogoutFailed": "セッションログアウトに失敗しました。再試行してください",
-        "unverifiedEmail": "メールアドレスが確認されていません。続行するにはメールアドレスを確認してください"
+        "emptyFields": "すべてのフィールドを入力してください。",
+        "invalidEmail": "無効なメールアドレスです。",
+        "invalidPassword": "無効なパスワードです。",
+        "passwordsDoNotMatch": "パスワードが一致しません。",
+        "userDisabled": "このアカウントは無効化されています。",
+        "userNotFound": "ユーザーが見つかりません。",
+        "wrongPassword": "パスワードが間違っています。",
+        "invalidCredential": "メールアドレスかパスワードが間違っています。",
+        "emailAlreadyInUse": "このメールアドレスはすでに使用されています。",
+        "weakPassword": "パスワードが弱すぎます。",
+        "tooManyRequests": "リクエストが多すぎます。しばらくしてから再試行してください。",
+        "networkError": "ネットワークエラーが発生しました。",
+        "unknownError": "不明なエラーが発生しました。",
+        "sessionLoginFailed": "セッションログインに失敗しました。再度ログインしてください。",
+        "sessionLogoutFailed": "セッションログアウトに失敗しました。再試行してください。",
+        "unverifiedEmail": "メールアドレスが確認されていません。続行するにはメールアドレスを確認してください。"
     },
     "AuthForm": {
         "email": "メールアドレス",
@@ -56,7 +72,8 @@
             "placeholder": "ここに名前を入力",
             "submit": "作成",
             "cancel": "キャンセル",
-            "notice": "作成されたインターフェースは30〜60分後に自動的に削除されます"
+            "notice": "使用しなくなったインターフェースは削除してください。",
+            "warning": "作成されたインターフェースは30〜60分後に自動的に削除されます。"
         },
         "interfaceDeletionModal": {
             "title": "インターフェースを削除",
@@ -65,26 +82,20 @@
             "cancel": "キャンセル"
         },
         "interfaceConfigurationError": {
-            "emptyName": "名前は必須です",
-            "tooLongName": "名前が長すぎます",
-            "tooManyInterfaces": "作成可能なインターフェース数を超えています",
-            "alreadyExistsName": "このインターフェース名はすでに存在します",
-            "sqlError": "SQLエラーが発生しました",
-            "invalidRequest": "無効なリクエストです",
-            "unauthorized": "認証されていません。ページを更新してください",
-            "noAvailableIP": "利用可能なIPアドレスがありません",
-            "createConfigFailed": "設定の作成に失敗しました",
-            "createInterfaceFailed": "インターフェースの作成に失敗しました",
-            "deleteInterfaceFailed": "インターフェースの削除に失敗しました",
-            "getIPFailed": "IPアドレスの取得に失敗しました",
-            "failedToFetch": "データの取得に失敗しました",
-            "unknownError": "不明なエラーが発生しました"
-        },
-        "CountdownTimer": {
-            "remaining": "残り:",
-            "remainingTimeUnit": "分",
-            "expiringSoon": "まもなく失効",
-            "expired": "失効済み"
+            "emptyName": "名前は必須です。",
+            "tooLongName": "名前が長すぎます。",
+            "tooManyInterfaces": "作成可能なインターフェース数を超えています。",
+            "alreadyExistsName": "このインターフェース名はすでに存在します。",
+            "sqlError": "SQLエラーが発生しました。",
+            "invalidRequest": "無効なリクエストです。",
+            "unauthorized": "認証されていません。ページを更新してください。",
+            "noAvailableIP": "利用可能なIPアドレスがありません。",
+            "createConfigFailed": "設定の作成に失敗しました。",
+            "createInterfaceFailed": "インターフェースの作成に失敗しました。",
+            "deleteInterfaceFailed": "インターフェースの削除に失敗しました。",
+            "getIPFailed": "IPアドレスの取得に失敗しました。",
+            "failedToFetch": "データの取得に失敗しました。",
+            "unknownError": "不明なエラーが発生しました。"
         }
     },
     "UserSettings": {

@@ -130,10 +130,7 @@ export default function AuthForm({ action }: Props) {
         <div>
             <div className='relative flex flex-col items-center justify-center h-screen overflow-hidden px-8'>
                 <div className='w-full px-6 py-4 bg-base-100 rounded-md shadow-lg max-w-sm'>
-                    <div className='flex flex-col justify-center items-center gap-2'>
-                        <MainLogo size={60} />
-                        <span className='text-2xl text-gray-600 font-bold font-sans select-none'>128kVPN</span>
-                    </div>
+                    <MainLogo logoSize={60} fontSize='2xl' className='flex-col justify-center' />
                     <div className='py-4' />
                     <form className='space-y-4' onSubmit={(e) => handleAuth(e)}>
                         {(action === 'login' || action === 'register' || action === 'forgotPassword') && (

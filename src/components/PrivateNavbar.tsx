@@ -13,21 +13,21 @@ export default function PrivateNavbar() {
                     <div className='flex items-center w-3xl px-4 py-2'>
                         <div className='flex-1'>
                             <Link href='/dashboard'>
-                                <div className='flex items-center gap-3'>
-                                    <MainLogo size={50} />
-                                    <span className='text-2xl text-gray-600 font-bold font-sans select-none'>128kVPN</span>
-                                </div>
+                                {/* sm未満 */}
+                                <MainLogo logoSize={40} fontSize='xl' className='flex sm:hidden' />
+                                {/* sm以上 */}
+                                <MainLogo logoSize={50} fontSize='2xl' className='hidden sm:flex' />
                             </Link>
                         </div>
 
-                        <div className='flex gap-1'>
+                        <div className='flex items-center gap-1'>
                             <LanguageDropdown size='md' direction='end' />
                             <UserDropdown />
                         </div>
                     </div>
                 </div>
             </div>
-            <div className='pb-30'></div>
+            <div className='max-sm:pb-20 sm:pb-30' />
         </div>
     );
 }

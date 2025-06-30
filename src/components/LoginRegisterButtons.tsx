@@ -15,7 +15,7 @@ export default function LoginRegisterButtons() {
                 <button onClick={() => router.push('/login', { locale: locale })} className='btn btn-neutral'>
                     {t('AuthForm.loginButton')}
                 </button>
-                <button onClick={() => router.push('/register', { locale: locale })} className='btn'>
+                <button onClick={() => router.push('/register', { locale: locale })} className='btn max-sm:hidden'>
                     {t('AuthForm.registerButton')}
                 </button>
             </div>

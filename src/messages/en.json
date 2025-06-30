@@ -1,21 +1,37 @@
 {
+    "TopPage": {
+        "Headline": {
+            "before": "Easily experience ",
+            "highlight": "speed restrictions",
+            "after": ""
+        },
+        "Description": {
+            "line1": "Free to use after logging in.",
+            "line2": "Connect easily via the dedicated page ※1 and experience a speed-limited environment ※2.",
+            "line3": "Secure communication enabled by advanced encryption."
+        },
+        "Notes": {
+            "note1": "WireGuard® installation is required.",
+            "note2": "Communication speed is limited to 128kbps."
+        }
+    },
     "AuthError": {
-        "emptyFields": "Please fill in all fields",
+        "emptyFields": "Please fill in all fields.",
         "invalidEmail": "Invalid email address",
         "invalidPassword": "Invalid password",
         "passwordsDoNotMatch": "Passwords do not match",
-        "userDisabled": "This account has been disabled",
+        "userDisabled": "This account has been disabled.",
         "userNotFound": "User not found",
         "wrongPassword": "Incorrect password",
-        "invalidCredential": "Email or password is incorrect",
-        "emailAlreadyInUse": "This email is already in use",
-        "weakPassword": "Password is too weak",
-        "tooManyRequests": "Too many requests. Please try again later",
+        "invalidCredential": "Email or password is incorrect.",
+        "emailAlreadyInUse": "This email is already in use.",
+        "weakPassword": "Password is too weak.",
+        "tooManyRequests": "Too many requests. Please try again later.",
         "networkError": "A network error occurred",
         "unknownError": "An unknown error occurred",
-        "sessionLoginFailed": "Session login failed. Please log in again",
-        "sessionLogoutFailed": "Session logout failed. Please try again",
-        "unverifiedEmail": "Your email address is not verified. Please verify your email to continue"
+        "sessionLoginFailed": "Session login failed. Please log in again.",
+        "sessionLogoutFailed": "Session logout failed. Please try again.",
+        "unverifiedEmail": "Your email address is not verified. Please verify your email to continue."
     },
     "AuthForm": {
         "email": "Email",
@@ -56,7 +72,8 @@
             "placeholder": "Enter name here",
             "submit": "Create",
             "cancel": "Cancel",
-            "notice": "The created interface will be automatically deleted after 30 to 60 minutes"
+            "notice": "Please delete interfaces that you no longer use.",
+            "warning": "The created interface will be automatically deleted after 30 to 60 minutes."
         },
         "interfaceDeletionModal": {
             "title": "Delete Interface",
@@ -67,11 +84,11 @@
         "interfaceConfigurationError": {
             "emptyName": "Name is required",
             "tooLongName": "Name is too long",
-            "tooManyInterfaces": "You have exceeded the maximum number of interfaces you can create",
-            "alreadyExistsName": "This interface name already exists",
+            "tooManyInterfaces": "You have exceeded the maximum number of interfaces you can create.",
+            "alreadyExistsName": "This interface name already exists.",
             "sqlError": "An SQL error occurred",
             "invalidRequest": "Invalid request",
-            "unauthorized": "Unauthorized access. Please refresh the page",
+            "unauthorized": "Unauthorized access. Please refresh the page.",
             "noAvailableIP": "No available IP addresses",
             "createConfigFailed": "Failed to create configuration",
             "createInterfaceFailed": "Failed to create interface",
@@ -79,12 +96,6 @@
             "getIPFailed": "Failed to retrieve IP address",
             "failedToFetch": "Failed to fetch data",
             "unknownError": "An unknown error occurred"
-        },
-        "CountdownTimer": {
-            "remaining": "Remaining:",
-            "remainingTimeUnit": "minutes",
-            "expiringSoon": "Expiring Soon",
-            "expired": "Expired"
         }
     },
     "UserSettings": {
