@@ -11,17 +11,17 @@ export default function PrivateNavbar() {
             <div className='navbar fixed top-0 z-40 bg-[var(--background)] border-b border-gray-300'>
                 <div className='flex mx-auto max-w-full min-w-xs'>
                     <div className='flex items-center w-3xl px-4 py-2'>
-                        <div className='flex-1'>
+                        <div className='flex flex-1'>
                             <Link href='/dashboard'>
                                 {/* sm未満 */}
-                                <MainLogo logoSize={40} fontSize='xl' className='flex sm:hidden' />
+                                <MainLogo logoSize={40} fontSize='text-xl' className='flex sm:hidden' />
                                 {/* sm以上 */}
-                                <MainLogo logoSize={50} fontSize='2xl' className='hidden sm:flex' />
+                                <MainLogo logoSize={50} fontSize='text-2xl' className='hidden sm:flex' />
                             </Link>
                         </div>
 
                         <div className='flex items-center gap-1'>
-                            <LanguageDropdown size='md' direction='end' />
+                            <LanguageDropdown direction='dropdown-end' buttonSize='btn-md' menuSize='menu-md' />
                             <UserDropdown />
                         </div>
                     </div>

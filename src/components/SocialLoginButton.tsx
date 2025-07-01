@@ -29,7 +29,7 @@ export default function SocialLoginButton() {
                 // セッションログインを試行
                 await sessionLogin(userCredential);
                 // ページを切り替え
-                router.push('/dashboard', { locale: locale });
+                router.replace('/dashboard', { locale: locale });
                 return;
             }
             // 不明なエラー

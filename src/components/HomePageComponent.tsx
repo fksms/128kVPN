@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useTranslations, useLocale } from 'next-intl';
 
-export default function TopPage() {
+export default function HomePageComponent() {
     const t = useTranslations();
 
     const locale = useLocale();
@@ -15,7 +15,7 @@ export default function TopPage() {
                     <div className='py-2' />
 
                     <div className='relative w-full aspect-square sm:aspect-[3/2]'>
-                        <Image src={`/speedtest_${locale}.webp`} alt='Speed Test Example' fill objectFit='contain' />
+                        <Image src={`/speedtest_${locale}.webp`} alt='Speed Test Example' fill style={{ objectFit: 'contain' }} priority={true} />
                     </div>
 
                     <div className='py-4' />

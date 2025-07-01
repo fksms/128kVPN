@@ -4,45 +4,29 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/navigation';
 
 type Props = {
-    direction: 'start' | 'end';
-    size: 'xs' | 'sm' | 'md';
-    buttonClassName?: string;
+    direction: 'dropdown-start' | 'dropdown-end';
+    buttonSize: 'btn-xs' | 'btn-sm' | 'btn-md';
+    menuSize: 'menu-xs' | 'menu-sm' | 'menu-md';
+    className?: string;
 };
 
-export default function LanguageDropdown({ direction = 'start', size = 'md', buttonClassName = '' }: Props) {
+export default function LanguageDropdown({ direction = 'dropdown-start', buttonSize = 'btn-md', menuSize = 'menu-md', className = '' }: Props) {
     const t = useTranslations();
 
     const pathname = usePathname();
     const router = useRouter();
     const locale = useLocale();
 
-    const dropdownDirectionClass = {
-        start: 'dropdown-start',
-        end: 'dropdown-end',
-    }[direction];
-
-    const btnSizeClass = {
-        xs: 'btn-xs',
-        sm: 'btn-sm',
-        md: 'btn-md',
-    }[size];
-
-    const menuSizeClass = {
-        xs: 'menu-xs',
-        sm: 'menu-sm',
-        md: 'menu-md',
-    }[size];
-
     const changeLocale = (newLocale: string): void => {
         if (locale !== newLocale) {
-            router.push(pathname, { locale: newLocale });
+            router.replace(pathname, { locale: newLocale });
         }
     };
 
     return (
         <div>
-            <div className={`dropdown ${dropdownDirectionClass}`} title={t('Navbar.language')}>
-                <div tabIndex={0} role='button' className={`btn ${btnSizeClass} btn-ghost rounded-field ${buttonClassName}`}>
+            <div className={`dropdown ${direction}`} title={t('Navbar.language')}>
+                <div tabIndex={0} role='button' className={`btn ${buttonSize} btn-ghost rounded-field ${className}`}>
                     <svg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' strokeWidth={1.5} stroke='currentColor' className='size-5'>
                         <path
                             strokeLinecap='round'
@@ -54,7 +38,7 @@ export default function LanguageDropdown({ direction = 'start', size = 'md', but
                         <path strokeLinecap='round' strokeLinejoin='round' d='m19.5 8.25-7.5 7.5-7.5-7.5' />
                     </svg>
                 </div>
-                <ul tabIndex={0} className={`menu ${menuSizeClass} dropdown-content bg-base-100 rounded-box z-1 mt-2 w-25 p-2 shadow-md`}>
+                <ul tabIndex={0} className={`menu ${menuSize} dropdown-content bg-base-100 rounded-box z-1 mt-2 w-25 p-2 shadow-md`}>
                     <li>
                         <span onClick={() => changeLocale('ja')}>{t('Navbar.languageSelect.ja')}</span>
                     </li>

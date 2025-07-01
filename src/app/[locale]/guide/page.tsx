@@ -3,15 +3,14 @@ import { cookies } from 'next/headers';
 import { verifySessionCookie } from '@/lib/verifySessionCookie';
 import PublicNavbar from '@/components/PublicNavbar';
 import PrivateNavbar from '@/components/PrivateNavbar';
-import HomePageComponent from '@/components/HomePageComponent';
-import DetailedFooter from '@/components/DetailedFooter';
+import GuidePageComponent from '@/components/GuidePageComponent';
+import SimpleFooter from '@/components/SimpleFooter';
 
 export const metadata: Metadata = {
-    title: '128kVPN',
-    description: 'Offers a speed-limited VPN.',
+    title: '128kVPN | Guide',
 };
 
-export default async function HomePage() {
+export default async function GuidePage() {
     let payload = null;
 
     try {
@@ -25,8 +24,8 @@ export default async function HomePage() {
     return (
         <div>
             {payload ? <PrivateNavbar /> : <PublicNavbar />}
-            <HomePageComponent />
-            <DetailedFooter />
+            <GuidePageComponent />
+            <SimpleFooter />
         </div>
     );
 }

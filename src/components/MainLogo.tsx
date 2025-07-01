@@ -2,11 +2,11 @@
 
 type Props = {
     logoSize: number;
-    fontSize: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+    fontSize: 'text-lg' | 'text-xl' | 'text-2xl';
     className?: string;
 };
 
-export default function MainLogo({ logoSize = 50, fontSize = '2xl', className = '' }: Props) {
+export default function MainLogo({ logoSize = 50, fontSize = 'text-2xl', className = '' }: Props) {
     return (
         <div>
             <div className={`flex items-center gap-2 ${className}`}>
@@ -26,7 +26,7 @@ export default function MainLogo({ logoSize = 50, fontSize = '2xl', className = 
                         />
                     </g>
                 </svg>
-                <span className={`text-${fontSize} text-gray-600 font-bold font-sans select-none`}>128kVPN</span>
+                <span className={`${fontSize} text-gray-600 font-bold font-sans select-none`}>128kVPN</span>
             </div>
         </div>
     );

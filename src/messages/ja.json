@@ -53,6 +53,7 @@
     "Navbar": {
         "dashboard": "管理画面",
         "settings": "設定",
+        "guide": "使用方法",
         "logout": "ログアウト",
         "confirmLogout": "ログアウトしますか？",
         "language": "言語",

@@ -28,7 +28,7 @@ export default function UserDropdown() {
                 // セッションログアウトを試行
                 await sessionLogout();
                 // ページを切り替え
-                router.push('/login', { locale: locale });
+                router.replace('/login', { locale: locale });
                 return;
             } else {
                 return;
@@ -80,6 +80,9 @@ export default function UserDropdown() {
                     </li>
                     <li>
                         <span onClick={() => goTo('/settings')}>{t('Navbar.settings')}</span>
+                    </li>
+                    <li>
+                        <span onClick={() => goTo('/guide')}>{t('Navbar.guide')}</span>
                     </li>
                     <li>
                         <span onClick={() => logout()} className='text-red-400'>

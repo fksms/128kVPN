@@ -53,6 +53,7 @@
     "Navbar": {
         "dashboard": "Dashboard",
         "settings": "Settings",
+        "guide": "Guide",
         "logout": "Logout",
         "confirmLogout": "Do you want to log out?",
         "language": "Language",

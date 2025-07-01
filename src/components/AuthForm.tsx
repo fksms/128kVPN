@@ -78,7 +78,7 @@ export default function AuthForm({ action }: Props) {
                 // セッションログインを試行
                 await sessionLogin(userCredential);
                 // ページを切り替え
-                router.push('/dashboard', { locale: locale });
+                router.replace('/dashboard', { locale: locale });
                 return;
             }
             // 登録時の処理
@@ -88,7 +88,7 @@ export default function AuthForm({ action }: Props) {
                 // 認証メールを送信
                 await sendEmailVerification(userCredential.user);
                 // ページを切り替え
-                router.push('/verify-email', { locale: locale });
+                router.replace('/verify-email', { locale: locale });
                 return;
             }
             // パスワードリセット時の処理
@@ -96,7 +96,7 @@ export default function AuthForm({ action }: Props) {
                 // パスワードリセットメールを送信
                 await sendPasswordResetEmail(auth, email);
                 // ページを切り替え
-                router.push('/forgot-password/sent', { locale: locale });
+                router.replace('/forgot-password/sent', { locale: locale });
                 return;
             }
             // 不明なエラー
@@ -130,7 +130,7 @@ export default function AuthForm({ action }: Props) {
         <div>
             <div className='relative flex flex-col items-center justify-center h-screen overflow-hidden px-8'>
                 <div className='w-full px-6 py-4 bg-base-100 rounded-md shadow-lg max-w-sm'>
-                    <MainLogo logoSize={60} fontSize='2xl' className='flex-col justify-center' />
+                    <MainLogo logoSize={60} fontSize='text-2xl' className='flex-col justify-center' />
                     <div className='py-4' />
                     <form className='space-y-4' onSubmit={(e) => handleAuth(e)}>
                         {(action === 'login' || action === 'register' || action === 'forgotPassword') && (
@@ -234,7 +234,7 @@ export default function AuthForm({ action }: Props) {
                     )}
 
                     <hr className='w-full my-4 border-neutral-content' />
-                    <LanguageDropdown size='xs' direction='start' buttonClassName='text-gray-500' />
+                    <LanguageDropdown direction='dropdown-start' buttonSize='btn-xs' menuSize='menu-xs' className='text-gray-500' />
                 </div>
             </div>
         </div>

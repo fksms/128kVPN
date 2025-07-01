@@ -111,7 +111,7 @@ export default function UserSettings() {
             // セッションログアウトを試行
             await sessionLogout();
             // ページを切り替え
-            router.push('/verify-email', { locale: locale });
+            router.replace('/verify-email', { locale: locale });
             return;
         } catch (error) {
             // ローディング停止
@@ -177,7 +177,7 @@ export default function UserSettings() {
             await sessionLogout();
             alert(t('UserSettings.accountDeleted'));
             // ページを切り替え
-            router.push('/register', { locale: locale });
+            router.replace('/register', { locale: locale });
             return;
         } catch (error) {
             // ローディング停止
@@ -212,7 +212,7 @@ export default function UserSettings() {
             await sessionLogout();
             alert(t('UserSettings.accountDeleted'));
             // ページを切り替え
-            router.push('/register', { locale: locale });
+            router.replace('/register', { locale: locale });
             return;
         } catch (error) {
             // ローディング停止
