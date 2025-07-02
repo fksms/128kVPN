@@ -14,4 +14,8 @@ services:
       - .env
     volumes:
       - ./:/app:cached
+      - node_modules:/app/src/node_modules
     tty: true
+
+volumes:
+  node_modules:

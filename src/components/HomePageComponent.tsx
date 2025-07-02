@@ -20,7 +20,7 @@ export default function HomePageComponent() {
 
                     <div className='py-4' />
 
-                    <h1 className='text-3xl sm:text-4xl md:text-5xl font-extrabold text-center pb-2'>
+                    <h1 className='text-3xl sm:text-4xl md:text-5xl font-bold text-center pb-2'>
                         {t('TopPage.Headline.before')}
                         <span className='text-teal-500'>{t('TopPage.Headline.highlight')}</span>
                         {t('TopPage.Headline.after')}
