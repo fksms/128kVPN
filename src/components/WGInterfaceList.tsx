@@ -319,9 +319,7 @@ export default function WGInterfaceList() {
                             <path strokeLinecap='round' strokeLinejoin='round' d='M6 18 18 6M6 6l12 12' />
                         </svg>
                     </button>
-                    <div className='flex justify-center items-center h-85 relative'>
-                        {qrCodeDataURL && <Image alt='QR Code' src={qrCodeDataURL} fill style={{ objectFit: 'contain' }} priority={true} />}
-                    </div>
+                    {qrCodeDataURL && <Image src={qrCodeDataURL} alt='QR Code' width={300} height={300} className='mx-auto w-90' />}
                 </div>
             </dialog>
             {/*--------------------QR表示モーダル--------------------*/}

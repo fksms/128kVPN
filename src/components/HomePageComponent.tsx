@@ -14,9 +14,7 @@ export default function HomePageComponent() {
                 <div className='w-5xl px-4 py-4 space-y-4'>
                     <div className='py-2' />
 
-                    <div className='relative w-full aspect-square sm:aspect-[3/2]'>
-                        <Image src={`/speedtest_${locale}.webp`} alt='Speed Test Example' fill style={{ objectFit: 'contain' }} priority={true} />
-                    </div>
+                    <Image src={`/speedtest_${locale}.webp`} alt='Speed Test Example' width={1200} height={2453} className='w-55 sm:w-70 mx-auto' priority={true} />
 
                     <div className='py-4' />
 
