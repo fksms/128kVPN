@@ -186,7 +186,7 @@ export const removePeer = async (ipAddress: string): Promise<void> => {
 // WireGuardの設定を同期
 async function syncConfig() {
     try {
-        await execSync(`wg syncconf ${wgInterfaceName} <(wg-quick strip ${serverWGConfigPath})`, { shell: 'bash' });
+        await execSync(`wg syncconf ${wgInterfaceName} ${serverWGConfigPath}`);
     } catch (error) {
         console.error(error);
         throw new Error('Failed to sync WireGuard configuration');
