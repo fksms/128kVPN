@@ -20,30 +20,30 @@ export default function HomePageComponent() {
                     <div className='py-4' />
 
                     <h1 className='text-3xl sm:text-4xl md:text-5xl font-bold text-center pb-2'>
-                        {t('TopPage.Headline.before')}
-                        <span className='text-teal-500'>{t('TopPage.Headline.highlight')}</span>
-                        {t('TopPage.Headline.after')}
+                        {t('TopPage.headline.before')}
+                        <span className='text-teal-500'>{t('TopPage.headline.highlight')}</span>
+                        {t('TopPage.headline.after')}
                     </h1>
 
                     <p className='text-base sm:text-lg md:text-xl text-center leading-relaxed py-2'>
-                        {t('TopPage.Description.line1')}
+                        {t('TopPage.description.line1')}
                         <br />
-                        {t('TopPage.Description.line2')}
+                        {t('TopPage.description.line2')}
                         <br />
-                        {t('TopPage.Description.line3')}
+                        {t('TopPage.description.line3')}
                         <br />
-                        {t('TopPage.GuideLink.prefix')}
+                        {t('TopPage.guideLink.prefix')}
                         {locale === 'ja' ? '' : ' '}
                         <Link href='/guide' className='text-blue-700 underline'>
-                            {t('TopPage.GuideLink.linkText')}
+                            {t('TopPage.guideLink.linkText')}
                         </Link>
-                        {t('TopPage.GuideLink.suffix')}
+                        {t('TopPage.guideLink.suffix')}
                     </p>
 
                     <p className='text-sm text-gray-500 text-center'>
-                        <sup>※1</sup> {t('TopPage.Notes.note1')}
+                        <sup>※1</sup> {t('TopPage.notes.note1')}
                         <br />
-                        <sup>※2</sup> {t('TopPage.Notes.note2')}
+                        <sup>※2</sup> {t('TopPage.notes.note2')}
                     </p>
                 </div>
             </div>

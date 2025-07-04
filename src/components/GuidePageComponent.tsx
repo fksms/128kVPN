@@ -60,10 +60,10 @@ export default function GuidePageComponent() {
                     <p className='text-base text-gray-700'>{t('GuidePage.installDescription')}</p>
 
                     <div className='flex flex-col sm:flex-row items-center justify-center py-4 gap-4 sm:gap-6'>
-                        <Link href={`https://apps.apple.com/${countryCode}/app/id1441195209`}>
+                        <Link href={`https://apps.apple.com/${countryCode}/app/id1441195209`} target='_blank' rel='noopener noreferrer'>
                             <Image src={`/badge/apple_${locale}.svg`} alt={t('GuidePage.downloadFromAppStore')} width={270} height={80} className='w-40 sm:w-auto sm:h-13' />
                         </Link>
-                        <Link href='https://play.google.com/store/apps/details?id=com.wireguard.android'>
+                        <Link href='https://play.google.com/store/apps/details?id=com.wireguard.android' target='_blank' rel='noopener noreferrer'>
                             <Image src={`/badge/google_${locale}.svg`} alt={t('GuidePage.getOnGooglePlay')} width={270} height={80} className='w-40 sm:w-auto sm:h-13' />
                         </Link>
                     </div>

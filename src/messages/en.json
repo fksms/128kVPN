@@ -1,20 +1,20 @@
 {
     "TopPage": {
-        "Headline": {
+        "headline": {
             "before": "Easily experience ",
             "highlight": "speed restrictions",
             "after": ""
         },
-        "Description": {
+        "description": {
             "line1": "Free to use after logging in.",
             "line2": "Connect easily via the dedicated page ※1 and experience a speed-limited environment ※2.",
             "line3": "Secure communication enabled by advanced encryption."
         },
-        "Notes": {
+        "notes": {
             "note1": "WireGuard® installation is required.",
             "note2": "Communication speed is limited to 128kbps."
         },
-        "GuideLink": {
+        "guideLink": {
             "prefix": "You can check how to use it",
             "linkText": "here",
             "suffix": "."
@@ -80,6 +80,9 @@
             "en": "English",
             "ja": "日本語"
         }
+    },
+    "Footer": {
+        "privacyPolicy": "Privacy Policy"
     },
     "DashboardPage": {
         "new": "+ New",

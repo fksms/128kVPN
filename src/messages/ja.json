@@ -1,20 +1,20 @@
 {
     "TopPage": {
-        "Headline": {
+        "headline": {
             "before": "手軽に",
             "highlight": "速度制限",
             "after": "を体験しよう"
         },
-        "Description": {
+        "description": {
             "line1": "ログインすれば無料で利用可能です。",
             "line2": "専用ページから簡単にVPN接続が可能 ※1 で、速度制限環境 ※2 を体験できます。",
             "line3": "高度な暗号化によって安全な通信を実現します。"
         },
-        "Notes": {
+        "notes": {
             "note1": "WireGuard® のインストールが必要です。",
             "note2": "通信速度は128kbpsに制限されています。"
         },
-        "GuideLink": {
+        "guideLink": {
             "prefix": "使い方は",
             "linkText": "こちら",
             "suffix": "から確認できます。"
@@ -80,6 +80,9 @@
             "en": "English",
             "ja": "日本語"
         }
+    },
+    "Footer": {
+        "privacyPolicy": "プライバシーポリシー"
     },
     "DashboardPage": {
         "new": "+ 新規追加",
