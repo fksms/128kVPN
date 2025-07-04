@@ -1,18 +1,9 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { expirationDurationMinutes } from '@/env';
-import { db } from '@/lib/sqlite';
+import { db, type WgInterface } from '@/lib/sqlite';
 import { adminAuth } from '@/lib/firebase-admin';
 import { ErrorCodes } from '@/lib/errorCodes';
 import { createPeerConfig, addPeer, removePeer } from '@/lib/wireguard';
-
-type WgInterface = {
-    id: number;
-    userid: string;
-    name: string;
-    ip_address: string;
-    client_config: string;
-    expire_at: number;
-};
 
 // IPアドレスの予約済みリスト（排他制御用）（重複時はエラー応答）
 const reservedIPs = new Set<string>();
@@ -113,9 +104,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
     // -------------------- セッションクッキーの検証 --------------------
 
-    if (action === 'create') {
-        // ============================== `Create` ==============================
-        //
+    // インターフェースの作成
+    if (action === 'CREATE') {
         // -------------------- 利用可能なIPアドレスの取得 --------------------
         let ipToAssign: string;
         const wgInterfaceCIDR = process.env.WG_INTERFACE_CIDR;
@@ -218,9 +208,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             { status: 200 }
         );
         // -------------------- 200 OK --------------------
-    } else if (action === 'delete') {
-        // ============================== `Delete` ==============================
-        //
+    }
+    // インターフェースの削除
+    else if (action === 'DELETE') {
         // -------------------- 削除するIPアドレスの取得 --------------------
         let ipToRelease: string;
         try {
@@ -277,7 +267,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         // -------------------- 200 OK --------------------
         return NextResponse.json({ success: true }, { status: 200 });
         // -------------------- 200 OK --------------------
-    } else {
+    }
+    // 不正なアクション
+    else {
         return NextResponse.json(
             {
                 success: false,

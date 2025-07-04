@@ -25,5 +25,5 @@ services:
     env_file:
       - .env
     environment:
-      - BANDWIDTH_LIMIT=false # `true`の場合は速度制限有りモードで起動、`false`の場合は速度制限無しモードで起動
+      - BANDWIDTH_LIMIT=true # `true`の場合は速度制限有りモードで起動、`false`の場合は速度制限無しモードで起動
     restart: always

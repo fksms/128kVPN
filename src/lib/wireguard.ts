@@ -3,7 +3,7 @@ import { execSync } from 'child_process';
 import { access, appendFile, writeFile, readFile } from 'fs/promises';
 
 // WireGuardのアドレス（クライアントが接続するアドレス）
-const wgHost = process.env.WG_HOST;
+const wgEndpoint = process.env.WG_ENDPOINT;
 // WireGuardのポート（クライアントが接続するポート）
 const wgPort = process.env.WG_PORT || '51820';
 // サーバー・クライアント間のMTU値
@@ -105,7 +105,7 @@ DNS = ${wgDefaultDNS}
 
 [Peer]
 PublicKey = ${serverPublicKey}
-Endpoint = ${wgHost}:${wgPort}
+Endpoint = ${wgEndpoint}:${wgPort}
 AllowedIPs = 0.0.0.0/0
 PersistentKeepalive = ${wgPersistentKeepalive}`;
 
@@ -149,8 +149,10 @@ export const removePeer = async (ipAddress: string): Promise<void> => {
         // コンフィグファイルの読み込み
         const configContent = await readFile(serverWGConfigPath, 'utf-8');
 
+        // [Peer]セクションごとに分割
         const peerSections = configContent.split(/\n(?=\[Peer\])/); // [Peer]の前の改行でセクション分割
 
+        // 各セクションをフィルター
         const filteredSections = peerSections.filter((section) => {
             // [Peer]セクションか確認
             if (section.startsWith('[Peer]')) {
@@ -158,8 +160,8 @@ export const removePeer = async (ipAddress: string): Promise<void> => {
                 const match = section.match(/AllowedIPs\s*=\s*(.*)/);
                 if (match) {
                     const allowedIPs = match[1].split(',').map((s) => s.trim());
+                    // 該当のIPアドレスが含まれる場合は除外
                     if (allowedIPs.includes(`${ipAddress}/32`)) {
-                        // 該当のIPアドレスが含まれる場合は削除
                         return false;
                     }
                 }
@@ -168,12 +170,59 @@ export const removePeer = async (ipAddress: string): Promise<void> => {
             return true;
         });
 
+        // 新しいコンフィグ内容にまとめる
         const newConfigContent = filteredSections.join('\n');
 
         await writeFile(serverWGConfigPath, newConfigContent);
     } catch (error) {
         console.error(error);
         throw new Error('Failed to remove peer from WireGuard config file');
+    }
+
+    try {
+        await syncConfig();
+    } catch (error) {
+        throw error;
+    }
+};
+
+// WireGuardのピアを削除して反映（複数IPアドレス対応）
+export const removePeers = async (ipAddresses: string[]): Promise<void> => {
+    try {
+        // コンフィグファイルの読み込み
+        const configContent = await readFile(serverWGConfigPath, 'utf-8');
+
+        // [Peer]セクションごとに分割
+        const peerSections = configContent.split(/\n(?=\[Peer\])/); // [Peer]の前の改行でセクション分割
+
+        // 削除対象のIPアドレスを文字列セットに（検索高速化のため）
+        const targetAllowedIPs = new Set(ipAddresses.map((ip) => `${ip}/32`));
+
+        // 各セクションをフィルター
+        const filteredSections = peerSections.filter((section) => {
+            // [Peer]セクションか確認
+            if (section.startsWith('[Peer]')) {
+                // このセクションに該当のAllowedIPsが含まれるか
+                const match = section.match(/AllowedIPs\s*=\s*(.*)/);
+                if (match) {
+                    const allowedIPs = match[1].split(',').map((s) => s.trim());
+                    // このセクションに削除対象のIPが含まれていれば除外
+                    if (allowedIPs.some((ip) => targetAllowedIPs.has(ip))) {
+                        return false;
+                    }
+                }
+            }
+            // [Interface]セクション、もしくは該当のIPアドレスが含まれない場合はそのまま残す
+            return true;
+        });
+
+        // 新しいコンフィグ内容にまとめる
+        const newConfigContent = filteredSections.join('\n');
+
+        await writeFile(serverWGConfigPath, newConfigContent);
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to remove peers from WireGuard config file');
     }
 
     try {

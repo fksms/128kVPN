@@ -2,6 +2,15 @@ import path from 'path';
 import Database from 'better-sqlite3';
 import { maxInterfaceNameLength, maxInterfaces } from '@/env';
 
+type WgInterface = {
+    id: number;
+    userid: string;
+    name: string;
+    ip_address: string;
+    client_config: string;
+    expire_at: number;
+};
+
 const interfacesDBPath = path.join(process.cwd(), 'wg_interfaces.db');
 
 const db = new Database(interfacesDBPath);
@@ -33,4 +42,4 @@ db.exec(`
     END;
 `);
 
-export { db };
+export { db, type WgInterface };

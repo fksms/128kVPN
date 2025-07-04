@@ -1,40 +1,13 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { db } from '@/lib/sqlite';
+import { db, type WgInterface } from '@/lib/sqlite';
 import { ErrorCodes } from '@/lib/errorCodes';
-
-// GETリクエスト
-export async function GET(req: NextRequest): Promise<NextResponse> {
-    try {
-        // プレースホルダを使ってSQLを準備
-        const stmt = db.prepare('SELECT * FROM wg_interfaces');
-
-        // プレースホルダに値をバインド
-        const wgInterfaces = stmt.all();
-
-        return NextResponse.json(
-            {
-                success: true,
-                data: wgInterfaces,
-            },
-            { status: 200 }
-        );
-    } catch (error) {
-        console.error(error);
-        return NextResponse.json(
-            {
-                success: false,
-                code: ErrorCodes.SQL_ERROR,
-            },
-            { status: 500 }
-        );
-    }
-}
+import { removePeers } from '@/lib/wireguard';
 
 // POSTリクエスト
 export async function POST(req: NextRequest): Promise<NextResponse> {
-    const { action, checkedAt, data } = await req.json();
+    const { action } = await req.json();
 
-    if (!action || !checkedAt || !data) {
+    if (!action) {
         return NextResponse.json(
             {
                 success: false,
@@ -44,15 +17,20 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         );
     }
 
-    if (action === 'delete') {
+    // 全てのインターフェースを取得
+    if (action === 'GET_ALL_INTERFACES') {
         try {
             // プレースホルダを使ってSQLを準備
-            const stmt = db.prepare('DELETE FROM wg_interfaces WHERE expire_at < ?');
-
+            const stmt = db.prepare('SELECT * FROM wg_interfaces');
             // プレースホルダに値をバインド
-            stmt.run(checkedAt);
-
-            return NextResponse.json({ success: true }, { status: 200 });
+            const wgInterfaces = stmt.all() as WgInterface[];
+            return NextResponse.json(
+                {
+                    success: true,
+                    data: wgInterfaces,
+                },
+                { status: 200 }
+            );
         } catch (error) {
             console.error(error);
             return NextResponse.json(
@@ -63,7 +41,87 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
                 { status: 500 }
             );
         }
-    } else {
+    }
+    // 失効済みのインターフェースを削除
+    else if (action === 'DELETE_EXPIRED_INTERFACES') {
+        // 現在時刻を取得
+        const now = Date.now();
+
+        // -------------------- 全てのインターフェースの取得 --------------------
+        let wgInterfaces: WgInterface[];
+        try {
+            // プレースホルダを使ってSQLを準備
+            const stmt = db.prepare('SELECT * FROM wg_interfaces');
+            // プレースホルダに値をバインド
+            wgInterfaces = stmt.all() as WgInterface[];
+        } catch (error) {
+            console.error(error);
+            return NextResponse.json(
+                {
+                    success: false,
+                    code: ErrorCodes.SQL_ERROR,
+                },
+                { status: 500 }
+            );
+        }
+        // -------------------- 全てのインターフェースの取得 --------------------
+
+        // -------------------- 期限切れのインターフェース（IPアドレス）を抽出 --------------------
+        const expiredWGInterfaces = wgInterfaces.filter((item) => item.expire_at < now);
+        const expiredIPAddresses = expiredWGInterfaces.map((item) => item.ip_address);
+        // -------------------- 期限切れのインターフェース（IPアドレス）を抽出 --------------------
+
+        // -------------------- WireGuardのコンフィグ更新 --------------------
+        try {
+            // WireGuardのピアを追加
+            await removePeers(expiredIPAddresses);
+        } catch (error) {
+            console.error(error);
+            return NextResponse.json(
+                {
+                    success: false,
+                    code: ErrorCodes.DELETE_INTERFACE_FAILED,
+                },
+                { status: 500 }
+            );
+        }
+        // -------------------- WireGuardのコンフィグ更新 --------------------
+
+        // -------------------- データベースの更新 --------------------
+        try {
+            // プレースホルダを使ってSQLを準備
+            const stmt = db.prepare('DELETE FROM wg_interfaces WHERE expire_at < ?');
+            // プレースホルダに値をバインド
+            stmt.run(now);
+        } catch (error) {
+            console.error(error);
+            return NextResponse.json(
+                {
+                    success: false,
+                    code: ErrorCodes.SQL_ERROR,
+                },
+                { status: 500 }
+            );
+        }
+        // -------------------- データベースの更新 --------------------
+
+        // -------------------- 200 OK --------------------
+        return NextResponse.json(
+            {
+                success: true,
+                data: {
+                    // 使用中のIPアドレス数
+                    usedIpCount: wgInterfaces.length - expiredIPAddresses.length,
+                    // 解放されたIPアドレス数
+                    releasedIpCount: expiredIPAddresses.length,
+                },
+            },
+            { status: 200 }
+        );
+        // -------------------- 200 OK --------------------
+    }
+    // 不正なアクション
+    else {
         return NextResponse.json(
             {
                 success: false,

@@ -91,7 +91,7 @@ export default function WGInterfaceList() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    action: 'create',
+                    action: 'CREATE',
                     name: createWGInterfaceName,
                 }),
                 credentials: 'include',
@@ -136,7 +136,7 @@ export default function WGInterfaceList() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    action: 'delete',
+                    action: 'DELETE',
                     name: deleteWGInterfaceName,
                 }),
                 credentials: 'include',
