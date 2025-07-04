@@ -16,14 +16,19 @@ export default function GuidePageComponent() {
     const carouselRef = useRef<HTMLDivElement>(null);
 
     const screenshots = [
-        '/iphone_screenshot_1.webp',
-        '/iphone_screenshot_2.webp',
-        '/iphone_screenshot_3.webp',
-        '/iphone_screenshot_4.webp',
-        '/iphone_screenshot_5.webp',
-        '/iphone_screenshot_6.webp',
-        '/iphone_screenshot_7.webp',
+        '/screenshots/iphone_screenshot_1.webp',
+        '/screenshots/iphone_screenshot_2.webp',
+        '/screenshots/iphone_screenshot_3.webp',
+        '/screenshots/iphone_screenshot_4.webp',
+        '/screenshots/iphone_screenshot_5.webp',
+        '/screenshots/iphone_screenshot_6.webp',
+        '/screenshots/iphone_screenshot_7.webp',
     ];
+
+    const countryCode = {
+        ja: 'jp',
+        en: 'us',
+    }[locale];
 
     // スクロール関数
     const scrollCarousel = (targetImageNumber: number) => {
@@ -50,42 +55,36 @@ export default function GuidePageComponent() {
         <div>
             <div className='flex justify-center max-w-full min-w-xs'>
                 <div className='w-3xl px-8 py-4 space-y-4'>
-                    <h1 className='text-2xl font-bold text-gray-700'>WireGuardのインストール</h1>
+                    <h1 className='text-2xl font-bold text-gray-700'>{t('GuidePage.installTitle')}</h1>
 
-                    <p className='text-base text-gray-700'>128kVPNの利用にはWireGuardが必要になります。以下のリンクから、あなたのデバイスに適したアプリをダウンロードしてください。</p>
+                    <p className='text-base text-gray-700'>{t('GuidePage.installDescription')}</p>
 
                     <div className='flex flex-col sm:flex-row items-center justify-center py-4 gap-4 sm:gap-6'>
-                        <Link href='https://apps.apple.com/app/id1441195209'>
-                            <Image src={`/badge/apple_${locale}.svg`} alt='App Storeからダウンロード' width={270} height={80} className='w-40 sm:w-auto sm:h-13' />
+                        <Link href={`https://apps.apple.com/${countryCode}/app/id1441195209`}>
+                            <Image src={`/badge/apple_${locale}.svg`} alt={t('GuidePage.downloadFromAppStore')} width={270} height={80} className='w-40 sm:w-auto sm:h-13' />
                         </Link>
                         <Link href='https://play.google.com/store/apps/details?id=com.wireguard.android'>
-                            <Image src={`/badge/google_${locale}.svg`} alt='Google Playで手に入れよう' width={270} height={80} className='w-40 sm:w-auto sm:h-13' />
+                            <Image src={`/badge/google_${locale}.svg`} alt={t('GuidePage.getOnGooglePlay')} width={270} height={80} className='w-40 sm:w-auto sm:h-13' />
                         </Link>
                     </div>
 
                     <div className='py-4' />
 
-                    <h1 className='text-2xl font-bold text-gray-700'>インターフェースの作成と接続方法</h1>
-                    <p className='text-base text-gray-700'>
-                        ログイン後、ダッシュボードから「+ 新規追加」ボタンをクリックして、WireGuardのインターフェースを作成してください。インターフェースが作成されたら、以下のような状態になります。
-                    </p>
-                    <p className='text-base text-gray-700'>
-                        QRコードを表示するボタンがあるので、表示されたQRコードをWireGuardアプリでスキャンしてください。スキャン後は画面の指示に従うことで、インターフェースが自動的に追加されます。
-                    </p>
-                    <p className='text-base text-gray-700'>追加されたインターフェースのトグルをオンにすると、VPN接続が開始されます。</p>
+                    <h1 className='text-2xl font-bold text-gray-700'>{t('GuidePage.interfaceTitle')}</h1>
+                    <p className='text-base text-gray-700'>{t('GuidePage.interfaceDescription1')}</p>
+                    <p className='text-base text-gray-700'>{t('GuidePage.interfaceDescription2')}</p>
+                    <p className='text-base text-gray-700'>{t('GuidePage.interfaceDescription3')}</p>
 
                     <div className='py-1' />
 
-                    <Image src={`/interfaces_${locale}.webp`} alt='インターフェースのスクリーンショット' width={2080} height={1724} priority={true} />
+                    <Image src={`/screenshots/dashboard_screenshot_${locale}.webp`} alt={t('GuidePage.interfaceScreenshotAlt')} width={2080} height={1724} priority={true} />
 
                     <div className='py-4' />
 
-                    <h1 className='text-2xl font-bold text-gray-700'>スマートフォンのみの場合の接続方法</h1>
+                    <h1 className='text-2xl font-bold text-gray-700'>{t('GuidePage.phoneOnlyTitle')}</h1>
 
-                    <p className='text-base text-gray-700'>
-                        ダウンロードボタンがあるので、コンフィグファイルを端末にダウンロードしてください。ダウンロード後、WireGuardアプリを開き、「トンネルの追加」ボタンをタップして「ファイルからインポート」を選択します。ダウンロードしたコンフィグファイルを選択すると、インターフェースが追加されます。
-                    </p>
-                    <p className='text-base text-gray-700'>追加されたインターフェースのトグルをオンにすると、VPN接続が開始されます。</p>
+                    <p className='text-base text-gray-700'>{t('GuidePage.phoneOnlyDescription1')}</p>
+                    <p className='text-base text-gray-700'>{t('GuidePage.phoneOnlyDescription2')}</p>
 
                     <div className='py-4' />
 

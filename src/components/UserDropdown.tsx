@@ -47,8 +47,6 @@ export default function UserDropdown() {
 
     const goTo = (pathname: string): void => {
         if (currentPathname !== pathname) {
-            // ローディング開始
-            setLoading(true);
             router.push(pathname, { locale: locale });
         }
     };

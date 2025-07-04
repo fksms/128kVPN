@@ -13,7 +13,26 @@
         "Notes": {
             "note1": "WireGuard® installation is required.",
             "note2": "Communication speed is limited to 128kbps."
+        },
+        "GuideLink": {
+            "prefix": "You can check how to use it",
+            "linkText": "here",
+            "suffix": "."
         }
+    },
+    "GuidePage": {
+        "installTitle": "Install WireGuard",
+        "installDescription": "128kVPN requires WireGuard. Download the app suitable for your device from the following links.",
+        "downloadFromAppStore": "Download from App Store",
+        "getOnGooglePlay": "Get it on Google Play",
+        "interfaceTitle": "Create and Connect an Interface",
+        "interfaceDescription1": "After logging in, click the '+ New' button on the dashboard to create a WireGuard interface. Once created, it will look like this.",
+        "interfaceDescription2": "There’s a button to display a QR code. Scan the displayed QR code with the WireGuard app. Follow the on-screen instructions to automatically add the interface.",
+        "interfaceDescription3": "Turn on the toggle for the added interface to start the VPN connection.",
+        "interfaceScreenshotAlt": "Screenshot of the interface",
+        "phoneOnlyTitle": "Connecting with Only a Smartphone",
+        "phoneOnlyDescription1": "Tap the download button to download the config file to your device. After downloading, open the WireGuard app, tap 'Add Tunnel' and select 'Import from file'. Select the downloaded config file to add the interface.",
+        "phoneOnlyDescription2": "Turn on the toggle for the added interface to start the VPN connection."
     },
     "AuthError": {
         "emptyFields": "Please fill in all fields.",

@@ -13,7 +13,26 @@
         "Notes": {
             "note1": "WireGuard® のインストールが必要です。",
             "note2": "通信速度は128kbpsに制限されています。"
+        },
+        "GuideLink": {
+            "prefix": "使い方は",
+            "linkText": "こちら",
+            "suffix": "から確認できます。"
         }
+    },
+    "GuidePage": {
+        "installTitle": "WireGuardのインストール",
+        "installDescription": "128kVPNの利用にはWireGuardが必要になります。以下のリンクから、あなたのデバイスに適したアプリをダウンロードしてください。",
+        "downloadFromAppStore": "App Storeからダウンロード",
+        "getOnGooglePlay": "Google Playで手に入れよう",
+        "interfaceTitle": "インターフェースの作成と接続方法",
+        "interfaceDescription1": "ログイン後、ダッシュボードから「+ 新規追加」ボタンをクリックして、WireGuardのインターフェースを作成してください。インターフェースが作成されたら、以下のような状態になります。",
+        "interfaceDescription2": "QRコードを表示するボタンがあるので、表示されたQRコードをWireGuardアプリでスキャンしてください。スキャン後は画面の指示に従うことで、インターフェースが自動的に追加されます。",
+        "interfaceDescription3": "追加されたインターフェースのトグルをオンにすると、VPN接続が開始されます。",
+        "interfaceScreenshotAlt": "インターフェースのスクリーンショット",
+        "phoneOnlyTitle": "スマートフォンのみの場合の接続方法",
+        "phoneOnlyDescription1": "ダウンロードボタンがあるので、コンフィグファイルを端末にダウンロードしてください。ダウンロード後、WireGuardアプリを開き、「トンネルの追加」ボタンをタップして「ファイルからインポート」を選択します。ダウンロードしたコンフィグファイルを選択すると、インターフェースが追加されます。",
+        "phoneOnlyDescription2": "追加されたインターフェースのトグルをオンにすると、VPN接続が開始されます。"
     },
     "AuthError": {
         "emptyFields": "すべてのフィールドを入力してください。",

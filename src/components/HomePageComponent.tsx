@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useTranslations, useLocale } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 
 export default function HomePageComponent() {
     const t = useTranslations();
@@ -30,6 +31,13 @@ export default function HomePageComponent() {
                         {t('TopPage.Description.line2')}
                         <br />
                         {t('TopPage.Description.line3')}
+                        <br />
+                        {t('TopPage.GuideLink.prefix')}
+                        {locale === 'ja' ? '' : ' '}
+                        <Link href='/guide' className='text-blue-700 underline'>
+                            {t('TopPage.GuideLink.linkText')}
+                        </Link>
+                        {t('TopPage.GuideLink.suffix')}
                     </p>
 
                     <p className='text-sm text-gray-500 text-center'>
