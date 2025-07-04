@@ -236,7 +236,7 @@ export default function AuthForm({ action }: Props) {
                     <hr className='w-full my-4 border-neutral-content' />
                     <LanguageDropdown direction='dropdown-start' buttonSize='btn-xs' menuSize='menu-xs' className='text-gray-500' />
                 </div>
-                <Link href='/privacy-policy' className='text-sm hover:underline text-gray-500 pt-7'>
+                <Link href='/privacy-policy' className='text-sm hover:underline text-gray-500 pt-7' target='_blank' rel='noopener noreferrer'>
                     {t('Footer.privacyPolicy')}
                 </Link>
             </div>

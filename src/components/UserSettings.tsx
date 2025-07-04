@@ -139,7 +139,7 @@ export default function UserSettings() {
             const userCredential = await reauthenticateWithCredential(auth.currentUser!, credential);
             // パスワードを更新
             await updatePassword(userCredential.user, newPassword);
-            alert(t('UserSettings.passwordUpdated'));
+            alert(t('UserSettingsPage.passwordUpdated'));
             // パスワード入力欄を初期化
             setCurrentPassword('');
             setNewPassword('');
@@ -175,7 +175,7 @@ export default function UserSettings() {
             await deleteUser(userCredential.user);
             // セッションログアウトを試行
             await sessionLogout();
-            alert(t('UserSettings.accountDeleted'));
+            alert(t('UserSettingsPage.accountDeleted'));
             // ページを切り替え
             router.replace('/register', { locale: locale });
             return;
@@ -210,7 +210,7 @@ export default function UserSettings() {
             await deleteUser(userCredential.user);
             // セッションログアウトを試行
             await sessionLogout();
-            alert(t('UserSettings.accountDeleted'));
+            alert(t('UserSettingsPage.accountDeleted'));
             // ページを切り替え
             router.replace('/register', { locale: locale });
             return;
@@ -239,18 +239,18 @@ export default function UserSettings() {
         <div>
             <div className='flex justify-center max-w-full min-w-xs'>
                 <div className='w-3xl px-4 py-4 space-y-4'>
-                    <h1 className='text-2xl font-bold'>{t('UserSettings.accountSettings')}</h1>
+                    <h1 className='text-2xl font-bold'>{t('UserSettingsPage.accountSettings')}</h1>
 
                     <div className='card bg-base-100 shadow-md'>
                         <div className='card-body space-y-2'>
-                            <h2 className='card-title text-lg font-semibold'>{t('UserSettings.changeEmail')}</h2>
+                            <h2 className='card-title text-lg font-semibold'>{t('UserSettingsPage.changeEmail')}</h2>
                             <div>
-                                <p className='text-gray-600'>{t('UserSettings.currentEmail')}</p>
+                                <p className='text-gray-600'>{t('UserSettingsPage.currentEmail')}</p>
                                 <p className='text-base font-medium'>{currentEmail}</p>
                             </div>
                             <input
                                 type='email'
-                                placeholder={t('UserSettings.newEmailPlaceholder')}
+                                placeholder={t('UserSettingsPage.newEmailPlaceholder')}
                                 value={newEmail}
                                 onChange={(e) => setNewEmail(e.target.value)}
                                 className='input text-base'
@@ -259,7 +259,7 @@ export default function UserSettings() {
                             <p className='text-sm text-error'>{error1}</p>
                             <div className='card-actions justify-start'>
                                 <button onClick={() => checkInput('changeEmail')} className='btn btn-soft' disabled={!!providerId}>
-                                    {t('UserSettings.changeButton')}
+                                    {t('UserSettingsPage.changeButton')}
                                 </button>
                             </div>
                         </div>
@@ -267,10 +267,10 @@ export default function UserSettings() {
 
                     <div className='card bg-base-100 shadow-md'>
                         <div className='card-body space-y-2'>
-                            <h2 className='card-title text-lg font-semibold'>{t('UserSettings.changePassword')}</h2>
+                            <h2 className='card-title text-lg font-semibold'>{t('UserSettingsPage.changePassword')}</h2>
                             <input
                                 type='password'
-                                placeholder={t('UserSettings.newPasswordPlaceholder')}
+                                placeholder={t('UserSettingsPage.newPasswordPlaceholder')}
                                 value={newPassword}
                                 onChange={(e) => setNewPassword(e.target.value)}
                                 className='input text-base'
@@ -278,7 +278,7 @@ export default function UserSettings() {
                             />
                             <input
                                 type='password'
-                                placeholder={t('UserSettings.confirmPasswordPlaceholder')}
+                                placeholder={t('UserSettingsPage.confirmPasswordPlaceholder')}
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 className='input text-base'
@@ -287,7 +287,7 @@ export default function UserSettings() {
                             <p className='text-sm text-error'>{error2}</p>
                             <div className='card-actions justify-start'>
                                 <button onClick={() => checkInput('changePassword')} className='btn btn-soft' disabled={!!providerId}>
-                                    {t('UserSettings.changeButton')}
+                                    {t('UserSettingsPage.changeButton')}
                                 </button>
                             </div>
                         </div>
@@ -295,18 +295,18 @@ export default function UserSettings() {
 
                     <div className='card bg-base-100 shadow-md'>
                         <div className='card-body space-y-2'>
-                            <h2 className='card-title text-lg font-semibold text-red-600'>{t('UserSettings.deleteAccount')}</h2>
-                            <p className='text-gray-600'>{t('UserSettings.deleteAccountWarning')}</p>
+                            <h2 className='card-title text-lg font-semibold text-red-600'>{t('UserSettingsPage.deleteAccount')}</h2>
+                            <p className='text-gray-600'>{t('UserSettingsPage.deleteAccountWarning')}</p>
                             <div className='card-actions justify-start'>
                                 <button
                                     onClick={() => {
-                                        if (confirm(t('UserSettings.confirmDeleteAccount'))) {
+                                        if (confirm(t('UserSettingsPage.confirmDeleteAccount'))) {
                                             providerId ? deleteSocialAccount() : checkInput('deleteEmailAccount');
                                         }
                                     }}
                                     className='btn border-red-600 bg-red-600 text-white hover:bg-red-700'
                                 >
-                                    {t('UserSettings.deleteAccountButton')}
+                                    {t('UserSettingsPage.deleteAccountButton')}
                                 </button>
                             </div>
                         </div>
@@ -317,10 +317,10 @@ export default function UserSettings() {
             {/*--------------------パスワード確認モーダル--------------------*/}
             <dialog ref={passwordCheckModalRef} className='modal'>
                 <div className='modal-box min-w-xs max-w-sm space-y-3'>
-                    <h3 className='font-bold text-lg'>{t('UserSettings.confirmPassword')}</h3>
+                    <h3 className='font-bold text-lg'>{t('UserSettingsPage.confirmPassword')}</h3>
                     <input
                         type='password'
-                        placeholder={t('UserSettings.enterCurrentPassword')}
+                        placeholder={t('UserSettingsPage.enterCurrentPassword')}
                         value={currentPassword}
                         onChange={(e) => setCurrentPassword(e.target.value)}
                         className='input text-base'
@@ -329,10 +329,10 @@ export default function UserSettings() {
 
                     <div className='flex justify-end space-x-2'>
                         <button className='btn' onClick={() => closeModal(passwordCheckModalRef)}>
-                            {t('UserSettings.cancel')}
+                            {t('UserSettingsPage.cancel')}
                         </button>
                         <button className='btn btn-primary' onClick={() => handleAction()}>
-                            {t('UserSettings.submit')}
+                            {t('UserSettingsPage.submit')}
                         </button>
                     </div>
                 </div>
