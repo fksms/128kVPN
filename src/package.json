@@ -1,5 +1,5 @@
 {
-    "name": "my-app",
+    "name": "128kvpn",
     "version": "0.1.0",
     "private": true,
     "scripts": {
@@ -15,7 +15,7 @@
         "firebase": "^11.8.1",
         "firebase-admin": "^13.4.0",
         "jose": "^6.0.11",
-        "next": "15.3.2",
+        "next": "^15.3.5",
         "next-intl": "^4.1.0",
         "qrcode": "^1.5.4",
         "react": "^19.0.0",
