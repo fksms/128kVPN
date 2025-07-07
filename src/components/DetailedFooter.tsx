@@ -15,10 +15,15 @@ export default function DetailedFooter() {
                 <div className='flex flex-col mx-auto max-w-full min-w-xs'>
                     <aside>
                         <MainLogo logoSize={60} fontSize='text-2xl' className='flex-col justify-center' />
-                        <div className='py-1' />
-                        <Link href='/privacy-policy' className='text-sm hover:underline'>
-                            {t('Footer.privacyPolicy')}
-                        </Link>
+                        <div className='py-2' />
+                        <div className='flex items-center gap-6'>
+                            <Link href='/guide' className='text-sm hover:underline'>
+                                {t('Footer.guide')}
+                            </Link>
+                            <Link href='/privacy-policy' className='text-sm hover:underline'>
+                                {t('Footer.privacyPolicy')}
+                            </Link>
+                        </div>
                     </aside>
                     <div className='py-2' />
                     <nav>

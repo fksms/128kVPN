@@ -34,6 +34,12 @@ sudo docker compose up -d
 sudo docker compose down
 ```
 
+Build only `app` (Prod)
+```sh
+sudo docker compose up -d app
+sudo docker compose down
+```
+
 ### MacOS and Windows
 
 > [!IMPORTANT]

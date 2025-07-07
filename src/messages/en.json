@@ -47,6 +47,7 @@
         }
     },
     "Footer": {
+        "guide": "Guide",
         "privacyPolicy": "Privacy Policy"
     },
     "DashboardPage": {

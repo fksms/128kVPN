@@ -37,7 +37,7 @@
     "Navbar": {
         "dashboard": "管理画面",
         "settings": "設定",
-        "guide": "使用方法",
+        "guide": "使い方",
         "logout": "ログアウト",
         "confirmLogout": "ログアウトしますか？",
         "language": "言語",
@@ -47,6 +47,7 @@
         }
     },
     "Footer": {
+        "guide": "使い方",
         "privacyPolicy": "プライバシーポリシー"
     },
     "DashboardPage": {

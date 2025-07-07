@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from '@next/third-parties/google';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
@@ -15,6 +16,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     return (
         <html>
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+            {process.env.GOOGLE_ANALYTICS_ID ? <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID} /> : null}
         </html>
     );
 }

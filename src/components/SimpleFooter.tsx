@@ -8,12 +8,17 @@ export default function SimpleFooter() {
 
     return (
         <div>
-            <footer className='footer footer-horizontal footer-center bg-[var(--background)] text-gray-400 py-6'>
+            <footer className='footer footer-horizontal footer-center bg-[var(--background)] text-gray-400 py-4'>
                 <div className='flex flex-col mx-auto max-w-full min-w-xs'>
                     <aside>
-                        <Link href='/privacy-policy' className='text-sm hover:underline'>
-                            {t('Footer.privacyPolicy')}
-                        </Link>
+                        <div className='flex items-center gap-6'>
+                            <Link href='/guide' className='text-sm hover:underline'>
+                                {t('Footer.guide')}
+                            </Link>
+                            <Link href='/privacy-policy' className='text-sm hover:underline'>
+                                {t('Footer.privacyPolicy')}
+                            </Link>
+                        </div>
                     </aside>
                     <div className='pb-1' />
                     <nav>
