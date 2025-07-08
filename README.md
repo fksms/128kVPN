@@ -20,6 +20,15 @@ Copy the `.env.sample` file and fill in the required information
 cp .env.sample .env
 ```
 
+Please place the private key (`privkey.pem`) and the server certificate issued by a certificate authority such as Let's Encrypt + intermediate certificate (`fullchain.pem`) in the `nginx` directory.
+
+(In a development environment, use `mkcert` to generate the certificate.)
+
+```sh
+cp /path/to/privkey.pem nginx/privkey.pem
+cp /path/to/fullchain.pem nginx/fullchain.pem
+```
+
 #### Deploy
 
 Build (Dev)

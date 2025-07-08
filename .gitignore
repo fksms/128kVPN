@@ -3,3 +3,6 @@
 # env files
 .env*
 !.env.sample
+
+# pem files
+nginx/*.pem

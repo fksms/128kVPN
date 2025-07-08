@@ -36,8 +36,8 @@ if ${BANDWIDTH_LIMIT}; then
     tc qdisc add dev ${IFB_INTERFACE_NAME} root handle 1: htb default 999 # Ingress traffic (Client -> Server)
 
     # Default class
-    tc class add dev ${WG_INTERFACE_NAME} parent 1: classid 1:999 htb rate 100mbit ceil 100mbit # Egress traffic (Server -> Client)
-    tc class add dev ${IFB_INTERFACE_NAME} parent 1: classid 1:999 htb rate 100mbit ceil 100mbit # Ingress traffic (Client -> Server)
+    tc class add dev ${WG_INTERFACE_NAME} parent 1: classid 1:999 htb rate 1mbit ceil 1mbit # Egress traffic (Server -> Client)
+    tc class add dev ${IFB_INTERFACE_NAME} parent 1: classid 1:999 htb rate 1mbit ceil 1mbit # Ingress traffic (Client -> Server)
 
     # 254 Addresses
     for i in $(seq 2 254); do

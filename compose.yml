@@ -6,7 +6,7 @@ services:
     ports:
       - "80:80/tcp"
       - "443:443/tcp"
-    restart: always
+    restart: on-failure:5 # 5回失敗したら再起動
     volumes:
       - type: bind
         source: ./nginx # ローカルのパス
@@ -26,4 +26,4 @@ services:
       - .env
     environment:
       - BANDWIDTH_LIMIT=true # `true`の場合は速度制限有りモードで起動、`false`の場合は速度制限無しモードで起動
-    restart: always
+    restart: on-failure:5 # 5回失敗したら再起動
