@@ -9,10 +9,11 @@ Install Docker
 curl https://get.docker.com | sudo sh
 ```
 
-Load `ifb` and `act_mirred` module
+Load `ifb` and `act_mirred`, `ip_tables` module
 ```sh
 sudo modprobe ifb
 sudo modprobe act_mirred
+sudo modprobe ip_tables
 ```
 
 Copy the `.env.sample` file and fill in the required information
