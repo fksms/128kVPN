@@ -9,6 +9,7 @@ import { auth, googleAuthProvider, handleFirebaseError } from '@/lib/firebase';
 import { sessionLogout } from '@/lib/handleSession';
 import { showModal, closeModal } from './handleModal';
 import { useLoading } from '@/contexts/LoadingContext';
+import { getCookieValueForClient } from '@/lib/getCookieValueForClient';
 
 type AuthAction = 'changeEmail' | 'changePassword' | 'deleteEmailAccount';
 
@@ -26,7 +27,7 @@ export default function UserSettings() {
     const [error2, setError2] = useState('');
     const [error3, setError3] = useState('');
 
-    const [providerId, setProviderId] = useState<string | null>(null);
+    const [providerId, setProviderId] = useState('');
     const [actionType, setActionType] = useState<AuthAction | null>(null);
 
     const router = useRouter();
@@ -227,10 +228,30 @@ export default function UserSettings() {
         }
     };
 
+    // ユーザーのメールアドレスをクッキーから取得
+    const getCurrentEmail = async (): Promise<void> => {
+        try {
+            const userInfo = JSON.parse(getCookieValueForClient('user_info')!);
+            setCurrentEmail(userInfo.email);
+        } catch (error) {
+            setCurrentEmail('-');
+        }
+    };
+
+    // ユーザーのログインプロバイダーをクッキーから取得
+    const getProviderId = async (): Promise<void> => {
+        try {
+            const userInfo = JSON.parse(getCookieValueForClient('user_info')!);
+            setProviderId(userInfo.providerId);
+        } catch (error) {
+            setProviderId('');
+        }
+    };
+
     useEffect(() => {
         // コンポーネントマウント時に実行
-        setCurrentEmail(sessionStorage.getItem('email') || '-');
-        setProviderId(sessionStorage.getItem('providerId'));
+        getCurrentEmail();
+        getProviderId();
         // ローディング停止
         setLoading(false);
     }, [setLoading]);
@@ -254,7 +275,7 @@ export default function UserSettings() {
                                 value={newEmail}
                                 onChange={(e) => setNewEmail(e.target.value)}
                                 className='input text-base'
-                                disabled={!!providerId}
+                                disabled={providerId !== 'password'}
                             />
                             <p className='text-sm text-error'>{error1}</p>
                             <div className='card-actions justify-start'>
@@ -274,7 +295,7 @@ export default function UserSettings() {
                                 value={newPassword}
                                 onChange={(e) => setNewPassword(e.target.value)}
                                 className='input text-base'
-                                disabled={!!providerId}
+                                disabled={providerId !== 'password'}
                             />
                             <input
                                 type='password'
@@ -282,7 +303,7 @@ export default function UserSettings() {
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 className='input text-base'
-                                disabled={!!providerId}
+                                disabled={providerId !== 'password'}
                             />
                             <p className='text-sm text-error'>{error2}</p>
                             <div className='card-actions justify-start'>
@@ -301,7 +322,7 @@ export default function UserSettings() {
                                 <button
                                     onClick={() => {
                                         if (confirm(t('UserSettingsPage.confirmDeleteAccount'))) {
-                                            providerId ? deleteSocialAccount() : checkInput('deleteEmailAccount');
+                                            providerId !== 'password' ? deleteSocialAccount() : checkInput('deleteEmailAccount');
                                         }
                                     }}
                                     className='btn border-red-600 bg-red-600 text-white hover:bg-red-700'

@@ -8,13 +8,14 @@ import { FirebaseError } from 'firebase/app';
 import { sessionLogout } from '@/lib/handleSession';
 import { handleFirebaseError } from '@/lib/firebase';
 import { useLoading } from '@/contexts/LoadingContext';
+import { getCookieValueForClient } from '@/lib/getCookieValueForClient';
 
 export default function UserDropdown() {
     const t = useTranslations();
 
     const { setLoading } = useLoading();
 
-    const [photoURL, setPhotoURL] = useState<string | null>(null);
+    const [photoURL, setPhotoURL] = useState('');
 
     const router = useRouter();
     const locale = useLocale();
@@ -51,9 +52,19 @@ export default function UserDropdown() {
         }
     };
 
+    // ユーザーの写真URLをクッキーから取得
+    const getPhotoURL = async (): Promise<void> => {
+        try {
+            const userInfo = JSON.parse(getCookieValueForClient('user_info')!);
+            setPhotoURL(userInfo.photoURL);
+        } catch (error) {
+            setPhotoURL('');
+        }
+    };
+
     useEffect(() => {
         // コンポーネントマウント時に実行
-        setPhotoURL(sessionStorage.getItem('photoURL'));
+        getPhotoURL();
     }, []);
 
     return (

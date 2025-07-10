@@ -42,6 +42,21 @@ export async function POST(req: NextRequest) {
             maxAge: expiresIn,
             sameSite: 'strict',
         });
+        // ユーザー情報を取得
+        const userInfo = {
+            email: decoded.email || '',
+            providerId: decoded.firebase.sign_in_provider || '',
+            photoURL: decoded.picture || '',
+        };
+        // ユーザー情報をクッキーに設定
+        // （注意：ペイロードは自動的に`encodeURIComponent`でエンコードされる）
+        response.cookies.set('user_info', JSON.stringify(userInfo), {
+            httpOnly: false, // クライアントサイドでアクセス可能
+            secure: true,
+            path: '/',
+            maxAge: expiresIn,
+            sameSite: 'strict',
+        });
         return response;
     } catch {
         return NextResponse.json(
