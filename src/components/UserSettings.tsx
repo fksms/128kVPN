@@ -279,7 +279,7 @@ export default function UserSettings() {
                             />
                             <p className='text-sm text-error'>{error1}</p>
                             <div className='card-actions justify-start'>
-                                <button onClick={() => checkInput('changeEmail')} className='btn btn-soft' disabled={!!providerId}>
+                                <button onClick={() => checkInput('changeEmail')} className='btn btn-soft' disabled={providerId !== 'password'}>
                                     {t('UserSettingsPage.changeButton')}
                                 </button>
                             </div>
@@ -307,7 +307,7 @@ export default function UserSettings() {
                             />
                             <p className='text-sm text-error'>{error2}</p>
                             <div className='card-actions justify-start'>
-                                <button onClick={() => checkInput('changePassword')} className='btn btn-soft' disabled={!!providerId}>
+                                <button onClick={() => checkInput('changePassword')} className='btn btn-soft' disabled={providerId !== 'password'}>
                                     {t('UserSettingsPage.changeButton')}
                                 </button>
                             </div>
