@@ -8,7 +8,7 @@
         "description": {
             "line1": "Free to use after logging in.",
             "line2": "Connect easily via the dedicated page ※1 and experience a speed-limited environment ※2.",
-            "line3": "Secure communication enabled by advanced encryption."
+            "line3": "Advanced encryption provides secure communications."
         },
         "notes": {
             "note1": "WireGuard® installation is required.",
@@ -62,7 +62,7 @@
             "submit": "Create",
             "cancel": "Cancel",
             "notice": "Please delete interfaces that you no longer use.",
-            "warning": "The created interface will be automatically deleted after 30 to 60 minutes."
+            "warning": "The created interface will be automatically deleted about 30 minutes."
         },
         "interfaceDeletionModal": {
             "title": "Delete Interface",

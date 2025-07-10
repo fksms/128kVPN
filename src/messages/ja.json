@@ -8,7 +8,7 @@
         "description": {
             "line1": "ログインすれば無料で利用可能です。",
             "line2": "専用ページから簡単にVPN接続が可能 ※1 で、速度制限環境 ※2 を体験できます。",
-            "line3": "高度な暗号化によって安全な通信を実現します。"
+            "line3": "高度な暗号化によって安全な通信を提供します。"
         },
         "notes": {
             "note1": "WireGuard® のインストールが必要です。",
@@ -62,7 +62,7 @@
             "submit": "作成",
             "cancel": "キャンセル",
             "notice": "使用しなくなったインターフェースは削除してください。",
-            "warning": "作成されたインターフェースは30〜60分後に自動的に削除されます。"
+            "warning": "作成されたインターフェースは30分程度で自動的に削除されます。"
         },
         "interfaceDeletionModal": {
             "title": "インターフェースを削除",
@@ -99,7 +99,7 @@
         "backToLogin": "ログイン画面に戻る",
         "verifyEmail1": "メールアドレスに確認リンクを送信しました。",
         "verifyEmail2": "受信トレイを確認し、リンクをクリックしてメールアドレスを確認してください。",
-        "forgotPasswordSentEmail1": "パスワードリセットリンクをメールアドレスに送信しました。",
+        "forgotPasswordSentEmail1": "パスワード再設定用リンクをメールアドレスに送信しました。",
         "forgotPasswordSentEmail2": "受信トレイを確認し、リンクをクリックしてパスワードをリセットしてください。",
         "loginWithGoogle": "Googleでログイン",
         "loginWithGitHub": "GitHubでログイン"

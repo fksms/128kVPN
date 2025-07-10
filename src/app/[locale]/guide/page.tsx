@@ -8,6 +8,15 @@ import SimpleFooter from '@/components/SimpleFooter';
 
 export const metadata: Metadata = {
     title: '128kVPN | Guide',
+    description: 'VPNインターフェースの作成から接続までを分かりやすく解説。簡単に利用できます。',
+    openGraph: {
+        title: '128kVPN | Guide',
+        description: 'VPNインターフェースの作成から接続までを分かりやすく解説。簡単に利用できます。',
+        url: 'https://128kvpn.net/guide',
+        siteName: '128kVPN',
+        type: 'website',
+        locale: 'ja_JP',
+    },
 };
 
 export default async function GuidePage() {

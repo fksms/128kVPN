@@ -4,6 +4,15 @@ import { Link } from '@/i18n/navigation';
 
 export const metadata: Metadata = {
     title: '128kVPN | Privacy Policy',
+    description: '当VPNサービスのプライバシーポリシー。利用者の個人情報の取扱いやセキュリティポリシーについてご確認ください。',
+    openGraph: {
+        title: '128kVPN | Privacy Policy',
+        description: '当VPNサービスのプライバシーポリシー。利用者の個人情報の取扱いやセキュリティポリシーについてご確認ください。',
+        url: 'https://128kvpn.net/privacy-policy',
+        siteName: '128kVPN',
+        type: 'website',
+        locale: 'ja_JP',
+    },
 };
 
 export default function PrivacyPolicyPage() {
