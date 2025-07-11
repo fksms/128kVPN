@@ -48,7 +48,7 @@ export default function UserDropdown() {
 
     const goTo = (pathname: string): void => {
         if (currentPathname !== pathname) {
-            router.push(pathname, { locale: locale });
+            router.replace(pathname, { locale: locale });
         }
     };
 

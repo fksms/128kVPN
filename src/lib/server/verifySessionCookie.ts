@@ -14,11 +14,11 @@ async function getPublicKeys(): Promise<Record<string, string> | null> {
     }
 
     // Firebase公開鍵リストを取得
-    const res = await fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/publicKeys');
-    const publicKeys = await res.json();
+    const response = await fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/publicKeys');
+    const publicKeys = await response.json();
 
     // Cache-Controlヘッダーからmax-age取得
-    const cacheControl = res.headers.get('cache-control');
+    const cacheControl = response.headers.get('cache-control');
     let maxAge = 0;
     if (cacheControl) {
         const match = cacheControl.match(/max-age=(\d+)/);

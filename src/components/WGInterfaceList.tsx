@@ -39,8 +39,8 @@ export default function WGInterfaceList() {
     // Fetch the list of interfaces
     const getWGInterfaces = async (): Promise<void> => {
         try {
-            const res = await fetch('/api/wg-interfaces', { method: 'GET', credentials: 'include' });
-            const data = await res.json();
+            const response = await fetch('/api/wg-interfaces', { method: 'GET', credentials: 'include' });
+            const data = await response.json();
 
             // 以下、エラーハンドリング
             if (data.success) {
@@ -85,7 +85,7 @@ export default function WGInterfaceList() {
         setModalLoading(true);
 
         try {
-            const res = await fetch('/api/wg-interfaces', {
+            const response = await fetch('/api/wg-interfaces', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -96,7 +96,7 @@ export default function WGInterfaceList() {
                 }),
                 credentials: 'include',
             });
-            const data = await res.json();
+            const data = await response.json();
 
             // 以下、エラーハンドリング
             if (data.success) {
@@ -130,7 +130,7 @@ export default function WGInterfaceList() {
         setModalLoading(true);
 
         try {
-            const res = await fetch('/api/wg-interfaces', {
+            const response = await fetch('/api/wg-interfaces', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -141,7 +141,7 @@ export default function WGInterfaceList() {
                 }),
                 credentials: 'include',
             });
-            const data = await res.json();
+            const data = await response.json();
 
             // 以下、エラーハンドリング
             if (data.success) {
