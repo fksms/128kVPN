@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
-import { verifySessionCookie } from '@/lib/verifySessionCookie';
+import { verifySessionCookie } from '@/lib/server/verifySessionCookie';
 import PublicNavbar from '@/components/PublicNavbar';
 import PrivateNavbar from '@/components/PrivateNavbar';
 import GuidePageComponent from '@/components/GuidePageComponent';

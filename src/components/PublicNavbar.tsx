@@ -2,8 +2,8 @@
 
 import { Link } from '@/i18n/navigation';
 import LanguageDropdown from '@/components/LanguageDropdown';
-import LoginRegisterButtons from './LoginRegisterButtons';
-import MainLogo from './MainLogo';
+import LoginRegisterButtons from '@/components/LoginRegisterButtons';
+import MainLogo from '@/components/MainLogo';
 
 export default function PublicNavbar() {
     return (

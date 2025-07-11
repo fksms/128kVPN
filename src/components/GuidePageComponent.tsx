@@ -1,9 +1,9 @@
 'use client';
 
 import Image from 'next/image';
+import { useEffect, useRef } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { useEffect, useRef } from 'react';
 import { useLoading } from '@/contexts/LoadingContext';
 
 export default function GuidePageComponent() {

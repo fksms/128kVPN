@@ -3,12 +3,12 @@
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
-import { useRouter, usePathname } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
-import { sessionLogout } from '@/lib/handleSession';
-import { handleFirebaseError } from '@/lib/firebase';
+import { useRouter, usePathname } from '@/i18n/navigation';
+import { sessionLogout } from '@/lib/client/handleSession';
+import { handleFirebaseError } from '@/lib/client/firebase';
+import { getCookieValueForClient } from '@/lib/client/getCookieValueForClient';
 import { useLoading } from '@/contexts/LoadingContext';
-import { getCookieValueForClient } from '@/lib/getCookieValueForClient';
 
 export default function UserDropdown() {
     const t = useTranslations();

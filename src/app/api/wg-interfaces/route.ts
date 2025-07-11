@@ -1,9 +1,10 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { expirationDurationMinutes } from '@/env';
-import { db, type WgInterface } from '@/lib/sqlite';
-import { adminAuth } from '@/lib/firebase-admin';
+import { db, type WgInterface } from '@/lib/server/sqlite';
+import { adminAuth } from '@/lib/server/firebase-admin';
 import { ErrorCodes } from '@/lib/errorCodes';
-import { createPeerConfig, addPeer, removePeer } from '@/lib/wireguard';
+import { createPeerConfig, addPeer, removePeer } from '@/lib/server/wireguard';
+import { noCacheResponse } from '@/lib/server/customResponse';
 
 // IPアドレスの予約済みリスト（排他制御用）（重複時はエラー応答）
 const reservedIPs = new Set<string>();
@@ -25,7 +26,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         }
     } catch (error) {
         console.error(error);
-        return NextResponse.json(
+        return noCacheResponse(
             {
                 success: false,
                 code: ErrorCodes.UNAUTHORIZED,
@@ -40,7 +41,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         // プレースホルダを使ってSQLを準備
         const stmt = db.prepare('SELECT * FROM wg_interfaces WHERE userid = ?');
         const wgInterfaces = stmt.all(userId) as WgInterface[];
-        return NextResponse.json(
+        return noCacheResponse(
             {
                 success: true,
                 data: wgInterfaces.map((wgInterface) => ({
@@ -53,7 +54,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         );
     } catch (error) {
         console.error(error);
-        return NextResponse.json(
+        return noCacheResponse(
             {
                 success: false,
                 code: ErrorCodes.SQL_ERROR,
@@ -72,7 +73,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // -------------------- リクエストボディの検証 --------------------
     const { action, name } = await req.json();
     if (!action || !name) {
-        return NextResponse.json(
+        return noCacheResponse(
             {
                 success: false,
                 code: ErrorCodes.INVALID_REQUEST,
@@ -94,7 +95,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         }
     } catch (error) {
         console.error(error);
-        return NextResponse.json(
+        return noCacheResponse(
             {
                 success: false,
                 code: ErrorCodes.UNAUTHORIZED,
@@ -127,7 +128,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             reservedIPs.add(ipToAssign);
         } catch (error) {
             console.error(error);
-            return NextResponse.json(
+            return noCacheResponse(
                 {
                     success: false,
                     code: ErrorCodes.NO_AVAILABLE_IP,
@@ -146,7 +147,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             console.error(error);
             // 予約済みIPアドレスを開放
             reservedIPs.delete(ipToAssign);
-            return NextResponse.json(
+            return noCacheResponse(
                 {
                     success: false,
                     code: ErrorCodes.CREATE_CONFIG_FAILED,
@@ -166,7 +167,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             stmt.run(userId, name, ipToAssign, clientConfig, expireAt);
         } catch (error) {
             console.error(error);
-            return NextResponse.json(
+            return noCacheResponse(
                 {
                     success: false,
                     code: ErrorCodes.SQL_ERROR,
@@ -185,7 +186,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             await addPeer(serverPeerConfig);
         } catch (error) {
             console.error(error);
-            return NextResponse.json(
+            return noCacheResponse(
                 {
                     success: false,
                     code: ErrorCodes.CREATE_INTERFACE_FAILED,
@@ -196,7 +197,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         // -------------------- WireGuardのピアの追加を反映 --------------------
 
         // -------------------- 200 OK --------------------
-        return NextResponse.json(
+        return noCacheResponse(
             {
                 success: true,
                 data: {
@@ -220,7 +221,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             ipToRelease = (stmt.get(userId, name) as { ip_address: string }).ip_address;
         } catch (error) {
             console.error(error);
-            return NextResponse.json(
+            return noCacheResponse(
                 {
                     success: false,
                     code: ErrorCodes.GET_IP_FAILED,
@@ -236,7 +237,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             await removePeer(ipToRelease);
         } catch (error) {
             console.error(error);
-            return NextResponse.json(
+            return noCacheResponse(
                 {
                     success: false,
                     code: ErrorCodes.DELETE_INTERFACE_FAILED,
@@ -254,7 +255,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             stmt.run(userId, name);
         } catch (error) {
             console.error(error);
-            return NextResponse.json(
+            return noCacheResponse(
                 {
                     success: false,
                     code: ErrorCodes.SQL_ERROR,
@@ -265,12 +266,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         // -------------------- データベースの更新 --------------------
 
         // -------------------- 200 OK --------------------
-        return NextResponse.json({ success: true }, { status: 200 });
+        return noCacheResponse({ success: true }, { status: 200 });
         // -------------------- 200 OK --------------------
     }
     // 不正なアクション
     else {
-        return NextResponse.json(
+        return noCacheResponse(
             {
                 success: false,
                 code: ErrorCodes.INVALID_REQUEST,

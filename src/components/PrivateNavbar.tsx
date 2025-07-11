@@ -2,8 +2,8 @@
 
 import { Link } from '@/i18n/navigation';
 import LanguageDropdown from '@/components/LanguageDropdown';
-import UserDropdown from './UserDropdown';
-import MainLogo from './MainLogo';
+import UserDropdown from '@/components/UserDropdown';
+import MainLogo from '@/components/MainLogo';
 
 export default function PrivateNavbar() {
     return (

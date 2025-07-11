@@ -4,7 +4,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     return [
         {
             url: 'https://128kvpn.net',
-            lastModified: '2025-07-01',
+            lastModified: '2025-07-11',
             changeFrequency: 'monthly',
             priority: 1,
             alternates: {
@@ -16,7 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
         {
             url: 'https://128kvpn.net/guide',
-            lastModified: '2025-07-01',
+            lastModified: '2025-07-11',
             changeFrequency: 'monthly',
             priority: 0.8,
             alternates: {
@@ -28,7 +28,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
         {
             url: 'https://128kvpn.net/privacy-policy',
-            lastModified: '2025-07-01',
+            lastModified: '2025-07-11',
             changeFrequency: 'monthly',
             priority: 0.5,
             alternates: {
@@ -40,7 +40,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
         {
             url: 'https://128kvpn.net/register',
-            lastModified: '2025-07-01',
+            lastModified: '2025-07-11',
             changeFrequency: 'monthly',
             priority: 0.3,
             alternates: {
@@ -52,7 +52,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
         {
             url: 'https://128kvpn.net/login',
-            lastModified: '2025-07-01',
+            lastModified: '2025-07-11',
             changeFrequency: 'monthly',
             priority: 0.3,
             alternates: {

@@ -1,8 +1,8 @@
 'use client';
 
-import MainLogo from './MainLogo';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
+import MainLogo from '@/components/MainLogo';
 
 export default function DetailedFooter() {
     const t = useTranslations();

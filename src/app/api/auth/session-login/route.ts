@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { adminAuth } from '@/lib/firebase-admin';
+import { adminAuth } from '@/lib/server/firebase-admin';
 import { ErrorCodes } from '@/lib/errorCodes';
+import { noCacheResponse } from '@/lib/server/customResponse';
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
     const { token } = await req.json();
 
     if (!token) {
-        return NextResponse.json(
+        return noCacheResponse(
             {
                 success: false,
                 code: ErrorCodes.INVALID_REQUEST,
@@ -20,7 +21,7 @@ export async function POST(req: NextRequest) {
         const decoded = await adminAuth.verifyIdToken(token);
         // メール認証が完了していない場合
         if (!decoded.email_verified) {
-            return NextResponse.json(
+            return noCacheResponse(
                 {
                     success: false,
                     error: ErrorCodes.UNVERIFIED_EMAIL,
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
         // セッションクッキーを作成
         const sessionCookie = await adminAuth.createSessionCookie(token, { expiresIn: expiresIn * 1000 });
         // レスポンス生成（200 OK）
-        const response = NextResponse.json({ success: true }, { status: 200 });
+        const response = noCacheResponse({ success: true }, { status: 200 });
         // セッションクッキーを設定
         response.cookies.set('__session', sessionCookie, {
             httpOnly: true,
@@ -59,7 +60,7 @@ export async function POST(req: NextRequest) {
         });
         return response;
     } catch {
-        return NextResponse.json(
+        return noCacheResponse(
             {
                 success: false,
                 code: ErrorCodes.CREATE_SESSION_FAILED,

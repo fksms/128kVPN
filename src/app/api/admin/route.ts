@@ -1,14 +1,15 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { db, type WgInterface } from '@/lib/sqlite';
+import { db, type WgInterface } from '@/lib/server/sqlite';
 import { ErrorCodes } from '@/lib/errorCodes';
-import { removePeers } from '@/lib/wireguard';
+import { removePeers } from '@/lib/server/wireguard';
+import { noCacheResponse } from '@/lib/server/customResponse';
 
 // POSTリクエスト
 export async function POST(req: NextRequest): Promise<NextResponse> {
     const { action } = await req.json();
 
     if (!action) {
-        return NextResponse.json(
+        return noCacheResponse(
             {
                 success: false,
                 code: ErrorCodes.INVALID_REQUEST,
@@ -24,7 +25,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             const stmt = db.prepare('SELECT * FROM wg_interfaces');
             // プレースホルダに値をバインド
             const wgInterfaces = stmt.all() as WgInterface[];
-            return NextResponse.json(
+            return noCacheResponse(
                 {
                     success: true,
                     data: wgInterfaces,
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             );
         } catch (error) {
             console.error(error);
-            return NextResponse.json(
+            return noCacheResponse(
                 {
                     success: false,
                     code: ErrorCodes.SQL_ERROR,
@@ -56,7 +57,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             wgInterfaces = stmt.all() as WgInterface[];
         } catch (error) {
             console.error(error);
-            return NextResponse.json(
+            return noCacheResponse(
                 {
                     success: false,
                     code: ErrorCodes.SQL_ERROR,
@@ -77,7 +78,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             await removePeers(expiredIPAddresses);
         } catch (error) {
             console.error(error);
-            return NextResponse.json(
+            return noCacheResponse(
                 {
                     success: false,
                     code: ErrorCodes.DELETE_INTERFACE_FAILED,
@@ -95,7 +96,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             stmt.run(now);
         } catch (error) {
             console.error(error);
-            return NextResponse.json(
+            return noCacheResponse(
                 {
                     success: false,
                     code: ErrorCodes.SQL_ERROR,
@@ -106,7 +107,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         // -------------------- データベースの更新 --------------------
 
         // -------------------- 200 OK --------------------
-        return NextResponse.json(
+        return noCacheResponse(
             {
                 success: true,
                 data: {
@@ -122,7 +123,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
     // 不正なアクション
     else {
-        return NextResponse.json(
+        return noCacheResponse(
             {
                 success: false,
                 code: ErrorCodes.INVALID_REQUEST,

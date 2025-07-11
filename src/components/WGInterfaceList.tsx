@@ -1,13 +1,13 @@
 'use client';
 
 import Image from 'next/image';
+import QRCode from 'qrcode';
 import { useEffect, useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { maxInterfaceNameLength, maxInterfaces } from '@/env';
 import { handleError } from '@/lib/errorCodes';
+import { showModal, closeModal } from '@/components/handleModal';
 import { useLoading } from '@/contexts/LoadingContext';
-import { showModal, closeModal } from './handleModal';
-import QRCode from 'qrcode';
 
 export type WGInterface = {
     name: string;

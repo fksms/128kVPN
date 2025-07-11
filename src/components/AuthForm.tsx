@@ -2,16 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
-import { useRouter, Link } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification } from 'firebase/auth';
-import { auth, handleFirebaseError } from '@/lib/firebase';
-import { sessionLogin } from '@/lib/handleSession';
+import { useRouter, Link } from '@/i18n/navigation';
+import { auth, handleFirebaseError } from '@/lib/client/firebase';
+import { sessionLogin } from '@/lib/client/handleSession';
 import { ErrorCodes } from '@/lib/errorCodes';
 import { useLoading } from '@/contexts/LoadingContext';
 import LanguageDropdown from '@/components/LanguageDropdown';
 import SocialLoginButton from '@/components/SocialLoginButton';
-import MainLogo from './MainLogo';
+import MainLogo from '@/components/MainLogo';
 
 type AuthAction = 'login' | 'register' | 'forgotPassword' | 'verifyEmail' | 'forgotPasswordSentEmail';
 

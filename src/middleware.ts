@@ -1,8 +1,9 @@
 import { NextResponse, NextRequest } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 import { routing } from '@/i18n/routing';
-import { verifySessionCookie } from '@/lib/verifySessionCookie';
+import { verifySessionCookie } from '@/lib/server/verifySessionCookie';
 import { ErrorCodes } from '@/lib/errorCodes';
+import { noCacheResponse } from '@/lib/server/customResponse';
 
 // next-intlのmiddlewareを事前に作成
 const intlMiddleware = createMiddleware(routing);
@@ -47,7 +48,7 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
             return NextResponse.next();
         } catch (error) {
             // セッションクッキーが無効な場合は、401エラーを返す
-            return NextResponse.json(
+            return noCacheResponse(
                 {
                     success: false,
                     code: ErrorCodes.UNAUTHORIZED,

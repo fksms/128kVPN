@@ -1,11 +1,11 @@
 'use client';
 
 import { useTranslations, useLocale } from 'next-intl';
-import { useRouter } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
 import { signInWithPopup } from 'firebase/auth';
-import { auth, googleAuthProvider, handleFirebaseError } from '@/lib/firebase';
-import { sessionLogin } from '@/lib/handleSession';
+import { useRouter } from '@/i18n/navigation';
+import { auth, googleAuthProvider, handleFirebaseError } from '@/lib/client/firebase';
+import { sessionLogin } from '@/lib/client/handleSession';
 import { useLoading } from '@/contexts/LoadingContext';
 
 type AuthAction = 'loginWithGoogle' | 'loginWithGitHub';

@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { noCacheResponse } from '@/lib/server/customResponse';
 
-export function POST(req: NextRequest) {
+export function POST(req: NextRequest): NextResponse {
     // レスポンス生成（200 OK）
-    const response = NextResponse.json({ success: true }, { status: 200 });
+    const response = noCacheResponse({ success: true }, { status: 200 });
     // セッションクッキーを削除（maxAge: 0）
     response.cookies.set('__session', '', {
         httpOnly: true,

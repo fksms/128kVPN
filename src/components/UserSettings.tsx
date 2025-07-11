@@ -2,14 +2,14 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
-import { useRouter } from '@/i18n/navigation';
 import { FirebaseError } from 'firebase/app';
 import { verifyBeforeUpdateEmail, updatePassword, deleteUser, EmailAuthProvider, reauthenticateWithCredential, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth, googleAuthProvider, handleFirebaseError } from '@/lib/firebase';
-import { sessionLogout } from '@/lib/handleSession';
-import { showModal, closeModal } from './handleModal';
+import { useRouter } from '@/i18n/navigation';
+import { auth, googleAuthProvider, handleFirebaseError } from '@/lib/client/firebase';
+import { sessionLogout } from '@/lib/client/handleSession';
+import { getCookieValueForClient } from '@/lib/client/getCookieValueForClient';
+import { showModal, closeModal } from '@/components/handleModal';
 import { useLoading } from '@/contexts/LoadingContext';
-import { getCookieValueForClient } from '@/lib/getCookieValueForClient';
 
 type AuthAction = 'changeEmail' | 'changePassword' | 'deleteEmailAccount';
 
