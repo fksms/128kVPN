@@ -1,5 +1,4 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { expirationDurationMinutes } from '@/env';
 import { db, type WgInterface } from '@/lib/server/sqlite';
 import { adminAuth } from '@/lib/server/firebase-admin';
 import { ErrorCodes } from '@/lib/errorCodes';
@@ -158,13 +157,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         // -------------------- WireGuardのコンフィグを取得 --------------------
 
         // -------------------- データベースの更新 --------------------
-        // 失効日時を計算（UNIXタイムスタンプ）
-        const expireAt = Date.now() + expirationDurationMinutes * 60 * 1000;
+        // 現在時刻を取得（UNIXタイムスタンプ）
+        const now = Date.now();
         try {
             // プレースホルダを使ってSQLを準備
-            const stmt = db.prepare('INSERT INTO wg_interfaces (userid, name, ip_address, client_config, expire_at) VALUES (?, ?, ?, ?, ?)');
+            const stmt = db.prepare('INSERT INTO wg_interfaces (userid, name, ip_address, client_config, created_at) VALUES (?, ?, ?, ?, ?)');
             // プレースホルダに値をバインド
-            stmt.run(userId, name, ipToAssign, clientConfig, expireAt);
+            stmt.run(userId, name, ipToAssign, clientConfig, now);
         } catch (error) {
             console.error(error);
             return noCacheResponse(

@@ -233,7 +233,7 @@ export default function UserSettings() {
         try {
             const userInfo = JSON.parse(getCookieValueForClient('user_info')!);
             setCurrentEmail(userInfo.email);
-        } catch (error) {
+        } catch {
             setCurrentEmail('-');
         }
     };
@@ -243,7 +243,7 @@ export default function UserSettings() {
         try {
             const userInfo = JSON.parse(getCookieValueForClient('user_info')!);
             setProviderId(userInfo.providerId);
-        } catch (error) {
+        } catch {
             setProviderId('');
         }
     };
@@ -322,7 +322,11 @@ export default function UserSettings() {
                                 <button
                                     onClick={() => {
                                         if (confirm(t('UserSettingsPage.confirmDeleteAccount'))) {
-                                            providerId !== 'password' ? deleteSocialAccount() : checkInput('deleteEmailAccount');
+                                            if (providerId !== 'password') {
+                                                deleteSocialAccount();
+                                            } else {
+                                                checkInput('deleteEmailAccount');
+                                            }
                                         }
                                     }}
                                     className='btn border-red-600 bg-red-600 text-white hover:bg-red-700'

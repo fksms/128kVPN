@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { noCacheResponse } from '@/lib/server/customResponse';
 
-export function POST(req: NextRequest): NextResponse {
+export function POST(): NextResponse {
     // レスポンス生成（200 OK）
     const response = noCacheResponse({ success: true }, { status: 200 });
     // セッションクッキーを削除（maxAge: 0）

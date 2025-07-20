@@ -3,6 +3,7 @@ import { db, type WgInterface } from '@/lib/server/sqlite';
 import { ErrorCodes } from '@/lib/errorCodes';
 import { removePeers } from '@/lib/server/wireguard';
 import { noCacheResponse } from '@/lib/server/customResponse';
+import { expirationDurationMinutes } from '@/env';
 
 // POSTリクエスト
 export async function POST(req: NextRequest): Promise<NextResponse> {
@@ -45,7 +46,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
     // 失効済みのインターフェースを削除
     else if (action === 'DELETE_EXPIRED_INTERFACES') {
-        // 現在時刻を取得
+        // 現在時刻を取得（UNIXタイムスタンプ）
         const now = Date.now();
 
         // -------------------- 全てのインターフェースの取得 --------------------
@@ -68,7 +69,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         // -------------------- 全てのインターフェースの取得 --------------------
 
         // -------------------- 期限切れのインターフェース（IPアドレス）を抽出 --------------------
-        const expiredWGInterfaces = wgInterfaces.filter((item) => item.expire_at < now);
+        const expiredWGInterfaces = wgInterfaces.filter((item) => item.created_at < now - expirationDurationMinutes * 60 * 1000);
         const expiredIPAddresses = expiredWGInterfaces.map((item) => item.ip_address);
         // -------------------- 期限切れのインターフェース（IPアドレス）を抽出 --------------------
 
@@ -91,9 +92,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         // -------------------- データベースの更新 --------------------
         try {
             // プレースホルダを使ってSQLを準備
-            const stmt = db.prepare('DELETE FROM wg_interfaces WHERE expire_at < ?');
+            const stmt = db.prepare('DELETE FROM wg_interfaces WHERE created_at < ?');
             // プレースホルダに値をバインド
-            stmt.run(now);
+            stmt.run(now - expirationDurationMinutes * 60 * 1000);
         } catch (error) {
             console.error(error);
             return noCacheResponse(

@@ -57,7 +57,7 @@ export default function UserDropdown() {
         try {
             const userInfo = JSON.parse(getCookieValueForClient('user_info')!);
             setPhotoURL(userInfo.photoURL);
-        } catch (error) {
+        } catch {
             setPhotoURL('');
         }
     };

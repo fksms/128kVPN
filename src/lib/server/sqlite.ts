@@ -8,7 +8,7 @@ type WgInterface = {
     name: string;
     ip_address: string;
     client_config: string;
-    expire_at: number;
+    created_at: number;
 };
 
 const interfacesDBPath = path.join(process.cwd(), 'wg_interfaces.db');
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS wg_interfaces (
     name TEXT NOT NULL CHECK(name <> '') CHECK(LENGTH(name) <= ${maxInterfaceNameLength}),
     ip_address TEXT NOT NULL UNIQUE,
     client_config TEXT NOT NULL,
-    expire_at INTEGER NOT NULL,
+    created_at INTEGER NOT NULL,
     UNIQUE(userid, name)
 );`);
 
