@@ -1,3 +1,37 @@
+# 128kVPN
+
+<div align="center">
+    <img src="./assets/logo.svg" width="125" alt="128kVPN Logo" />
+    <br>
+    Provides a bandwidth-limited environment.
+    <br>
+    Bandwidth control is implemented via VPN.
+    <br>
+    <br>
+    <img src="./assets/screenshot.png" width="750" alt="128kVPN Screenshot" />
+</div>
+
+## Features
+- Establishes a VPN connection using WireGuard, with all traffic controlled server-side.
+- Uses `tc` and the `ifb` module on the server to enforce both upload and download bandwidth limits.
+- Bandwidth is limited to 128 kbps for both upload and download.
+- Easily and quickly deployable via Next.js and Docker.
+- User information is managed using Firebase Authentication.
+- Provides management APIs to check and disconnect active sessions.
+- Web interface is multilingual.
+- Enables HTTPS communication via Nginx as a reverse proxy.
+
+## Architecture
+<div align="center">
+    <img src="./assets/architecture.png" width="700" alt="128kVPN Architecture" />
+</div>
+
+## Requirements
+- Requires Linux to utilize network control features like `tc` and `ifb`.
+- Docker is required to run the application.
+- You must obtain the Firebase Client SDK config and Admin SDK config in advance and set them in the `.env` file.
+- To use the management API, a shared secret must be set in the `.env` file.
+
 ## How to deploy
 
 ### Linux (Ubuntu etc.)
